@@ -1,0 +1,8 @@
+name: AntiMalware_pl
+version: '${project.version}'
+main: me.alek.AntiMalwarePlugin
+api-version: 1.19
+commands:
+  antimalware:
+    aliases: am
+
