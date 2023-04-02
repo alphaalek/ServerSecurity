@@ -1,7 +1,9 @@
 package me.alek.handlers;
 
 import me.alek.cache.containers.CacheContainer;
+import me.alek.controllers.CheckController;
 import me.alek.model.CheckResult;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
@@ -16,13 +18,13 @@ public abstract class CheckAdapter extends BaseHandler {
     }
 
     @Override
-    public CheckResult processSingle(File file, Path rootFolder, CacheContainer cache) {
-        return Check.check(this, file, rootFolder, cache);
+    public CheckResult processSingle(File file, Path rootFolder, CacheContainer cache, PluginProperties properties) {
+        return CheckController.check(this, file, rootFolder, cache, properties);
     }
 
 
     public abstract String processFile(Path classPath, ClassNode classNode, File file, boolean isClass);
 
-    public abstract String preProcessJAR(File file, Path rootFolder);
+    public abstract String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties);
 
 }

@@ -5,7 +5,7 @@ import me.alek.enums.MalwareType;
 import me.alek.handlers.types.EncryptedKeyHandler;
 import me.alek.handlers.types.nodes.MalwareNode;
 import me.alek.handlers.types.ParseHandler;
-import org.bukkit.Bukkit;
+import me.alek.model.PluginProperties;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -31,7 +31,7 @@ public class SkyRageCheck extends EncryptedKeyHandler implements ParseHandler, M
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         /*if (resolve(rootFolder, "plugin-config.bin")) {
             return "Config-bin";
         }*/

@@ -5,7 +5,7 @@ import me.alek.enums.MalwareType;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.MalwareNode;
-import org.bukkit.Bukkit;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class ThiccIndustriesCheck extends CheckAdapter implements MalwareNode, P
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         for (ThiccIndustriesVariant variant : classes) {
             if (resolve(rootFolder, "com/thiccindustries/debugger/" + variant.classCheck + ".class")) {
                 return variant.getVariant();

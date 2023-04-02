@@ -9,6 +9,7 @@ import me.alek.handlers.Handler;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.model.CheckResult;
 import me.alek.model.DuplicatedValueMap;
+import me.alek.model.PluginProperties;
 import me.alek.model.ResultData;
 import me.alek.utils.Utils;
 import me.alek.utils.ChatUtils;
@@ -28,6 +29,7 @@ public class Scanner {
     private final Player player;
     private final boolean deepScan;
     private int totalFilesRisk = 0;
+    private boolean scanning = false;
     @Getter
     private static AcceptedPluginsForceOPContainer acceptedPluginsForceOPContainer;
 
@@ -41,6 +43,7 @@ public class Scanner {
 
         HandlerContainer handlerContainer = new HandlerContainer();
         player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for malware. Vent venligst...");
+        scanning = true;
         CacheContainer cache = new CacheContainer();
         acceptedPluginsForceOPContainer = new AcceptedPluginsForceOPContainer();
 
@@ -51,24 +54,28 @@ public class Scanner {
 
                 if (fs == null) return;
 
+                PluginProperties pluginProperties = new PluginProperties(file);
+
                 List<CheckResult> results = new ArrayList<>();
-                for (Handler handler : handlerContainer.getList()) {
+                synchronized (this) {
+                    for (Handler handler : handlerContainer.getList()) {
 
-                    if (handler instanceof ParseHandler parseHandler) {
-                        parseHandler.parse();
+                        if (handler instanceof ParseHandler parseHandler) {
+                            parseHandler.parse();
+                        }
+
+                        Iterator<Path> rootFolderIterator = fs.getRootDirectories().iterator();
+                        if (!rootFolderIterator.hasNext()) return;
+                        Path rootFolder = rootFolderIterator.next();
+
+                        List<CheckResult> result = handler.process(file, rootFolder, cache, pluginProperties);
+
+                        if (result == null) continue;
+                        results.addAll(result);
                     }
-
-                    Iterator<Path> rootFolderIterator = fs.getRootDirectories().iterator();
-                    if (!rootFolderIterator.hasNext()) return;
-                    Path rootFolder = rootFolderIterator.next();
-
-                    List<CheckResult> result = handler.process(file, rootFolder, cache);
-
-                    if (result == null) continue;
-                    results.addAll(result);
+                    resultMap.put(new ResultData(results, file, getResultLevel(results)), getResultLevel(results));
+                    cache.clearCache(file.toPath());
                 }
-                resultMap.put(new ResultData(results, file, getResultLevel(results)), getResultLevel(results));
-                cache.clearCache(file.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -100,7 +107,7 @@ public class Scanner {
         if (deepScan) {
             player.sendMessage(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName());
         }
-        AbstractMap.SimpleEntry<Risk, StringBuilder>[] riskStringBuilders = new AbstractMap.SimpleEntry[4];
+        AbstractMap.SimpleEntry<Risk, StringBuilder>[] riskStringBuilders = new AbstractMap.SimpleEntry[5];
         int i = 0;
         for (Risk risk : Risk.values()) {
             riskStringBuilders[i] = new AbstractMap.SimpleEntry<>(risk, new StringBuilder());
@@ -119,10 +126,32 @@ public class Scanner {
         }
         if (detected && deepScan) {
             totalFilesRisk++;
+
+            boolean sendTemp = false;
+            String temp = "";
             for (AbstractMap.SimpleEntry<Risk, StringBuilder> entry : riskStringBuilders) {
 
                 if (entry.getValue().isEmpty()) continue;
-                player.sendMessage(" §7- " + entry.getKey().getChatColor() + entry.getKey().getName() + ": §7" + entry.getValue().toString().substring(2));
+
+                String message = " §7- " + entry.getKey().getChatColor() + entry.getKey().getName() + ": §7" + entry.getValue().substring(2);
+                switch (entry.getKey()) {
+                    case FAKE_CRITICAL -> {
+                        temp = entry.getValue().toString();
+                        continue;
+                    }
+                    case HIGH -> {
+                        message = message + temp;
+                        sendTemp = true;
+                    }
+                    default -> {
+                        if (!sendTemp) {
+                            if (!temp.equals("")) {
+                                player.sendMessage(" §7- §cHøj risiko: §7" + temp.substring(2));
+                            }
+                        }
+                    }
+                }
+                player.sendMessage(message);
             }
         }
         player.sendMessage(ChatUtils.getMessage(level, deepScan, data.getFile().getName()));

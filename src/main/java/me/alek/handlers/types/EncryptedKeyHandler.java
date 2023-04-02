@@ -4,29 +4,32 @@ import me.alek.controllers.BytecodeController;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
-public abstract class EncryptedKeyHandler extends InsnInvokeHandler {
+public abstract class EncryptedKeyHandler extends MethodInvokeHandler {
 
     public EncryptedKeyHandler() {
         super(MethodInsnNode.class);
     }
 
     @Override
-    public String processAbstractInsn(AbstractInsnNode abstractInsnNode) {
+    public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
         ArrayList<String> testStrings = new ArrayList<>();
         switch (methodInsnNode.owner) {
-            case "java/net/URI":
+            case "java/net/URI": {
 
                 //WEBSOCKET URI CHECK
                 if (methodInsnNode.name.equals("create")) {
-                    String websocketURI =  BytecodeController.getStringUsed(methodInsnNode);
+                    String websocketURI = BytecodeController.getStringUsed(methodInsnNode);
                     if (websocketURI != null) {
                         testStrings.add(websocketURI);
                     }
                 }
+            }
             case "java/lang/String": {
 
                 if (methodInsnNode.getOpcode() == Opcodes.INVOKESPECIAL) {
@@ -39,7 +42,7 @@ public abstract class EncryptedKeyHandler extends InsnInvokeHandler {
             }
             case "java/util/Base64$Decoder": {
 
-               // System.out.println(methodInsnNode.name);
+                // System.out.println(methodInsnNode.name);
 
                 String base64Invocation = BytecodeController.getBase64Invocation(methodInsnNode);
                 if (base64Invocation != null) {

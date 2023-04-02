@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.alek</groupId>
-    <artifactId>AntiMalware_pl</artifactId>
+    <artifactId>AntiMalware</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>AntiMalware_pl</name>
+    <name>AntiMalware</name>
 
     <properties>
         <java.version>16</java.version>

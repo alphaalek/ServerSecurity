@@ -1,5 +1,6 @@
-name: AntiMalware_pl
+name: AntiMalware
 version: '${project.version}'
+author: Alek05
 main: me.alek.AntiMalwarePlugin
 api-version: 1.19
 commands:

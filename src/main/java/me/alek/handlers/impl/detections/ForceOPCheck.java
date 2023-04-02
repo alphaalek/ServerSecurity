@@ -1,28 +1,27 @@
 package me.alek.handlers.impl.detections;
 
-import com.sun.jdi.Method;
+import lombok.Getter;
+import me.alek.Scanner;
 import me.alek.enums.Risk;
-import me.alek.handlers.types.InsnInvokeHandler;
-import me.alek.handlers.types.OnlySourceLibraryHandler;
+import me.alek.handlers.types.MethodInvokeHandler;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
-import org.bukkit.Bukkit;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class ForceOPCheck extends InsnInvokeHandler implements DetectionNode, ParseHandler {
+public class ForceOPCheck extends MethodInvokeHandler implements DetectionNode, ParseHandler {
 
-    public ForceOPCheck() {
-        super(MethodInsnNode.class, LdcInsnNode.class);
-    }
-
+    @Getter
     private List<String> methodInvokeOwners;
+    private PluginProperties pluginProperties;
 
     @Override
     public void parse() {
@@ -35,18 +34,49 @@ public class ForceOPCheck extends InsnInvokeHandler implements DetectionNode, Pa
         );
     }
 
-    @Override
-    public String preProcessJAR(File file, Path rootFolder) {
-        return null;
+    public ForceOPCheck() {
+        super(MethodInsnNode.class, LdcInsnNode.class);
     }
 
     @Override
-    public String processAbstractInsn(AbstractInsnNode abstractInsnNode) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+        this.pluginProperties = pluginProperties;
+        return null;
+    }
+
+
+    private static String formatPlugin(String plugin) {
+        return plugin
+                .replaceAll("\\.jar", "")
+                .replaceAll("[_-]", "")
+                .replaceAll("[0-9]", "")
+                .replaceAll("\\.", "");
+    }
+
+    private boolean validatePluginAcceptance(Path classPath) {
+        if (pluginProperties == null) return false;
+        if (pluginProperties.getSourceLib() == null) return false;
+        if (pluginProperties.getPluginName() == null) return false;
+
+        if (classPath.toAbsolutePath().toString().contains(pluginProperties.getSourceLib())) {
+            String formattedPlugin = formatPlugin(pluginProperties.getPluginName().toLowerCase());
+            for (String checkString : Scanner.getAcceptedPluginsForceOPContainer().getList()) {
+                if (formattedPlugin.replaceAll(checkString.toLowerCase(), "").length() < 3 && formattedPlugin.length() >= 3) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
         if (abstractInsnNode instanceof MethodInsnNode methodInsnNode) {
             String owner = methodInsnNode.owner;
             if (methodInsnNode.name.equals("setOp")) {
                 for (String insnOwner : methodInvokeOwners) {
                     if (!owner.equals(insnOwner)) continue;
+                    if (validatePluginAcceptance(classPath)) continue;
                     return "";
                 }
             }
@@ -54,9 +84,9 @@ public class ForceOPCheck extends InsnInvokeHandler implements DetectionNode, Pa
         if (abstractInsnNode instanceof LdcInsnNode ldcInsnNode) {
             Object cst = ldcInsnNode.cst;
             if (!(cst instanceof String)) return null;
-            if (((String)cst).contains("ops.json")) {
-                return "ops.json";
-            }
+            if (!((String)cst).contains("ops.json")) return null;
+            return "ops.json";
+
         }
         return null;
     }
@@ -70,5 +100,4 @@ public class ForceOPCheck extends InsnInvokeHandler implements DetectionNode, Pa
     public Risk getRisk() {
         return Risk.HIGH;
     }
-
 }

@@ -4,6 +4,7 @@ import me.alek.enums.Risk;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
@@ -20,7 +21,7 @@ public class L10ClassCheck extends CheckAdapter implements DetectionNode, OnlySo
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         return null;
     }
 
@@ -31,6 +32,6 @@ public class L10ClassCheck extends CheckAdapter implements DetectionNode, OnlySo
 
     @Override
     public Risk getRisk() {
-        return Risk.LOW;
+        return Risk.MODERATE;
     }
 }

@@ -8,14 +8,12 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.File;
 import java.nio.file.Path;
 
-import org.bukkit.Bukkit;
-
-public abstract class InsnInvokeHandler extends CheckAdapter {
+public abstract class MethodInvokeHandler extends CheckAdapter {
 
     private final Class<? extends AbstractInsnNode>[] insnTypes;
 
     @SafeVarargs
-    public InsnInvokeHandler(Class<? extends AbstractInsnNode>... insnTypes) {
+    public MethodInvokeHandler(Class<? extends AbstractInsnNode>... insnTypes) {
         this.insnTypes = insnTypes;
     }
 
@@ -28,9 +26,9 @@ public abstract class InsnInvokeHandler extends CheckAdapter {
 
                     if (insnNode != abstractInsnNode.getClass()) continue;
 
-                    String variant = processAbstractInsn(abstractInsnNode);
+                    String variant = processAbstractInsn(methodNode, abstractInsnNode, classPath);
                     if (variant != null) {
-                        return processAbstractInsn(abstractInsnNode);
+                        return variant;
                     }
                 }
             }
@@ -38,5 +36,5 @@ public abstract class InsnInvokeHandler extends CheckAdapter {
         return null;
     }
 
-    public abstract String processAbstractInsn(AbstractInsnNode abstractInsnNode);
+    public abstract String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath);
 }

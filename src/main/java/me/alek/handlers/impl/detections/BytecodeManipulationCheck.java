@@ -3,6 +3,7 @@ package me.alek.handlers.impl.detections;
 import me.alek.enums.Risk;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
@@ -15,7 +16,7 @@ public class BytecodeManipulationCheck extends CheckAdapter implements Detection
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         if (resolve(rootFolder, "javassist/")) {
             return "Javassist";
         }

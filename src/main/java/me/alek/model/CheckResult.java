@@ -2,7 +2,6 @@ package me.alek.model;
 
 import lombok.Getter;
 import me.alek.enums.Risk;
-import me.alek.handlers.Check;
 
 public class CheckResult {
 

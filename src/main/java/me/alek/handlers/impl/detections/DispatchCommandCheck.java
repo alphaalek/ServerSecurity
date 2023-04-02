@@ -1,57 +1,63 @@
 package me.alek.handlers.impl.detections;
 
-import me.alek.controllers.BytecodeController;
 import me.alek.enums.Risk;
-import me.alek.handlers.types.InsnInvokeHandler;
+import me.alek.handlers.types.MethodInvokeHandler;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.nio.file.Path;
 
-public class DispatchCommandCheck extends InsnInvokeHandler implements DetectionNode, OnlySourceLibraryHandler {
+public class DispatchCommandCheck extends MethodInvokeHandler implements DetectionNode {
 
     public DispatchCommandCheck() {
         super(MethodInsnNode.class);
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         return null;
     }
 
-    public boolean isExecutedByConsole(AbstractInsnNode abstractInsnNode) {
+    public String isValid(MethodNode methodNode, AbstractInsnNode abstractInsnNode) {
         AbstractInsnNode previous = abstractInsnNode;
         int i = 0;
+
+        String name = methodNode.name.toLowerCase();
+        if (name.contains("chat")) { //|| name.contains("command") || name.contains("execute")) {
+            return "";
+        }
+        String desc = methodNode.desc;
+        if (desc.contains("AsyncPlayerChatEvent")
+                || desc.contains("ConsoleCommandSender")) {
+            return "";
+        }
+
         while ((previous = previous.getPrevious()) != null) {
             if (previous instanceof MethodInsnNode methodInsnNode) {
-                if (methodInsnNode.desc.contains("org/bukkit/command/ConsoleCommandSender")) {
-                    return true;
+                if (methodInsnNode.desc.contains("ConsoleCommandSender")) {
+                    return "";
                 }
             }
             if (i > 5) {
-                return false;
+                return null;
             }
             i++;
         }
-        return false;
+        return null;
     }
 
     @Override
-    public String processAbstractInsn(AbstractInsnNode abstractInsnNode) {
+    public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
         String owner = methodInsnNode.owner;
-        if (methodInsnNode.name.equals("dispatchCommand")) {
-            switch (owner) {
-                case "org/bukkit/Server", "org/bukkit/Bukkit":
-                    if (isExecutedByConsole(methodInsnNode)) {
-                        return "";
-                    }
-            }
-        }
-        return null;
+        if (!methodInsnNode.name.equals("dispatchCommand")) return null;
+        if (!(owner.equals("org/bukkit/Server") || owner.equals("org/bukkit/Bukkit"))) return null;
+        return isValid(methodNode, methodInsnNode);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class MainCommand extends AbstractCommand {
 
     @Override
     public String getPermission() {
-        return null;
+        return "antimalware.use";
     }
 
     @Override

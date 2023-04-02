@@ -35,6 +35,7 @@ public class HandlerRegistery extends Registery<Handler> {
                 new BytecodeManipulationCheck(),
                 new IPGrapperCheck(),
                 new ClassLoaderCheck(),
+                new DiscordWebhookCheck(),
                 new EmbeddedJarCheck(),
 
                 //MALWARES

@@ -2,19 +2,21 @@ package me.alek.handlers.impl.detections;
 
 import me.alek.enums.Risk;
 import me.alek.controllers.BytecodeController;
-import me.alek.handlers.types.InsnInvokeHandler;
+import me.alek.handlers.types.MethodInvokeHandler;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class SystemPropertyCheck extends InsnInvokeHandler implements DetectionNode, ParseHandler {
+public class SystemPropertyCheck extends MethodInvokeHandler implements DetectionNode, ParseHandler {
 
     public SystemPropertyCheck() {
         super(MethodInsnNode.class);
@@ -36,7 +38,7 @@ public class SystemPropertyCheck extends InsnInvokeHandler implements DetectionN
         );
     }
     @Override
-    public String preProcessJAR(File file, Path rootFolder) {
+    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         return null;
     }
 
@@ -50,7 +52,7 @@ public class SystemPropertyCheck extends InsnInvokeHandler implements DetectionN
     }
 
     @Override
-    public String processAbstractInsn(AbstractInsnNode abstractInsnNode) {
+    public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
         if (!methodInsnNode.name.equals("getProperty")) return null;
         if (!methodInsnNode.owner.equals("java/lang/System")) return null;

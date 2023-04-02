@@ -11,6 +11,7 @@ import me.alek.handlers.types.nodes.DetectionNode;
 import me.alek.model.CheckResult;
 import me.alek.model.DuplicatedValueMap;
 import me.alek.model.FeatureResponse;
+import me.alek.model.PluginProperties;
 import me.alek.obfuscation.handlers.AbstractObfHandler;
 import me.alek.utils.Utils;
 import me.alek.utils.ZipUtils;
@@ -30,7 +31,9 @@ public class ObfuscationHandler extends Handler implements DetectionNode {
     private static AcceptedNameObfContainer acceptedNameObfContainer;
 
     @Override
-    public List<CheckResult> process(File file, Path rootFolder, CacheContainer cache) {
+    public List<CheckResult> process(File file, Path rootFolder, CacheContainer cache, PluginProperties pluginProperties) {
+
+        if (file.getName().toLowerCase().contains("litebans")) return null;
 
         ObfuscationContainer obfuscationContainer = new ObfuscationContainer();
         ChecksumLibrariesContainer checksumLibrariesContainer = new ChecksumLibrariesContainer();
@@ -39,7 +42,7 @@ public class ObfuscationHandler extends Handler implements DetectionNode {
         try {
             List<Path> libraries = Files.list(rootFolder).toList();
 
-            DuplicatedValueMap<String, Double> libraryPercentages = new DuplicatedValueMap<>();
+            DuplicatedValueMap<Double, String> libraryPercentages = new DuplicatedValueMap<>();
 
             for (Path library : libraries) {
 
@@ -83,14 +86,14 @@ public class ObfuscationHandler extends Handler implements DetectionNode {
                 }
                 double averagePercentage = Utils.arithmeticSecure(obfuscationLibraryCount, totalLibraryCount);
                 if (!Double.isNaN(averagePercentage))
-                    libraryPercentages.put(library.getFileName().toString(), averagePercentage);
+                    libraryPercentages.put(averagePercentage, library.getFileName().toString());
             }
 
             if (libraryPercentages.getPulledEntries().isEmpty()) return null;
-            Map.Entry<String, Double> maxEntry = Collections.max(libraryPercentages.getPulledEntries(), Map.Entry.comparingByValue());
-            if (maxEntry.getValue() > 0.55) {
+            Map.Entry<Double, String> maxEntry = Collections.max(libraryPercentages.getPulledEntries(), Map.Entry.comparingByKey());
+            if (maxEntry.getKey() > 0.55) {
                 return Arrays.asList(
-                        new CheckResult("Obfuscated (" + Utils.percentage(maxEntry.getValue()) + ")", Risk.HIGH)
+                        new CheckResult("Obfuscated (" + Utils.percentage(maxEntry.getKey()) + ")", Risk.FAKE_CRITICAL)
                 );
             }
 
@@ -107,6 +110,6 @@ public class ObfuscationHandler extends Handler implements DetectionNode {
 
     @Override
     public Risk getRisk() {
-        return Risk.HIGH;
+        return Risk.FAKE_CRITICAL;
     }
 }

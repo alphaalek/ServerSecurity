@@ -15,25 +15,25 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class UserAgentRequestCheck extends RequestPropertyHandler {
+public class DiscordWebhookCheck extends RequestPropertyHandler {
 
-    public UserAgentRequestCheck() {
+    public DiscordWebhookCheck() {
         super();
     }
 
     @Override
-    public String[] getParams() {
-        return new String[]{"", "User-Agent"};
-    }
-
-
-    @Override
     public String getType() {
-        return "User-Agent Request";
+        return "Discord Webhook";
     }
 
     @Override
     public Risk getRisk() {
-        return Risk.MODERATE;
+        return Risk.LOW;
+
+    }
+
+    @Override
+    public String[] getParams() {
+        return new String[]{"application/json", "Content-Type"};
     }
 }
