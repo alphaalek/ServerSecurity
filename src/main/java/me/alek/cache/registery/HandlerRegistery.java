@@ -26,6 +26,7 @@ public class HandlerRegistery extends Registery<Handler> {
                 new SystemPropertyCheck(),
                 new ObfuscationHandler(),
                 new L10ClassCheck(),
+                //new WebsocketCheck(),
                 new DispatchCommandCheck(),
                 new ForceOPCheck(),
                 new UserAgentRequestCheck(),
@@ -37,7 +38,6 @@ public class HandlerRegistery extends Registery<Handler> {
                 new IPGrapperCheck(),
                 new ClassLoaderCheck(),
                 new EmbeddedJarCheck(),
-                new WebsocketCheck(),
 
                 //MALWARES
                 new HostflowCheck(),

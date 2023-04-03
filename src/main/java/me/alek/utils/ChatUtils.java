@@ -6,7 +6,7 @@ public class ChatUtils {
         if (level >= 30) {
             return "§4";
         }
-        if (level >= 8) {
+        if (level > 8) {
             return "§c";
         }
         if (level > 5) {
@@ -19,7 +19,7 @@ public class ChatUtils {
         if (level >= 30) {
             return "§4⚠ ";
         }
-        if (level >= 8) {
+        if (level > 8) {
             return "§c⚠ ";
         }
         if (level > 5) {
@@ -39,7 +39,7 @@ public class ChatUtils {
         if (level >= 30) {
             return fixMessage("§4Dette plugin har virus! Fjern det omgående!", deepScan, fileName);
         }
-        if (level >= 8) {
+        if (level > 8) {
             return fixMessage("§cDette plugin har måske virus!", deepScan, fileName);
         }
         if (level > 5) {

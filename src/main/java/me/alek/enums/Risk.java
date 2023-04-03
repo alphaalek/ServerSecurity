@@ -7,7 +7,7 @@ public enum Risk {
 
     CRITICAL(3, 30,"§4", "Malware"),
     FAKE_CRITICAL(2, 15, "§c", "Høj risiko"),
-    HIGH(2, 5,"§c", "Høj risiko"),
+    HIGH(2, 6,"§c", "Høj risiko"),
     MODERATE(2, 3,"§e", "Moderat risiko"),
     LOW(1, 1,"§a", "Lav risiko");
 

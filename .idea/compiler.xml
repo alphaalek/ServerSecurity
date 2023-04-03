@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AntiMalware_pl" target="16" />
+      <module name="AntiMalware_pl" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

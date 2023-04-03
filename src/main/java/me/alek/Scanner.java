@@ -43,7 +43,7 @@ public class Scanner {
     public synchronized void scan() {
 
         HandlerContainer handlerContainer = new HandlerContainer();
-        player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for malware. Vent venligst...");
+        player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for virus. Vent venligst...");
         scanning = true;
 
         CacheContainer cache = new CacheContainer();
