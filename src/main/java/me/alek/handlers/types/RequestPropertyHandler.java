@@ -31,11 +31,13 @@ public abstract class RequestPropertyHandler extends MethodInvokeHandler impleme
         if (!(methodInsnNode.owner.equals("javax/net/ssl/HttpsURLConnection") || methodInsnNode.owner.equals("java/net/HttpURLConnection"))) return null;
 
         String[] param = BytecodeController.getStringsUsed(abstractInsnNode, 2);
+        if (param == null) return null;
         if (Arrays.stream(param).filter(Objects::isNull).collect(Collectors.toList()).size() == param.length) return null;
 
         int i = 0;
         for (String paramCheck : getParams()) {
             if (!paramCheck.equals("")) {
+                if (param[i] == null) return null;
                 if (!param[i].equalsIgnoreCase(paramCheck)) return null;
             }
             i++;
