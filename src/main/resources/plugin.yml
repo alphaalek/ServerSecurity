@@ -1,5 +1,5 @@
 name: AntiMalware
-version: 2.0.0
+version: 2.0.3
 author: Alek05
 main: me.alek.AntiMalwarePlugin
 commands:

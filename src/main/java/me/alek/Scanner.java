@@ -29,7 +29,7 @@ public class Scanner {
     private final List<File> files;
     private final Player player;
     private final boolean deepScan;
-    private int totalFilesMalware = 0;
+    private static int totalFilesMalware = 0;
     private boolean scanning = false;
     @Getter
     private static AcceptedPluginsForceOPContainer acceptedPluginsForceOPContainer;
@@ -40,10 +40,32 @@ public class Scanner {
         this.deepScan = deepScan;
     }
 
+    public Scanner(List<File> files) {
+        this.files = files;
+        this.player = null;
+        this.deepScan = false;
+    }
+
+    public static boolean hasMalware() {
+        return totalFilesMalware != 0;
+    }
+
+    public static void incrementTotalFilesMalware() {
+        totalFilesMalware++;
+    }
+
     public synchronized void scan() {
 
+        if (scanning) {
+            player.sendMessage("§8[§6AntiMalware§8] §cEn anden spiller er allerede igang med at scanne plugins igennem. " +
+                    "Kun én spiller ad gangen kan scanne plugins for at undgå lagspikes.");
+            return;
+        }
+        boolean sendFeedback = player != null;
+        totalFilesMalware = 0;
+
         HandlerContainer handlerContainer = new HandlerContainer();
-        player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for virus. Vent venligst...");
+        if (sendFeedback) player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for virus. Vent venligst...");
         scanning = true;
 
         CacheContainer cache = new CacheContainer();
@@ -78,24 +100,27 @@ public class Scanner {
                 e.printStackTrace();
             }
         }
-        List<Map.Entry<ResultData, Integer>> pulledEntries = resultMap.getPulledEntries();
-        pulledEntries.sort(Map.Entry.comparingByValue());
-        for (Map.Entry<ResultData, Integer> entry : pulledEntries) {
-            logResults(entry.getKey(), player);
-        }
-        //tjekker om man scanner hele plugin listen eller kun en bestemt fil
-        if (files.size() != 1) {
-
-            //tjekker om serveren har mange plugins med malware, typisk enten thiccindutries eller hostflow der har smittet alle andre plugins
-            double percentage = Utils.arithmeticSecure(totalFilesMalware, files.size());
-            if (percentage >= 0.5) {
-                player.sendMessage("§4⚠ Det ser ud til, at du har rigtig mange plugins med virus! Dette kan være fordi, at virussen i ét " +
-                        "plugin har smittet sig til mange flere. Det anbefales at geninstallere ALLE plugins på din server, også AntiMalware selv.");
-                player.sendMessage("");
+        if (sendFeedback) {
+            List<Map.Entry<ResultData, Integer>> pulledEntries = resultMap.getPulledEntries();
+            pulledEntries.sort(Map.Entry.comparingByValue());
+            for (Map.Entry<ResultData, Integer> entry : pulledEntries) {
+                logResults(entry.getKey(), player);
             }
-        }
+            //tjekker om man scanner hele plugin listen eller kun en bestemt fil
+            if (files.size() != 1) {
 
-        player.sendMessage("§8[§6AntiMalware§8] §7Scannede i alt " + files.size() + " filer igennem og fandt " + totalFilesMalware + " filer med virus.");
+                //tjekker om serveren har mange plugins med malware, typisk enten thiccindutries eller hostflow der har smittet alle andre plugins
+                double percentage = Utils.arithmeticSecure(totalFilesMalware, files.size());
+                if (percentage >= 0.5) {
+                    player.sendMessage("§4⚠ Det ser ud til, at du har rigtig mange plugins med virus! Dette kan være fordi, at virussen i ét " +
+                            "plugin har smittet sig til mange flere. Det anbefales at geninstallere ALLE plugins på din server, også AntiMalware selv.");
+                    player.sendMessage("");
+                }
+            }
+
+            player.sendMessage("§8[§6AntiMalware§8] §7Scannede i alt " + files.size() + " filer igennem og fandt " + totalFilesMalware + " filer med virus.");
+        }
+        scanning = false;
     }
 
     public int getResultLevel(List<CheckResult> results) {
@@ -130,16 +155,10 @@ public class Scanner {
             riskStringBuilders[i] = new AbstractMap.SimpleEntry<>(risk, new StringBuilder());
             i++;
         }
-
         boolean detected = false;
         for (CheckResult result : results) {
-
             if (result == null) continue;
             detected = true;
-            if (result.isMalware()) {
-                totalFilesMalware++;
-            }
-
             Arrays.stream(riskStringBuilders)
                     .filter(entry -> entry.getKey() == result.getRisk())
                     .forEach(entry -> entry.getValue().append(", ").append(Utils.formatCheckResult(result)));

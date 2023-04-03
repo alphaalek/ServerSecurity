@@ -32,12 +32,12 @@ public abstract class AbstractCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         CommandResponse.Response response = CommandResponse.check(this, sender, args);
-        if (response == CommandResponse.Response.PERFORM_SINGLE) {
-            performSingle(sender, args);
-            return true;
-        }
         if (response == CommandResponse.Response.NOT_EXECUTABLE ) {
             sender.sendMessage("[AntiMalware] Denne kommando kan kun bruges af spillere.");
+            return true;
+        }
+        if (response == CommandResponse.Response.PERFORM_SINGLE) {
+            performSingle(sender, args);
             return true;
         }
         if (response == CommandResponse.Response.NO_PERMISSION) {

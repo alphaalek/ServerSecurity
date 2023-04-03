@@ -1,5 +1,6 @@
 package me.alek.controllers;
 
+import me.alek.Scanner;
 import me.alek.cache.containers.CacheContainer;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
@@ -60,6 +61,7 @@ public class CheckController {
         }
         if (handler instanceof MalwareNode) {
             MalwareNode node = (MalwareNode) handler;
+            Scanner.incrementTotalFilesMalware();
             return new CheckResult(node.getType().getName(), true, variant);
         }
         return null;
