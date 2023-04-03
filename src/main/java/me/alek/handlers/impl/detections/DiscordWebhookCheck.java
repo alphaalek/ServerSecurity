@@ -28,7 +28,7 @@ public class DiscordWebhookCheck extends RequestPropertyHandler {
 
     @Override
     public Risk getRisk() {
-        return Risk.LOW;
+        return Risk.MODERATE;
 
     }
 

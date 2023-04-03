@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ScanPerform {
 
@@ -24,7 +25,7 @@ public class ScanPerform {
             files.add(target);
         }
 
-        if (files.isEmpty() || files.stream().filter(Objects::isNull).toList().size() == files.size()) {
+        if (files.isEmpty() || files.stream().filter(Objects::isNull).collect(Collectors.toList()).size() == files.size()) {
             player.sendMessage("&8[&6AntiMalware&8] §cKunne ikke finde noget plugin...");
             return;
         }

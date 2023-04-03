@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ObfuscationHandler extends Handler implements DetectionNode {
@@ -40,7 +41,7 @@ public class ObfuscationHandler extends Handler implements DetectionNode {
         acceptedNameObfContainer = new AcceptedNameObfContainer();
 
         try {
-            List<Path> libraries = Files.list(rootFolder).toList();
+            List<Path> libraries = Files.list(rootFolder).collect(Collectors.toList());
 
             DuplicatedValueMap<Double, String> libraryPercentages = new DuplicatedValueMap<>();
 

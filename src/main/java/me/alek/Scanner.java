@@ -11,8 +11,8 @@ import me.alek.model.CheckResult;
 import me.alek.model.DuplicatedValueMap;
 import me.alek.model.PluginProperties;
 import me.alek.model.ResultData;
-import me.alek.utils.Utils;
 import me.alek.utils.ChatUtils;
+import me.alek.utils.Utils;
 import me.alek.utils.ZipUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,13 +22,14 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Scanner {
 
     private final List<File> files;
     private final Player player;
     private final boolean deepScan;
-    private int totalFilesRisk = 0;
+    private int totalFilesMalware = 0;
     private boolean scanning = false;
     @Getter
     private static AcceptedPluginsForceOPContainer acceptedPluginsForceOPContainer;
@@ -39,11 +40,12 @@ public class Scanner {
         this.deepScan = deepScan;
     }
 
-    public void scan() {
+    public synchronized void scan() {
 
         HandlerContainer handlerContainer = new HandlerContainer();
         player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for malware. Vent venligst...");
         scanning = true;
+
         CacheContainer cache = new CacheContainer();
         acceptedPluginsForceOPContainer = new AcceptedPluginsForceOPContainer();
 
@@ -53,29 +55,25 @@ public class Scanner {
             try (FileSystem fs = ZipUtils.fileSystemForZip(file.toPath())) {
 
                 if (fs == null) return;
-
                 PluginProperties pluginProperties = new PluginProperties(file);
 
                 List<CheckResult> results = new ArrayList<>();
-                synchronized (this) {
-                    for (Handler handler : handlerContainer.getList()) {
+                for (Handler handler : handlerContainer.getList()) {
 
-                        if (handler instanceof ParseHandler parseHandler) {
-                            parseHandler.parse();
-                        }
-
-                        Iterator<Path> rootFolderIterator = fs.getRootDirectories().iterator();
-                        if (!rootFolderIterator.hasNext()) return;
-                        Path rootFolder = rootFolderIterator.next();
-
-                        List<CheckResult> result = handler.process(file, rootFolder, cache, pluginProperties);
-
-                        if (result == null) continue;
-                        results.addAll(result);
+                    if (handler instanceof ParseHandler) {
+                        ((ParseHandler)handler).parse();
                     }
-                    resultMap.put(new ResultData(results, file, getResultLevel(results)), getResultLevel(results));
-                    cache.clearCache(file.toPath());
+                    Iterator<Path> rootFolderIterator = fs.getRootDirectories().iterator();
+                    if (!rootFolderIterator.hasNext()) return;
+                    Path rootFolder = rootFolderIterator.next();
+
+                    List<CheckResult> result = handler.process(file, rootFolder, cache, pluginProperties);
+
+                    if (result == null) continue;
+                    results.addAll(result);
                 }
+                resultMap.put(new ResultData(results, file, getResultLevel(results)), getResultLevel(results));
+                cache.clearCache(file.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -85,7 +83,19 @@ public class Scanner {
         for (Map.Entry<ResultData, Integer> entry : pulledEntries) {
             logResults(entry.getKey(), player);
         }
-        player.sendMessage("§8[§6AntiMalware§8] §7Scannede i alt " + files.size() + " filer igennem og fandt " + totalFilesRisk + " filer med risikoer.");
+        //tjekker om man scanner hele plugin listen eller kun en bestemt fil
+        if (files.size() != 1) {
+
+            //tjekker om serveren har mange plugins med malware, typisk enten thiccindutries eller hostflow der har smittet alle andre plugins
+            double percentage = Utils.arithmeticSecure(totalFilesMalware, files.size());
+            if (percentage >= 0.5) {
+                player.sendMessage("§4⚠ Det ser ud til, at du har rigtig mange plugins med virus! Dette kan være fordi, at virussen i ét " +
+                        "plugin har smittet sig til mange flere. Det anbefales at geninstallere ALLE plugins på din server, også AntiMalware selv.");
+                player.sendMessage("");
+            }
+        }
+
+        player.sendMessage("§8[§6AntiMalware§8] §7Scannede i alt " + files.size() + " filer igennem og fandt " + totalFilesMalware + " filer med virus.");
     }
 
     public int getResultLevel(List<CheckResult> results) {
@@ -102,7 +112,14 @@ public class Scanner {
         List<CheckResult> results = data.getResults();
         double level = data.getLevel();
 
-        if (results.stream().filter(Objects::isNull).toList().size() == results.size()) return;
+        if (results.stream().filter(Objects::isNull).collect(Collectors.toList()).size() == results.size()) {
+            if (deepScan) {
+                player.sendMessage("§a✓ " + data.getFile().getName());
+            }
+            player.sendMessage(ChatUtils.getMessage(level, deepScan, data.getFile().getName()));
+            player.sendMessage("");
+            return;
+        };
 
         if (deepScan) {
             player.sendMessage(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName());
@@ -119,31 +136,33 @@ public class Scanner {
 
             if (result == null) continue;
             detected = true;
+            if (result.isMalware()) {
+                totalFilesMalware++;
+            }
 
             Arrays.stream(riskStringBuilders)
                     .filter(entry -> entry.getKey() == result.getRisk())
                     .forEach(entry -> entry.getValue().append(", ").append(Utils.formatCheckResult(result)));
         }
         if (detected && deepScan) {
-            totalFilesRisk++;
 
             boolean sendTemp = false;
             String temp = "";
             for (AbstractMap.SimpleEntry<Risk, StringBuilder> entry : riskStringBuilders) {
 
-                if (entry.getValue().isEmpty()) continue;
+                if (entry.getValue().length() < 3) continue;
 
                 String message = " §7- " + entry.getKey().getChatColor() + entry.getKey().getName() + ": §7" + entry.getValue().substring(2);
                 switch (entry.getKey()) {
-                    case FAKE_CRITICAL -> {
+                    case FAKE_CRITICAL: {
                         temp = entry.getValue().toString();
                         continue;
                     }
-                    case HIGH -> {
+                    case HIGH: {
                         message = message + temp;
                         sendTemp = true;
                     }
-                    default -> {
+                    default: {
                         if (!sendTemp) {
                             if (!temp.equals("")) {
                                 player.sendMessage(" §7- §cHøj risiko: §7" + temp.substring(2));

@@ -87,11 +87,13 @@ public class BytecodeController {
             }
             i++;
         }
-        if (previousInstruction instanceof LdcInsnNode ldcInsnNode) {
+        if (previousInstruction instanceof LdcInsnNode) {
+            LdcInsnNode ldcInsnNode = (LdcInsnNode) previousInstruction;
             Object cst = ldcInsnNode.cst;
-            if (!(cst instanceof String str)) {
+            if (!(cst instanceof String)) {
                 return null;
             }
+            String str = (String) cst;
             if (!(str.length() > 10)) {
                 return null;
             }
@@ -122,7 +124,8 @@ public class BytecodeController {
         AbstractInsnNode previous = abstractInsnNode.getPrevious();
         AbstractMap.SimpleEntry<AbstractInsnNode, String> stringUsedEntry;
 
-        if (previous instanceof LdcInsnNode ldcInsnNode) {
+        if (previous instanceof LdcInsnNode) {
+            LdcInsnNode ldcInsnNode = (LdcInsnNode) previous;
             if (ldcInsnNode.cst instanceof String) {
                 stringUsedEntry = new AbstractMap.SimpleEntry<>(previous, (String) ldcInsnNode.cst);
                 return stringUsedEntry;

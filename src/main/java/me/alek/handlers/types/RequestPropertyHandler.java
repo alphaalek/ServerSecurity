@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class RequestPropertyHandler extends MethodInvokeHandler implements DetectionNode{
 
@@ -30,7 +31,7 @@ public abstract class RequestPropertyHandler extends MethodInvokeHandler impleme
         if (!(methodInsnNode.owner.equals("javax/net/ssl/HttpsURLConnection") || methodInsnNode.owner.equals("java/net/HttpURLConnection"))) return null;
 
         String[] param = BytecodeController.getStringsUsed(abstractInsnNode, 2);
-        if (Arrays.stream(param).filter(Objects::isNull).toList().size() == param.length) return null;
+        if (Arrays.stream(param).filter(Objects::isNull).collect(Collectors.toList()).size() == param.length) return null;
 
         int i = 0;
         for (String paramCheck : getParams()) {

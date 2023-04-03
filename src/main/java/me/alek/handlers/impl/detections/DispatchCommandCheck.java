@@ -38,7 +38,8 @@ public class DispatchCommandCheck extends MethodInvokeHandler implements Detecti
         }
 
         while ((previous = previous.getPrevious()) != null) {
-            if (previous instanceof MethodInsnNode methodInsnNode) {
+            if (previous instanceof MethodInsnNode) {
+                MethodInsnNode methodInsnNode = (MethodInsnNode) previous;
                 if (methodInsnNode.desc.contains("ConsoleCommandSender")) {
                     return "";
                 }

@@ -71,7 +71,8 @@ public class ForceOPCheck extends MethodInvokeHandler implements DetectionNode, 
 
     @Override
     public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
-        if (abstractInsnNode instanceof MethodInsnNode methodInsnNode) {
+        if (abstractInsnNode instanceof MethodInsnNode) {
+            MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
             String owner = methodInsnNode.owner;
             if (methodInsnNode.name.equals("setOp")) {
                 for (String insnOwner : methodInvokeOwners) {
@@ -81,7 +82,8 @@ public class ForceOPCheck extends MethodInvokeHandler implements DetectionNode, 
                 }
             }
         }
-        if (abstractInsnNode instanceof LdcInsnNode ldcInsnNode) {
+        if (abstractInsnNode instanceof LdcInsnNode) {
+            LdcInsnNode ldcInsnNode =(LdcInsnNode) abstractInsnNode;
             Object cst = ldcInsnNode.cst;
             if (!(cst instanceof String)) return null;
             if (!((String)cst).contains("ops.json")) return null;

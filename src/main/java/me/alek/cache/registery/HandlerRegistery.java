@@ -21,7 +21,7 @@ public class HandlerRegistery extends Registery<Handler> {
         return Arrays.asList(
                 //DETECTIONS
                 new Base64Check(),
-                //new OpenConnectionCheck(),
+                new OpenConnectionCheck(),
                 new SystemAccessCheck(),
                 new SystemPropertyCheck(),
                 new ObfuscationHandler(),
@@ -29,14 +29,15 @@ public class HandlerRegistery extends Registery<Handler> {
                 new DispatchCommandCheck(),
                 new ForceOPCheck(),
                 new UserAgentRequestCheck(),
+                new DiscordWebhookCheck(),
                 new LoadPluginCheck(),
                 new CipherEncryptionCheck(),
                 new HiddenFileCheck(),
                 new BytecodeManipulationCheck(),
                 new IPGrapperCheck(),
                 new ClassLoaderCheck(),
-                new DiscordWebhookCheck(),
                 new EmbeddedJarCheck(),
+                new WebsocketCheck(),
 
                 //MALWARES
                 new HostflowCheck(),

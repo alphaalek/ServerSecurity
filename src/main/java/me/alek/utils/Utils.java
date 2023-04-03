@@ -63,10 +63,10 @@ public class Utils {
     public static int frequencyOfWord(ClassNode classNode) {
         ArrayList<String> namesList = new ArrayList<>();
         classNode.methods.stream().map(method -> method.name).forEach(methodName -> {
-            namesList.addAll(List.of(methodName.split("[ _-]")));
+            namesList.addAll(Arrays.asList(methodName.split("[ _-]")));
         });
         classNode.fields.stream().map(field -> field.name).forEach(fieldName -> {
-            namesList.addAll(List.of(fieldName.split("[ _-]")));
+            namesList.addAll(Arrays.asList(fieldName.split("[ _-]")));
         });
 
         int n = namesList.size();

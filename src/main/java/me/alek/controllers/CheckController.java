@@ -51,13 +51,15 @@ public class CheckController {
     }
 
     public static CheckResult validCheck(CheckAdapter handler, String variant) {
-        if (handler instanceof DetectionNode node) {
+        if (handler instanceof DetectionNode) {
+            DetectionNode node = (DetectionNode) handler;
             if (!variant.equals("")) {
                 return new CheckResult(node.getType(), node.getRisk(), variant);
             }
             return new CheckResult(node.getType(), node.getRisk());
         }
-        if (handler instanceof MalwareNode node) {
+        if (handler instanceof MalwareNode) {
+            MalwareNode node = (MalwareNode) handler;
             return new CheckResult(node.getType().getName(), true, variant);
         }
         return null;

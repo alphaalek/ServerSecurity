@@ -58,10 +58,11 @@ public class SystemPropertyCheck extends MethodInvokeHandler implements Detectio
         if (!methodInsnNode.owner.equals("java/lang/System")) return null;
 
         AbstractInsnNode previous = methodInsnNode.getPrevious();
-        if (previous instanceof LdcInsnNode ldcInsnNode) {
+        if (previous instanceof LdcInsnNode) {
+            LdcInsnNode ldcInsnNode = (LdcInsnNode) previous;
             Object cst = ldcInsnNode.cst;
-            if (!(cst instanceof String string)) return null;
-            return check(string);
+            if (!(cst instanceof String)) return null;
+            return check((String)cst);
         }
         String encryptedString = BytecodeController.getStringUsed(methodInsnNode);
         if (encryptedString == null) return null;

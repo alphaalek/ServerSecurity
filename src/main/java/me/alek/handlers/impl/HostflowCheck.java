@@ -30,4 +30,5 @@ public class HostflowCheck extends EncryptedKeyHandler implements MalwareNode {
     public String[] getURLKeys() {
         return new String[]{"http://client.hostflow.eu:5050/ws"};
     }
+
 }

@@ -22,7 +22,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         init();
     }
 
-    public void sendHelpMessage(AbstractCommand abstractCommand, CommandSender sender) {
+    public void sendHelpMessage(CommandSender sender) {
         sender.sendMessage("§8[§6AntiMalware§8] §7Sender kommandoer du kan bruge...");
         subCommands.forEach(subCommand -> {
             sender.sendMessage("§a" + subCommand.getUsage() + ": §7" + subCommand.getDescription());
@@ -51,7 +51,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         }).findAny().orElse(null);
 
         if (sub == null) {
-            sendHelpMessage(this, sender);
+            sendHelpMessage(sender);
             return true;
         }
 
