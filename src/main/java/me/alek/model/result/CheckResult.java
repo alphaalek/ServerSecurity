@@ -1,4 +1,4 @@
-package me.alek.model;
+package me.alek.model.result;
 
 import lombok.Getter;
 import me.alek.enums.Risk;

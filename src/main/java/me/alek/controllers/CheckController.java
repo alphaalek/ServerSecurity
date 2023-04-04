@@ -1,13 +1,13 @@
 package me.alek.controllers;
 
-import me.alek.Scanner;
 import me.alek.cache.containers.CacheContainer;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
 import me.alek.handlers.types.nodes.MalwareNode;
-import me.alek.model.CheckResult;
+import me.alek.model.result.CheckResult;
 import me.alek.model.PluginProperties;
+import me.alek.model.result.MalwareCheckResult;
 import me.alek.utils.ZipUtils;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -61,8 +61,7 @@ public class CheckController {
         }
         if (handler instanceof MalwareNode) {
             MalwareNode node = (MalwareNode) handler;
-            Scanner.incrementTotalFilesMalware();
-            return new CheckResult(node.getType().getName(), true, variant);
+            return new MalwareCheckResult(node.getType().getName(), true, variant);
         }
         return null;
     }

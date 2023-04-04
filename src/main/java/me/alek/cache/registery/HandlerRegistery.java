@@ -2,7 +2,7 @@ package me.alek.cache.registery;
 
 import me.alek.cache.Container;
 import me.alek.cache.Registery;
-import me.alek.handlers.Handler;
+import me.alek.handlers.BaseHandler;
 import me.alek.handlers.impl.*;
 import me.alek.handlers.impl.detections.*;
 import me.alek.handlers.types.ObfuscationHandler;
@@ -10,18 +10,18 @@ import me.alek.handlers.types.ObfuscationHandler;
 import java.util.Arrays;
 import java.util.List;
 
-public class HandlerRegistery extends Registery<Handler> {
+public class HandlerRegistery extends Registery<BaseHandler> {
 
-    public HandlerRegistery(Container<Handler> container) {
+    public HandlerRegistery(Container<BaseHandler> container) {
         super(container);
     }
 
     @Override
-    public List<Handler> getElements() {
+    public List<BaseHandler> getElements() {
         return Arrays.asList(
                 //DETECTIONS
                 new Base64Check(),
-                new OpenConnectionCheck(),
+                //new OpenConnectionCheck(),
                 new SystemAccessCheck(),
                 new SystemPropertyCheck(),
                 new ObfuscationHandler(),

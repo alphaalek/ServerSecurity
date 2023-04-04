@@ -6,9 +6,9 @@ import me.alek.cache.containers.CacheContainer;
 import me.alek.cache.containers.ChecksumLibrariesContainer;
 import me.alek.cache.containers.ObfuscationContainer;
 import me.alek.enums.Risk;
-import me.alek.handlers.Handler;
+import me.alek.handlers.BaseHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
-import me.alek.model.CheckResult;
+import me.alek.model.result.CheckResult;
 import me.alek.model.DuplicatedValueMap;
 import me.alek.model.FeatureResponse;
 import me.alek.model.PluginProperties;
@@ -26,13 +26,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ObfuscationHandler extends Handler implements DetectionNode {
+public class ObfuscationHandler extends BaseHandler implements DetectionNode {
 
     @Getter
     private static AcceptedNameObfContainer acceptedNameObfContainer;
 
     @Override
-    public List<CheckResult> process(File file, Path rootFolder, CacheContainer cache, PluginProperties pluginProperties) {
+    public CheckResult processSingle(File file, Path rootFolder, CacheContainer cache, PluginProperties pluginProperties) {
 
         if (file.getName().toLowerCase().contains("litebans")) return null;
 
@@ -93,11 +93,8 @@ public class ObfuscationHandler extends Handler implements DetectionNode {
             if (libraryPercentages.getPulledEntries().isEmpty()) return null;
             Map.Entry<Double, String> maxEntry = Collections.max(libraryPercentages.getPulledEntries(), Map.Entry.comparingByKey());
             if (maxEntry.getKey() > 0.55) {
-                return Arrays.asList(
-                        new CheckResult("Obfuscated (" + Utils.percentage(maxEntry.getKey()) + ")", Risk.FAKE_CRITICAL)
-                );
+                return new CheckResult("Obfuscated (" + Utils.percentage(maxEntry.getKey()) + ")", Risk.FAKE_CRITICAL);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

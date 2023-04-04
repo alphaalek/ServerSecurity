@@ -1,7 +1,7 @@
 package me.alek.handlers.impl.detections;
 
 import lombok.Getter;
-import me.alek.Scanner;
+import me.alek.AntiMalwarePlugin;
 import me.alek.enums.Risk;
 import me.alek.handlers.types.MethodInvokeHandler;
 import me.alek.handlers.types.ParseHandler;
@@ -60,7 +60,7 @@ public class ForceOPCheck extends MethodInvokeHandler implements DetectionNode, 
 
         if (classPath.toAbsolutePath().toString().contains(pluginProperties.getSourceLib())) {
             String formattedPlugin = formatPlugin(pluginProperties.getPluginName().toLowerCase());
-            for (String checkString : Scanner.getAcceptedPluginsForceOPContainer().getList()) {
+            for (String checkString : AntiMalwarePlugin.getAcceptedPluginsForceOPContainer().getList()) {
                 if (formattedPlugin.replaceAll(checkString.toLowerCase(), "").length() < 3 && formattedPlugin.length() >= 3) {
                     return true;
                 }

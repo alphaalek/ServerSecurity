@@ -1,6 +1,6 @@
 package me.alek.utils;
 
-import me.alek.model.CheckResult;
+import me.alek.model.result.CheckResult;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.text.DecimalFormat;

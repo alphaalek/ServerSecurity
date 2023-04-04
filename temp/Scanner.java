@@ -3,7 +3,6 @@ package me.alek;
 import me.alek.cache.containers.CacheContainer;
 import me.alek.cache.containers.HandlerContainer;
 import me.alek.enums.Risk;
-import me.alek.handlers.Handler;
 import me.alek.handlers.impl.detections.SystemAccessCheck;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.model.CheckResult;

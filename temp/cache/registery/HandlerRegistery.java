@@ -2,7 +2,6 @@ package me.alek.cache.registery;
 
 import me.alek.cache.Container;
 import me.alek.cache.Registery;
-import me.alek.handlers.Handler;
 import me.alek.handlers.impl.*;
 import me.alek.handlers.impl.detections.*;
 import me.alek.handlers.types.ObfuscationHandler;

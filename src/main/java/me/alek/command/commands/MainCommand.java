@@ -2,9 +2,7 @@ package me.alek.command.commands;
 
 import me.alek.command.AbstractCommand;
 import me.alek.command.SubCommand;
-import me.alek.command.subcommands.DeepScanCommand;
-import me.alek.command.subcommands.InfoCommand;
-import me.alek.command.subcommands.SimpleScanCommand;
+import me.alek.command.subcommands.*;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
@@ -30,9 +28,11 @@ public class MainCommand extends AbstractCommand {
     @Override
     public List<SubCommand> registerSubCommands() {
         return Arrays.asList(
+                new HelpCommand(),
+                new ReloadCommand(),
+                new InfoCommand(),
                 new DeepScanCommand(),
-                new SimpleScanCommand(),
-                new InfoCommand()
+                new SimpleScanCommand()
         );
     }
 }

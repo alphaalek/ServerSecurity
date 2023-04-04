@@ -50,14 +50,12 @@ public abstract class AbstractCommand implements CommandExecutor {
             return Arrays.stream(subCommand.getAliases()).anyMatch(alias -> alias.equalsIgnoreCase(args[0]));
         }).findAny().orElse(null);
 
-        if (sub == null) {
+        if (sub == null || sub instanceof HelpSubCommand) {
             sendHelpMessage(sender);
             return true;
         }
-
         sub.perform(sender, args);
         return true;
-
     }
 
     public abstract void performSingle(CommandSender sender, String[] args);

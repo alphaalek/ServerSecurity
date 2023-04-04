@@ -6,7 +6,6 @@ import me.alek.cache.containers.CacheContainer;
 import me.alek.cache.containers.ChecksumLibrariesContainer;
 import me.alek.cache.containers.ObfuscationContainer;
 import me.alek.enums.Risk;
-import me.alek.handlers.Handler;
 import me.alek.handlers.types.nodes.DetectionNode;
 import me.alek.model.CheckResult;
 import me.alek.model.DuplicatedValueMap;

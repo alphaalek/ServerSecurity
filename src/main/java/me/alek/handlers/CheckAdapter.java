@@ -2,7 +2,7 @@ package me.alek.handlers;
 
 import me.alek.cache.containers.CacheContainer;
 import me.alek.controllers.CheckController;
-import me.alek.model.CheckResult;
+import me.alek.model.result.CheckResult;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 

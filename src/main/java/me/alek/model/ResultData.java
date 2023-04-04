@@ -1,7 +1,7 @@
 package me.alek.model;
 
 import lombok.Getter;
-import lombok.Setter;
+import me.alek.model.result.CheckResult;
 
 import java.io.File;
 import java.util.List;

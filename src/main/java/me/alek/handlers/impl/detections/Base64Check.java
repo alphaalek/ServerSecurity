@@ -27,7 +27,7 @@ public class Base64Check extends MethodInvokeHandler implements DetectionNode, O
     public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
         String owner = methodInsnNode.owner;
-        if (owner.equals("java/util/Base64$Decoder") || owner.equals("java/utils/Base64$Encoder") || owner.equals("org.apache.commons.codec.binary.Base64")) {
+        if (owner.equals("java/util/Base64$Decoder") || owner.equals("java/utils/Base64$Encoder") || owner.equals("org/apache/commons/codec/binary/Base64")) {
             return "";
         }
         return null;

@@ -14,7 +14,7 @@ public class InfoCommand implements SubCommand {
         player.sendMessage("§c⚠ Høj risiko: §7Obfuscated, Force OP, Bytecode Manipulation");
         player.sendMessage("§e✓ Moderat risiko: §7Dispatch Command, Discord Webhook, L10 Class, System Access, User-Agent Request, Embedded JAR, Websocket");
         player.sendMessage("§a✓ Lav risiko: §7Cipher Encryption, Base64, ClassLoader, Hidden File, IP Grabber, Load Plugins, OpenConnection, System Property, AsyncPlayerChatEvent");
-        player.sendMessage("§8[§6AntiMalware§8] §7Bare fordi et plugin bliver flagget for nogen af de ovenstående ting, betyder det ikke at det har virus. " +
+        player.sendMessage("§fBare fordi et plugin bliver flagget for nogen af de ovenstående ting, betyder det ikke at det har virus. " +
                 "Dog er det typiske tegn på, at et plugin har en integreret backdoor eller andre former for ting der ikke burde være der.");
     }
 
