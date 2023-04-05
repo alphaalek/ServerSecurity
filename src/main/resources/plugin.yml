@@ -1,6 +1,7 @@
 name: AntiMalware
 version: 2.0.3
 author: Alek05
+website: https://www.spigotmc.org/resources/antimalware.109025/
 main: me.alek.AntiMalwarePlugin
 commands:
   antimalware:

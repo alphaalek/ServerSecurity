@@ -10,7 +10,6 @@ import java.nio.file.Path;
 
 public class QlutchCheck extends EncryptedKeyHandler implements MalwareNode {
 
-
     @Override
     public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         if (file.getName().contains("VaultLib")) {

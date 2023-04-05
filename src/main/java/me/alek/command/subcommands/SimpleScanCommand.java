@@ -11,7 +11,7 @@ public class SimpleScanCommand implements SubCommand {
 
     @Override
     public String getUsage() {
-        return "/antimalware simplescan <all eller filnavn>";
+        return "/antimalware simplescan <all eller pluginnavn>";
     }
 
     @Override

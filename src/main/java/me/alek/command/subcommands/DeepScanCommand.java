@@ -12,7 +12,7 @@ public class DeepScanCommand implements SubCommand {
 
     @Override
     public String getUsage() {
-        return "/antimalware deepscan <all eller filnavn>";
+        return "/antimalware deepscan <all eller pluginnavn>";
     }
 
     @Override

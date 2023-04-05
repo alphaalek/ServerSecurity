@@ -10,16 +10,16 @@ import java.util.zip.ZipFile;
 
 public class JARFinder {
 
-    public static List<File> findAllJars(File dir) {
+    public static ArrayList<File> findAllJars(File dir) {
         if (dir.listFiles() == null) return null;
-        List<String> absolutePaths = new ArrayList<>();
-        List<File> jars = findAllJarsDir(dir, absolutePaths);
+        ArrayList<String> absolutePaths = new ArrayList<>();
+        ArrayList<File> jars = findAllJarsDir(dir, absolutePaths);
         return jars;
     }
 
-    public static List<File> findAllJarsDir(File dir, List<String> absolutePaths) {
+    public static ArrayList<File> findAllJarsDir(File dir, List<String> absolutePaths) {
         try {
-            List<File> jars = new ArrayList<>();
+            ArrayList<File> jars = new ArrayList<>();
             Files.walk(dir.toPath())
                     .map(Path::toFile)
                     .filter(file -> !absolutePaths.contains(file.getAbsolutePath()))

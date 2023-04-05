@@ -14,7 +14,6 @@ import java.nio.file.Path;
 
 public class IPGrapperCheck extends MethodInvokeHandler implements DetectionNode, OnlySourceLibraryHandler {
 
-
     public IPGrapperCheck() {
         super(MethodInsnNode.class);
     }
