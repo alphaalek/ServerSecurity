@@ -43,6 +43,8 @@ public class Scanner {
     private int totalFilesMalware = 0;
 
     private boolean scanning = false;
+    @Getter
+    private ScanService service;
 
     public Scanner(ArrayList<File> files) {
         this.files = files;
@@ -57,10 +59,6 @@ public class Scanner {
         return totalFilesMalware != 0;
     }
 
-    public enum ScanResponse {
-        ERROR, SCANNERS_RUNNING, SUCCESS
-    }
-
     public void startScan() {
 
         if (ScanManager.hasScannersRunning()) {
@@ -73,11 +71,20 @@ public class Scanner {
         CacheContainer cache = new CacheContainer();
         DuplicatedValueMap<ResultData, Integer> resultMap = new DuplicatedValueMap<>();
 
-        ScanService service = new ScanService(queriedFiles, resultMap, this, handlerContainer, cache);
-        ExecutorService executorService = Executors.newFixedThreadPool(1); // fuck this shit
-        for (int i = 0; i <= 2; i++) {
+        service = new ScanService(queriedFiles, resultMap, this, handlerContainer, cache);
+
+        // FAST RELOAD
+        /*ExecutorService executorService = Executors.newFixedThreadPool(files.size());
+        for (int i = 0; i <= files.size()-1; i++) {
+            executorService.execute(new ScanRunnable(service));
+        }*/
+
+        // LAGFREE RELOAD
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        for (int i = 0; i <= 1; i++) {
             executorService.execute(new ScanRunnable(service));
         }
+
         Scanner scanner = this;
         BukkitRunnable waitingRunnable = new BukkitRunnable() {
             @Override
@@ -92,6 +99,6 @@ public class Scanner {
                 }
             }
         };
-        waitingRunnable.runTaskTimer(AntiMalwarePlugin.getInstance(), 0L, 1L);
+        waitingRunnable.runTaskTimer(AntiMalwarePlugin.getInstance(), 0L, 40L);
     }
 }

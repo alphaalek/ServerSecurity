@@ -20,7 +20,8 @@ public class AcceptedPluginsForceOPRegistery extends Registery<String> {
                 "Essentials",
                 "WorldGuard",
                 "skUtilities",
-                "SkEssentials"
+                "SkEssentials",
+                "WildSkript"
         );
     }
 }

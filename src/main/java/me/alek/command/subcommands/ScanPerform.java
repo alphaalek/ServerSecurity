@@ -3,6 +3,7 @@ package me.alek.command.subcommands;
 import me.alek.*;
 import me.alek.scanning.Loader;
 import me.alek.scanning.ScanManager;
+import me.alek.scanning.Scanner;
 import me.alek.utils.JARFinder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,8 +18,11 @@ public class ScanPerform {
 
     public static void perform(CommandSender sender, String[] args, boolean deepScan) {
         Player player = (Player) sender;
-        if (ScanManager.getLatestScanner().isScanning()) {
-            player.sendMessage("§8[§6AntiMalware§8] §7Serveren er igang med at opdatere cache i auto-update. Vent lidt...");
+        Scanner scanner = ScanManager.getLatestScanner();
+        if (scanner.isScanning()) {
+            int size = scanner.getFiles().size();
+            player.sendMessage("§8[§6AntiMalware§8] §7Serveren er igang med at opdatere cache i auto-update. Vent lidt... ("
+                    + (size - scanner.getService().getNotDoneFiles().size()) + "/" + size + ")");
             return;
         }
         List<File> files = new ArrayList<>();

@@ -4,12 +4,10 @@ import me.alek.enums.Risk;
 import me.alek.model.result.CheckResult;
 import me.alek.model.ResultData;
 import me.alek.utils.ChatUtils;
+import me.alek.utils.AdventureUtils;
 import me.alek.utils.Utils;
-import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -40,6 +38,7 @@ public class Loader {
             player.sendMessage(PREFIX + "§cDer blev ikke fundet noget data fra scanningen...");
             return;
         }
+        AdventureUtils json = new AdventureUtils(player);
         player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + scanner.getFiles().size() + " filer for virus. Vent venligst...");
         for (ResultData data : scanner.getResultData()) {
             List<CheckResult> results = data.getResults();
@@ -52,15 +51,15 @@ public class Loader {
 
             if (results.stream().filter(Objects::isNull).collect(Collectors.toList()).size() == results.size()) {
                 if (deepScan) {
-                    player.sendMessage("§a✓ " + data.getFile().getName() + append);
+                    json.send("§a✓ " + data.getFile().getName() + append);
                 }
-                player.sendMessage(ChatUtils.getMessage(level, deepScan, data.getFile().getName()));
-                player.sendMessage("");
+                json.send(ChatUtils.getMessage(level, deepScan, data.getFile().getName()));
+                if (deepScan) player.sendMessage("");
                 continue;
             }
 
             if (deepScan) {
-                player.sendMessage(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName() + append);
+                json.send(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName() + append);
             }
             AbstractMap.SimpleEntry<Risk, StringBuilder>[] riskStringBuilders = new AbstractMap.SimpleEntry[5];
             int i = 0;
@@ -92,21 +91,25 @@ public class Loader {
                         }
                         case HIGH: {
                             message = message + temp;
-                            sendTemp = true;
                         }
-                        default: {
-                            if (!sendTemp) {
-                                if (!temp.equals("")) {
-                                    player.sendMessage(" §7- §cHøj risiko: §7" + temp.substring(2));
-                                }
-                            }
+                    }
+                    if (!sendTemp) {
+                        if (!temp.equals("")) {
+                            json.send(" §7- §cHøj risiko: §7" + temp.substring(2));
+                            sendTemp = true;
+                            continue;
                         }
                     }
                     player.sendMessage(message);
                 }
+                if (!sendTemp) {
+                    if (!temp.equals("")) {
+                        json.send(" §7- §cHøj risiko: §7" + temp.substring(2));
+                    }
+                }
             }
-            player.sendMessage(ChatUtils.getMessage(level, deepScan, data.getFile().getName()));
-            player.sendMessage("");
+            json.send(ChatUtils.getMessage(level, deepScan, data.getFile().getName()));
+            if (deepScan) player.sendMessage("");
         }
         //tjekker om man scanner hele plugin listen eller kun en bestemt fil
         if (scanner.getFiles().size() != 1) {

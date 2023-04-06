@@ -1,5 +1,7 @@
 package me.alek.scanning;
 
+import lombok.Getter;
+import me.alek.AntiMalwarePlugin;
 import me.alek.cache.containers.CacheContainer;
 import me.alek.cache.containers.HandlerContainer;
 import me.alek.handlers.BaseHandler;
@@ -10,7 +12,7 @@ import me.alek.model.ResultData;
 import me.alek.model.result.CheckResult;
 import me.alek.model.result.MalwareCheckResult;
 import me.alek.utils.ZipUtils;
-import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +26,11 @@ public class ScanService {
 
     private volatile ArrayList<File> files;
     private volatile DuplicatedValueMap<ResultData, Integer> resultMap;
+    @Getter
+    private volatile ArrayList<File> notDoneFiles;
 
     private final Scanner scanner;
-    private volatile HandlerContainer handlerContainer;
+    private final HandlerContainer handlerContainer;
     private final CacheContainer cacheContainer;
 
     public ScanService(ArrayList<File> files,
@@ -35,31 +39,38 @@ public class ScanService {
                        HandlerContainer handlerContainer,
                        CacheContainer cacheContainer) {
         this.files = files;
+        notDoneFiles = new ArrayList<>();
+        notDoneFiles.addAll(files);
+
         this.resultMap = resultMap;
         this.scanner = scanner;
         this.handlerContainer = handlerContainer;
         this.cacheContainer = cacheContainer;
     }
 
-    public synchronized boolean hasMore() {
-        return !files.isEmpty();
+    public synchronized void updateNotDoneFiles(File file) {
+        notDoneFiles.remove(file);
     }
 
-    public synchronized void start() {
-        if (!hasMore()) return;
-        File file = get();
-        files.remove(file);
-        execute(file);
+    public synchronized boolean hasMore() {
+        return !files.isEmpty();
     }
 
     private synchronized File get() {
         return files.get(0);
     }
 
-    /*
-     * Jeg havde håbet på, at Minecraft var bedre til multithreading, men det viste sig at være noget møg.
-     * Beholder det bare som det er, det kan være jeg kommer tilbage på et senere tidspunkt, og prøver igen.
-     */
+    public synchronized void start() {
+        if (!hasMore()) return;
+        File file = get();
+        files.remove(file);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                execute(file);
+            }
+        }.runTaskAsynchronously(AntiMalwarePlugin.getInstance());
+    }
 
     private void execute(File file) {
         try (FileSystem fs = ZipUtils.fileSystemForZip(file.toPath())) {
@@ -92,6 +103,7 @@ public class ScanService {
             cacheContainer.clearCache(file.toPath());
         } catch (IOException e) {
         }
+        updateNotDoneFiles(file);
     }
 
     public int getResultLevel(List<CheckResult> results) {

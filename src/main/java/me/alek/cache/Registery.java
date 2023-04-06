@@ -13,5 +13,9 @@ public abstract class Registery<T> {
         }
     }
 
+    public Container<T> getContainer() {
+        return container;
+    }
+
     public abstract List<T> getElements();
 }

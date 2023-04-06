@@ -12,11 +12,6 @@ public class ScanRunnable implements Runnable {
         this.service = service;
     }
 
-    /*
-     * Lavet en timer task runnable for at undgå lag. TPS kunne komme under 10 før, uden dette.
-     * Nu bliver den typisk over 18+ (altså medmindre der er andre faktorer som driver den gevaldigt ned)
-     */
-
     @Override
     public void run() {
         new BukkitRunnable() {
@@ -28,7 +23,7 @@ public class ScanRunnable implements Runnable {
                     this.cancel();
                 }
             }
-        }.runTaskTimerAsynchronously(AntiMalwarePlugin.getInstance(), 0L, 10L);
+        }.runTaskTimerAsynchronously(AntiMalwarePlugin.getInstance(), 0L, 15L);
 
     }
 }

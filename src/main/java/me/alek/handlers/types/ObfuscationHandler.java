@@ -34,7 +34,9 @@ public class ObfuscationHandler extends BaseHandler implements DetectionNode {
     @Override
     public CheckResult processSingle(File file, Path rootFolder, CacheContainer cache, PluginProperties pluginProperties) {
 
-        if (file.getName().toLowerCase().contains("litebans")) return null;
+        String check = file.getName().toLowerCase();
+        if (check.contains("litebans")) return null;
+        if (check.contains("featherboard")) return null;
 
         ObfuscationContainer obfuscationContainer = new ObfuscationContainer();
         ChecksumLibrariesContainer checksumLibrariesContainer = new ChecksumLibrariesContainer();

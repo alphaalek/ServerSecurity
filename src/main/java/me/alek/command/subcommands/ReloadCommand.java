@@ -16,8 +16,11 @@ public class ReloadCommand implements SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         Player player = (Player) sender;
-        if (ScanManager.getLatestScanner().isScanning()) {
-            player.sendMessage("§8[§6AntiMalware§8] §7Serveren er allerede igang med at opdatere cache i auto-update. Vent lidt...");
+        Scanner scanner = ScanManager.getLatestScanner();
+        if (scanner.isScanning()) {
+            int size = scanner.getFiles().size();
+            player.sendMessage("§8[§6AntiMalware§8] §7Serveren er allerede igang med at opdatere cache i auto-update. Vent lidt... ("
+                    + (size - scanner.getService().getNotDoneFiles().size()) + "/" + size + ")");
             return;
         }
         File dataFolder = AntiMalwarePlugin.getInstance().getDataFolder().getParentFile();
