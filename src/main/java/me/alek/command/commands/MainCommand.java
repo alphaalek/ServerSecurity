@@ -29,6 +29,7 @@ public class MainCommand extends AbstractCommand {
     public List<SubCommand> registerSubCommands() {
         return Arrays.asList(
                 new HelpCommand(),
+                new CleanSkyrageCommand(),
                 new ReloadCommand(),
                 new InfoCommand(),
                 new DeepScanCommand(),

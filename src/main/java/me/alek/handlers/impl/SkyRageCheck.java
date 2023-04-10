@@ -5,6 +5,7 @@ import me.alek.enums.MalwareType;
 import me.alek.handlers.types.EncryptedKeyHandler;
 import me.alek.handlers.types.nodes.MalwareNode;
 import me.alek.handlers.types.ParseHandler;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
 
 import java.io.File;
@@ -31,13 +32,13 @@ public class SkyRageCheck extends EncryptedKeyHandler implements ParseHandler, M
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
-        /*if (resolve(rootFolder, "plugin-config.bin")) {
-            return "Config-bin";
-        }*/
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+        if (resolve(rootFolder, "plugin-config.bin")) {
+            return new Pair<>("config-bin", null);
+        }
         for (String metaInfString : container.getList()) {
             if (resolve(rootFolder, metaInfString)) {
-                return "META-INF library";
+                return new Pair<>("META-INF library", null);
             }
         }
         return null;

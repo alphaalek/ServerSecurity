@@ -12,6 +12,7 @@ import me.alek.model.ResultData;
 import me.alek.model.result.CheckResult;
 import me.alek.model.result.MalwareCheckResult;
 import me.alek.utils.ZipUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -60,19 +61,25 @@ public class ScanService {
         return files.get(0);
     }
 
-    public synchronized void start() {
-        if (!hasMore()) return;
+    public synchronized ScanStatus start() {
+        if (!hasMore()) return null;
         File file = get();
         files.remove(file);
+        return new ScanStatus(file);
+    }
+
+    public void execute(ScanStatus status) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                execute(file);
+                asyncExecute(status);
             }
         }.runTaskAsynchronously(AntiMalwarePlugin.getInstance());
     }
 
-    private void execute(File file) {
+    private void asyncExecute(ScanStatus status) {
+        if (status == null) return;
+        File file = status.getFile();
         try (FileSystem fs = ZipUtils.fileSystemForZip(file.toPath())) {
 
             if (fs == null) return;
@@ -99,6 +106,7 @@ public class ScanService {
                 if (result == null) continue;
                 results.add(result);
             }
+            status.setState(ScanStatus.State.DONE);
             resultMap.put(new ResultData(results, file, getResultLevel(results)), getResultLevel(results));
             cacheContainer.clearCache(file.toPath());
         } catch (IOException e) {

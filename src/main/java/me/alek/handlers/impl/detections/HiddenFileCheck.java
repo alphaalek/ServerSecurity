@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import me.alek.enums.Risk;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -14,18 +15,18 @@ import java.nio.file.Path;
 public class HiddenFileCheck extends CheckAdapter implements DetectionNode {
 
     @Override
-    public String processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
+    public Pair<String, String> processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
         return null;
     }
 
     @SneakyThrows
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         if (Files.isHidden(file.toPath())) {
-            return "";
+            return new Pair<>("", null);
         }
         if (file.isHidden()) {
-            return "";
+            return new Pair<>("", null);
         }
         return null;
     }

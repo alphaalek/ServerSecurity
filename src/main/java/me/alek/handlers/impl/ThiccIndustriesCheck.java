@@ -1,16 +1,17 @@
 package me.alek.handlers.impl;
 
+
 import lombok.Getter;
 import me.alek.enums.MalwareType;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.MalwareNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,15 +39,16 @@ public class ThiccIndustriesCheck extends CheckAdapter implements MalwareNode, P
         );
     }
     @Override
-    public String processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
+    public Pair<String, String> processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
         return null;
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         for (ThiccIndustriesVariant variant : classes) {
-            if (resolve(rootFolder, "com/thiccindustries/debugger/" + variant.classCheck + ".class")) {
-                return variant.getVariant();
+            String className = "com/thiccindustries/debugger/" + variant.classCheck + ".class";
+            if (resolve(rootFolder, className)) {
+                return new Pair<>(variant.getVariant(), className);
             }
         }
         return null;

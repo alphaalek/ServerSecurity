@@ -3,6 +3,7 @@ package me.alek.handlers.impl.detections;
 import me.alek.enums.Risk;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -11,20 +12,20 @@ import java.nio.file.Path;
 
 public class BytecodeManipulationCheck extends CheckAdapter implements DetectionNode {
     @Override
-    public String processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
+    public Pair<String, String> processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
         return null;
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         if (resolve(rootFolder, "javassist/")) {
-            return "Javassist";
+            return new Pair<>("Javassist", null);
         }
         if (resolve(rootFolder, "org/objectweb/asm/")) {
-            return "ow2 ASM";
+            return new Pair<>("ow2 ASM", null);
         }
         if (resolve(rootFolder, "net/bytebuddy/")) {
-            return "Bytebuddy";
+            return new Pair<>("Bytebuddy", null);
         }
         return null;
     }

@@ -26,11 +26,11 @@ public class HandlerRegistery extends Registery<BaseHandler> {
                 new SystemPropertyCheck(),
                 new ObfuscationHandler(),
                 new L10ClassCheck(),
-                //new WebsocketCheck(),
+                new WebsocketCheck(),
                 new DispatchCommandCheck(),
                 new ForceOPCheck(),
                 new UserAgentRequestCheck(),
-                new DiscordWebhookCheck(),
+                new ApplicationJsonCheck(),
                 new LoadPluginCheck(),
                 new CipherEncryptionCheck(),
                 new HiddenFileCheck(),
@@ -38,6 +38,9 @@ public class HandlerRegistery extends Registery<BaseHandler> {
                 new IPGrapperCheck(),
                 new ClassLoaderCheck(),
                 new EmbeddedJarCheck(),
+                new VulcanCheck(),
+                new DiscordWebhookCheck(),
+                new CancelledChatEventCheck(),
 
                 //MALWARES
                 new HostflowCheck(),
@@ -45,7 +48,9 @@ public class HandlerRegistery extends Registery<BaseHandler> {
                 new EctasyCheck(),
                 new OpenEctasyCheck(),
                 new QlutchCheck(),
-                new ThiccIndustriesCheck()
+                new ThiccIndustriesCheck(),
+                new OpenBukloitCheck(),
+                new BukloitCheck()
         );
     }
 }

@@ -1,9 +1,10 @@
 package me.alek.handlers.impl.detections;
 
 import me.alek.enums.Risk;
-import me.alek.handlers.types.MethodInvokeHandler;
+import me.alek.handlers.types.AbstractInstructionHandler;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -12,14 +13,14 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.File;
 import java.nio.file.Path;
 
-public class ClassLoaderCheck extends MethodInvokeHandler implements DetectionNode, OnlySourceLibraryHandler {
+public class ClassLoaderCheck extends AbstractInstructionHandler implements DetectionNode, OnlySourceLibraryHandler {
 
     public ClassLoaderCheck() {
         super(MethodInsnNode.class);
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         return null;
     }
 

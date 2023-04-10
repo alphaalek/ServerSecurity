@@ -22,7 +22,7 @@ public class ScanPerform {
         if (scanner.isScanning()) {
             int size = scanner.getFiles().size();
             player.sendMessage("§8[§6AntiMalware§8] §7Serveren er igang med at opdatere cache i auto-update. Vent lidt... ("
-                    + (size - scanner.getService().getNotDoneFiles().size()) + "/" + size + ")");
+                    + (size - scanner.getService().getNotDoneFiles().size() - 1) + "/" + size + ")");
             return;
         }
         List<File> files = new ArrayList<>();
@@ -41,7 +41,7 @@ public class ScanPerform {
             player.sendMessage("§8[§6AntiMalware§8] §cKunne ikke finde noget plugin...");
             return;
         }
-        Loader loader = new Loader(player, deepScan);
+        Loader loader = new Loader(player, deepScan, files);
         loader.load(ScanManager.getLatestScanner()).sendFeedback();
     }
 }

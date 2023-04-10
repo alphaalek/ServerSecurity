@@ -1,6 +1,9 @@
 package me.alek.handlers.types;
 
+
 import me.alek.handlers.CheckAdapter;
+import me.alek.model.Pair;
+import org.bukkit.Bukkit;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -8,17 +11,17 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.File;
 import java.nio.file.Path;
 
-public abstract class MethodInvokeHandler extends CheckAdapter {
+public abstract class AbstractInstructionHandler extends CheckAdapter {
 
     private final Class<? extends AbstractInsnNode>[] insnTypes;
 
     @SafeVarargs
-    public MethodInvokeHandler(Class<? extends AbstractInsnNode>... insnTypes) {
+    public AbstractInstructionHandler(Class<? extends AbstractInsnNode>... insnTypes) {
         this.insnTypes = insnTypes;
     }
 
     @Override
-    public String processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
+    public Pair<String, String> processFile(Path classPath, ClassNode classNode, File file, boolean isClass) {
         if (classNode == null) return null;
         for (MethodNode methodNode : classNode.methods) {
             for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
@@ -28,7 +31,7 @@ public abstract class MethodInvokeHandler extends CheckAdapter {
 
                     String variant = processAbstractInsn(methodNode, abstractInsnNode, classPath);
                     if (variant != null) {
-                        return variant;
+                        return new Pair<>(variant, classPath.getFileName().toString());
                     }
                 }
             }

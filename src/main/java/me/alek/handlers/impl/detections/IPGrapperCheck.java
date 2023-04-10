@@ -1,36 +1,50 @@
 package me.alek.handlers.impl.detections;
 
 import me.alek.enums.Risk;
-import me.alek.handlers.types.MethodInvokeHandler;
+import me.alek.handlers.types.AbstractInstructionHandler;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
+import org.bukkit.Bukkit;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.nio.file.Path;
 
-public class IPGrapperCheck extends MethodInvokeHandler implements DetectionNode, OnlySourceLibraryHandler {
+public class IPGrapperCheck extends AbstractInstructionHandler implements DetectionNode {
+
+    File file;
 
     public IPGrapperCheck() {
-        super(MethodInsnNode.class);
+        super(MethodInsnNode.class, LdcInsnNode.class);
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+        this.file = file;
         return null;
     }
 
     @Override
     public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
-        MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
-        String owner = methodInsnNode.owner;
-        String name = methodInsnNode.name;
-        if (!owner.equals("org/bukkit/entity/Player")) return null;
-        if (!name.equals("getAddress")) return null;
-        return "";
+        if (abstractInsnNode instanceof MethodInsnNode) {
+            MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
+            if (!methodInsnNode.owner.equals("org/bukkit/entity/Player")) return null;
+            if (!methodInsnNode.name.equals("getAddress")) return null;
+            return "";
+        } else {
+            LdcInsnNode ldcInsnNode = (LdcInsnNode) abstractInsnNode;
+            Object value = ldcInsnNode.cst;
+            if (!(value instanceof String)) return null;
+            String string = (String) value;
+            if (!string.contains("api.ipify.org")) return null;
+            return "api.ipify";
+        }
+
     }
 
     @Override

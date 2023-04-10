@@ -3,10 +3,12 @@ package me.alek.handlers.impl.detections;
 import lombok.Getter;
 import me.alek.AntiMalwarePlugin;
 import me.alek.enums.Risk;
-import me.alek.handlers.types.MethodInvokeHandler;
+import me.alek.handlers.types.AbstractInstructionHandler;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
+import org.bukkit.Bukkit;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -17,7 +19,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class ForceOPCheck extends MethodInvokeHandler implements DetectionNode, ParseHandler {
+public class ForceOPCheck extends AbstractInstructionHandler implements DetectionNode, ParseHandler {
 
     @Getter
     private List<String> methodInvokeOwners;
@@ -39,7 +41,7 @@ public class ForceOPCheck extends MethodInvokeHandler implements DetectionNode, 
     }
 
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         this.pluginProperties = pluginProperties;
         return null;
     }

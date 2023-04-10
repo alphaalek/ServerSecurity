@@ -20,7 +20,7 @@ public class ReloadCommand implements SubCommand {
         if (scanner.isScanning()) {
             int size = scanner.getFiles().size();
             player.sendMessage("§8[§6AntiMalware§8] §7Serveren er allerede igang med at opdatere cache i auto-update. Vent lidt... ("
-                    + (size - scanner.getService().getNotDoneFiles().size()) + "/" + size + ")");
+                    + (size - scanner.getService().getNotDoneFiles().size() - 1) + "/" + size + ")");
             return;
         }
         File dataFolder = AntiMalwarePlugin.getInstance().getDataFolder().getParentFile();
@@ -45,7 +45,7 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public String getDescription() {
-        return "Reloader cached resultdata set, hvis du har tilføjet nye plugins du vil have scannet. (serveren gør det også automatisk hvert 10. minut)";
+        return "Reloader cached resultdata set, hvis du har tilføjet nye plugins du vil have scannet. (serveren gør det også automatisk hver halve time)";
     }
 
     @Override

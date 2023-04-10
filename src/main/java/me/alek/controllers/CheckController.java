@@ -5,10 +5,12 @@ import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
 import me.alek.handlers.types.nodes.MalwareNode;
+import me.alek.model.Pair;
 import me.alek.model.result.CheckResult;
 import me.alek.model.PluginProperties;
 import me.alek.model.result.MalwareCheckResult;
 import me.alek.utils.ZipUtils;
+import org.bukkit.Bukkit;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
@@ -28,9 +30,9 @@ public class CheckController {
             sourceLib = pluginProperties.getSourceLib();
         }
 
-        String variant;
-        if ((variant = handler.preProcessJAR(file, rootFolder, pluginProperties)) != null) {
-            return validCheck(handler, variant);
+        Pair<String, String> data;
+        if ((data = handler.preProcessJAR(file, rootFolder, pluginProperties)) != null) {
+            return validCheck(handler, data.getKey(), data.getValue());
         }
 
         while (validClassIterator.hasNext()) {
@@ -38,30 +40,30 @@ public class CheckController {
             boolean validClassPath = ZipUtils.validClassPath(classPath);
 
             ClassNode classNode = cache.fetchClass(file.toPath(), classPath);
-            variant = handler.processFile(classPath, classNode, file, validClassPath);
-            if (variant != null) {
+            data = handler.processFile(classPath, classNode, file, validClassPath);
+            if (data != null) {
                 if (handler instanceof OnlySourceLibraryHandler) {
                     if (sourceLib != null)  {
                         if (!classPath.toString().contains(sourceLib)) continue;
                     }
                 }
-                return validCheck(handler, variant);
+                return validCheck(handler, data.getKey(), data.getValue());
             }
         }
         return null;
     }
 
-    public static CheckResult validCheck(CheckAdapter handler, String variant) {
+    public static CheckResult validCheck(CheckAdapter handler, String variant, String className) {
         if (handler instanceof DetectionNode) {
             DetectionNode node = (DetectionNode) handler;
             if (!variant.equals("")) {
-                return new CheckResult(node.getType(), node.getRisk(), variant);
+                return new CheckResult(node.getType(), node.getRisk(), variant, className);
             }
-            return new CheckResult(node.getType(), node.getRisk());
+            return new CheckResult(node.getType(), node.getRisk(), className);
         }
         if (handler instanceof MalwareNode) {
             MalwareNode node = (MalwareNode) handler;
-            return new MalwareCheckResult(node.getType().getName(), true, variant);
+            return new MalwareCheckResult(node.getType(), variant, className);
         }
         return null;
     }

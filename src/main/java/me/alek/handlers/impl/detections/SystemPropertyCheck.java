@@ -2,9 +2,10 @@ package me.alek.handlers.impl.detections;
 
 import me.alek.enums.Risk;
 import me.alek.controllers.BytecodeController;
-import me.alek.handlers.types.MethodInvokeHandler;
+import me.alek.handlers.types.AbstractInstructionHandler;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
+import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
@@ -16,7 +17,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class SystemPropertyCheck extends MethodInvokeHandler implements DetectionNode, ParseHandler {
+public class SystemPropertyCheck extends AbstractInstructionHandler implements DetectionNode, ParseHandler {
 
     public SystemPropertyCheck() {
         super(MethodInsnNode.class);
@@ -38,7 +39,7 @@ public class SystemPropertyCheck extends MethodInvokeHandler implements Detectio
         );
     }
     @Override
-    public String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
+    public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         return null;
     }
 

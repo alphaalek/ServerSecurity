@@ -9,7 +9,7 @@ import org.objectweb.asm.tree.MethodNode;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public abstract class EncryptedKeyHandler extends MethodInvokeHandler {
+public abstract class EncryptedKeyHandler extends AbstractInstructionHandler {
 
     public EncryptedKeyHandler() {
         super(MethodInsnNode.class);
@@ -56,7 +56,7 @@ public abstract class EncryptedKeyHandler extends MethodInvokeHandler {
 
                 if (testString.equals(url)) {
                     if (url.contains("hostflow")) {
-                        return "Websocket";
+                        return "Websocket URI";
                     }
                     return "Key";
                 }

@@ -2,6 +2,7 @@ package me.alek.handlers;
 
 import me.alek.cache.containers.CacheContainer;
 import me.alek.controllers.CheckController;
+import me.alek.model.Pair;
 import me.alek.model.result.CheckResult;
 import me.alek.model.PluginProperties;
 import org.objectweb.asm.tree.ClassNode;
@@ -23,8 +24,8 @@ public abstract class CheckAdapter extends BaseHandler {
     }
 
 
-    public abstract String processFile(Path classPath, ClassNode classNode, File file, boolean isClass);
+    public abstract Pair<String, String> processFile(Path classPath, ClassNode classNode, File file, boolean isClass);
 
-    public abstract String preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties);
+    public abstract Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties);
 
 }

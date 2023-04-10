@@ -91,6 +91,7 @@ public class Scanner {
             public void run() {
                 if (!service.hasMore()) {
                     List<Map.Entry<ResultData, Integer>> pulledEntries = resultMap.getPulledEntries();
+
                     pulledEntries.sort(Map.Entry.comparingByValue());
                     pulledEntries.forEach(entry -> resultData.add(entry.getKey()));
                     ScanManager.unregisterScanner(scanner);

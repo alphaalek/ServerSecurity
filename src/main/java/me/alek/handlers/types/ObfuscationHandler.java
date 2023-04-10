@@ -95,7 +95,7 @@ public class ObfuscationHandler extends BaseHandler implements DetectionNode {
             if (libraryPercentages.getPulledEntries().isEmpty()) return null;
             Map.Entry<Double, String> maxEntry = Collections.max(libraryPercentages.getPulledEntries(), Map.Entry.comparingByKey());
             if (maxEntry.getKey() > 0.55) {
-                return new CheckResult("Obfuscated (" + Utils.percentage(maxEntry.getKey()) + ")", Risk.FAKE_CRITICAL);
+                return new CheckResult("Obfuscated (" + Utils.percentage(maxEntry.getKey()) + ")", Risk.FAKE_CRITICAL, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
