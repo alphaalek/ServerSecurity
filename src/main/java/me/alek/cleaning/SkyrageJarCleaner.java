@@ -1,4 +1,4 @@
-package me.alek.cleanskyrage;
+package me.alek.cleaning;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;

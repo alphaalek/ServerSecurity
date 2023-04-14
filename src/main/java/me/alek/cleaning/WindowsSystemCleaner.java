@@ -1,6 +1,5 @@
-package me.alek.cleanskyrage;
+package me.alek.cleaning;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;

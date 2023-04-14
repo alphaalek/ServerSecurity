@@ -1,8 +1,8 @@
 package me.alek.command.subcommands;
 
-import me.alek.cleanskyrage.OperatingSystem;
-import me.alek.cleanskyrage.SkyrageJarCleaner;
-import me.alek.cleanskyrage.SystemCleaner;
+import me.alek.cleaning.OperatingSystem;
+import me.alek.cleaning.SkyrageJarCleaner;
+import me.alek.cleaning.SystemCleaner;
 import me.alek.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

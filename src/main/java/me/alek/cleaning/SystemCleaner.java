@@ -1,4 +1,4 @@
-package me.alek.cleanskyrage;
+package me.alek.cleaning;
 
 import org.bukkit.entity.Player;
 

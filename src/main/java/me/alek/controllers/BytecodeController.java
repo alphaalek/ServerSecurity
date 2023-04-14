@@ -1,5 +1,6 @@
 package me.alek.controllers;
 
+import me.alek.model.Pair;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
@@ -27,7 +28,7 @@ public class BytecodeController {
         return bytes;
     }
 
-    public static AbstractMap.SimpleEntry<AbstractInsnNode, String> getBytesInvocationEntry(AbstractInsnNode abstractInsnNode) {
+    public static Pair<AbstractInsnNode, String> getBytesInvocationEntry(AbstractInsnNode abstractInsnNode) {
         AbstractInsnNode previousInstruction = abstractInsnNode;
         int i = 0;
         boolean j = true;
@@ -52,11 +53,11 @@ public class BytecodeController {
             }
             i++;
         }
-        return (!bytes.isEmpty()) ? new AbstractMap.SimpleEntry<>(previousInstruction, new String(byteArrayWrapper(bytes))) : null;
+        return (!bytes.isEmpty()) ? new Pair<>(previousInstruction, new String(byteArrayWrapper(bytes))) : null;
     }
 
     public static String getBytesInvocation(AbstractInsnNode abstractInsnNode) {
-        AbstractMap.SimpleEntry<AbstractInsnNode, String> bytesEntry = getBytesInvocationEntry(abstractInsnNode);
+        Pair<AbstractInsnNode, String> bytesEntry = getBytesInvocationEntry(abstractInsnNode);
         return (bytesEntry != null) ? bytesEntry.getValue() : null;
     }
 
@@ -71,7 +72,7 @@ public class BytecodeController {
         return new String(decoded);
     }
 
-    public static AbstractMap.SimpleEntry<AbstractInsnNode, String> getBase64InvocationEntry(AbstractInsnNode abstractInsnNode) {
+    public static Pair<AbstractInsnNode, String> getBase64InvocationEntry(AbstractInsnNode abstractInsnNode) {
         int i = 0;
         AbstractInsnNode previousInstruction = abstractInsnNode;
         String string = null;
@@ -110,22 +111,22 @@ public class BytecodeController {
                 string = bytes;
             }
         }
-        return (string != null) ? new AbstractMap.SimpleEntry<>(previousInstruction, string) : null;
+        return (string != null) ? new Pair<>(previousInstruction, string) : null;
     }
 
     public static String getBase64Invocation(AbstractInsnNode abstractInsnNode) {
-        AbstractMap.SimpleEntry<AbstractInsnNode, String> base64Entry = getBase64InvocationEntry(abstractInsnNode);
+        Pair<AbstractInsnNode, String> base64Entry = getBase64InvocationEntry(abstractInsnNode);
         return (base64Entry != null) ? base64Entry.getValue() : null;
     }
 
-    public static AbstractMap.SimpleEntry<AbstractInsnNode, String> getStringUsedEntry(AbstractInsnNode abstractInsnNode) {
+    public static Pair<AbstractInsnNode, String> getStringUsedEntry(AbstractInsnNode abstractInsnNode) {
         AbstractInsnNode previous = abstractInsnNode.getPrevious();
-        AbstractMap.SimpleEntry<AbstractInsnNode, String> stringUsedEntry;
+        Pair<AbstractInsnNode, String> stringUsedEntry;
 
         if (previous instanceof LdcInsnNode) {
             LdcInsnNode ldcInsnNode = (LdcInsnNode) previous;
             if (ldcInsnNode.cst instanceof String) {
-                stringUsedEntry = new AbstractMap.SimpleEntry<>(previous, (String) ldcInsnNode.cst);
+                stringUsedEntry = new Pair<>(previous, (String) ldcInsnNode.cst);
                 return stringUsedEntry;
             }
         }
@@ -141,7 +142,7 @@ public class BytecodeController {
     }
 
     public static String getStringUsed(AbstractInsnNode abstractInsnNode) {
-        AbstractMap.SimpleEntry<AbstractInsnNode, String> stringUsedEntry = getStringUsedEntry(abstractInsnNode);
+        Pair<AbstractInsnNode, String> stringUsedEntry = getStringUsedEntry(abstractInsnNode);
         return (stringUsedEntry != null) ? stringUsedEntry.getValue() : null;
     }
 
@@ -149,7 +150,7 @@ public class BytecodeController {
         AbstractInsnNode abstractInsnNodeCurrent = abstractInsnNodeStart;
         String[] stringsUsed = new String[loops];
         for (int i = 0; i < loops; i++) {
-            AbstractMap.SimpleEntry<AbstractInsnNode, String> stringUsedEntry = getStringUsedEntry(abstractInsnNodeCurrent);
+            Pair<AbstractInsnNode, String> stringUsedEntry = getStringUsedEntry(abstractInsnNodeCurrent);
             if (stringUsedEntry == null) {
                 return stringsUsed;
             }
