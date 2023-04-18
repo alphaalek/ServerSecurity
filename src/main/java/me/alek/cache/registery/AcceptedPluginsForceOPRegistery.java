@@ -23,5 +23,7 @@ public class AcceptedPluginsForceOPRegistery extends Registery<String> {
                 "SkEssentials",
                 "WildSkript"
         );
+
+        //TODO CHECK OM VIRKER?
     }
 }

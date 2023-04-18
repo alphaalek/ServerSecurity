@@ -5,7 +5,6 @@ import me.alek.command.SubCommand;
 import me.alek.scanning.ScanManager;
 import me.alek.scanning.Scanner;
 import me.alek.utils.JARFinder;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,6 +14,8 @@ import java.io.File;
 public class ReloadCommand implements SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
+        AntiMalwarePlugin.getSecurityManager().reload();
+
         Player player = (Player) sender;
         Scanner scanner = ScanManager.getLatestScanner();
         if (scanner.isScanning()) {

@@ -1,4 +1,4 @@
-package me.alek.security.network;
+package me.alek.network;
 
 
 import me.alek.AntiMalwarePlugin;

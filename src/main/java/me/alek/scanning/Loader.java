@@ -140,7 +140,13 @@ public class Loader {
         }
         Instant end = Instant.now();
         Duration timeElapsed = Duration.between(start, end);
-        player.sendMessage("§8[§6AntiMalware§8] §7Scannede i alt " + files.size() + " filer igennem og fandt " + scanner.getTotalFilesMalware()
+        int fileSize = files.size();
+        if (files.size() == 1) {
+            scanner.setTotalFilesMalware(scanner.getTotalFilesMalware() - 1);
+        } else {
+            fileSize--;
+        }
+        player.sendMessage("§8[§6AntiMalware§8] §7Scannede i alt " + fileSize + " filer igennem og fandt " + scanner.getTotalFilesMalware()
                 + " filer med virus. (" + ((double)timeElapsed.toMillis()) + "ms)");
     }
 }

@@ -1,4 +1,4 @@
-package me.alek.security.network;
+package me.alek.network;
 
 public final class SneakyThrow {
     public static void sneakyThrow(final Throwable t) throws Throwable {

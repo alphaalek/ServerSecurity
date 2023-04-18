@@ -10,4 +10,5 @@ softdepend: []
 commands:
   antimalware:
     aliases: [am]
+  test:
 

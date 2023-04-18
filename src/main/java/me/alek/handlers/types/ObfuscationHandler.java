@@ -37,6 +37,7 @@ public class ObfuscationHandler extends BaseHandler implements DetectionNode {
         String check = file.getName().toLowerCase();
         if (check.contains("litebans")) return null;
         if (check.contains("featherboard")) return null;
+        if (check.contains("voidgen")) return null;
 
         ObfuscationContainer obfuscationContainer = new ObfuscationContainer();
         ChecksumLibrariesContainer checksumLibrariesContainer = new ChecksumLibrariesContainer();

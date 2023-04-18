@@ -1,0 +1,7 @@
+
+
+# skal Security være slået til på serveren. true / false
+security-enabled: true
+
+# hvis du ændrer i denne, kræver det et genstart af serveren.
+prevent-cancelled-malicious-chat-event: true

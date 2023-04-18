@@ -1,4 +1,4 @@
-package me.alek.security.network;
+package me.alek.network;
 
 public interface Interceptor {
 

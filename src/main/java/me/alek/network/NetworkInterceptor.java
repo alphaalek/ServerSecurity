@@ -1,4 +1,4 @@
-package me.alek.security.network;
+package me.alek.network;
 
 import me.alek.AntiMalwarePlugin;
 
@@ -22,7 +22,7 @@ public class NetworkInterceptor {
             try {
                 interceptor.enable();
             } catch (final Exception e) {
-                this.plugin.getLogger().log(Level.SEVERE, "Exception occurred whilst enabling " + interceptor.getClass().getName(), e);
+                this.plugin.getLogger().log(Level.SEVERE, "Fejl opstod ved aktivering af " + interceptor.getClass().getName(), e);
             }
         }
     }
@@ -40,7 +40,7 @@ public class NetworkInterceptor {
                 final Interceptor interceptor = constructor.newInstance(this.plugin);
                 this.interceptors.put(method, interceptor);
             } catch (final Throwable t) {
-                this.plugin.getLogger().log(Level.SEVERE, "Exception occurred whilst initialising method " + method, t);
+                this.plugin.getLogger().log(Level.SEVERE, "Fejl opstået ved aktivering af " + method, t);
             }
         }
     }
