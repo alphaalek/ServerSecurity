@@ -1,7 +1,7 @@
-package me.alek.security.event;
+package me.alek.security.blocker;
 
 import me.alek.AntiMalwarePlugin;
-import me.alek.security.event.wrappers.WrappedEventController;
+import me.alek.security.blocker.wrappers.WrappedEventController;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -24,6 +24,10 @@ public class EventController<EVENT extends Event> implements Listener {
         Bukkit.getPluginManager().registerEvents(this, AntiMalwarePlugin.getInstance());
     }
 
+    public enum ControllerType {
+        THREAD_START, CALLBACK
+    }
+
     @EventHandler
     public void onControlEvent(WrappedEventController event) {
         if (event.getType() == ControllerType.THREAD_START) {
@@ -35,7 +39,7 @@ public class EventController<EVENT extends Event> implements Listener {
                 }
             }
             CancellationEventProxy.getHandlerListContainer().clearId(event.getId());
-            ChatExecutorBlocker.getAlreadyNotifiedEvent().removeNotifiedId(event.getId());
+            ExecutorDetector.getAlreadyNotifiedEvent().removeNotifiedId(event.getId());
         }
     }
 

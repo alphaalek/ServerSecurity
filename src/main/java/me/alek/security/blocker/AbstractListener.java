@@ -1,4 +1,4 @@
-package me.alek.security.event;
+package me.alek.security.blocker;
 
 import lombok.Getter;
 import me.alek.security.SecurityManager;

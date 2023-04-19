@@ -1,6 +1,6 @@
-package me.alek.security.event;
+package me.alek.security.blocker;
 
-import me.alek.security.event.wrappers.WrappedMethodRegisteredListener;
+import me.alek.security.blocker.wrappers.WrappedMethodRegisteredListener;
 import org.bukkit.plugin.RegisteredListener;
 
 public class RegisteredListenerAdapter {

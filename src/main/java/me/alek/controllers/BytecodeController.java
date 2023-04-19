@@ -119,6 +119,25 @@ public class BytecodeController {
         return (base64Entry != null) ? base64Entry.getValue() : null;
     }
 
+    public static String getStrictStringUsedEntry(AbstractInsnNode abstractInsnNode) {
+        AbstractInsnNode node = abstractInsnNode;
+        for (int i = 0; i<=5; i++) {
+            node = node.getPrevious();
+            if (node == null) {
+                return null;
+            }
+            if (node instanceof LdcInsnNode) {
+                final LdcInsnNode ldcInsnNode = (LdcInsnNode) node;
+                Object value = ldcInsnNode.cst;
+                if (value instanceof String) {
+                    return (String) value;
+                }
+            }
+            i++;
+        }
+        return null;
+    }
+
     public static Pair<AbstractInsnNode, String> getStringUsedEntry(AbstractInsnNode abstractInsnNode) {
         AbstractInsnNode previous = abstractInsnNode.getPrevious();
         Pair<AbstractInsnNode, String> stringUsedEntry;

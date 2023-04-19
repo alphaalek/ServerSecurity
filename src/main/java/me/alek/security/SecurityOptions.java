@@ -1,8 +1,6 @@
 package me.alek.security;
 
 import lombok.Getter;
-import me.alek.security.config.SecurityConfig;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class SecurityOptions {

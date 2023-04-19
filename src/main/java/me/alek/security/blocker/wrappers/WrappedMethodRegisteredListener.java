@@ -1,4 +1,4 @@
-package me.alek.security.event.wrappers;
+package me.alek.security.blocker.wrappers;
 
 import org.bukkit.event.*;
 import org.bukkit.plugin.EventExecutor;

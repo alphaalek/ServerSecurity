@@ -1,8 +1,6 @@
-package me.alek.security.event.wrappers;
+package me.alek.security.blocker.wrappers;
 
-import me.alek.AntiMalwarePlugin;
-import me.alek.security.event.RegisteredListenerAdapter;
-import org.bukkit.Bukkit;
+import me.alek.security.blocker.RegisteredListenerAdapter;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventPriority;

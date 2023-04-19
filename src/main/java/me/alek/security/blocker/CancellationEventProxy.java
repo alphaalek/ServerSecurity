@@ -1,8 +1,8 @@
-package me.alek.security.event;
+package me.alek.security.blocker;
 
 import lombok.Getter;
-import me.alek.security.event.wrappers.WrappedEventController;
-import me.alek.security.event.wrappers.WrappedUniqueRegisteredListener;
+import me.alek.security.blocker.wrappers.WrappedEventController;
+import me.alek.security.blocker.wrappers.WrappedUniqueRegisteredListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
 import org.bukkit.plugin.RegisteredListener;
@@ -21,8 +21,9 @@ public class CancellationEventProxy<EVENT extends Event> {
 
     @Getter private static HandlerListContainer handlerListContainer;
     private final Class<EVENT> clazz;
-    private final List<CancelListener<EVENT>> listeners = new ArrayList<>();
     private final boolean controlMultipleCancellers;
+
+    private final List<CancelListener<EVENT>> listeners = new ArrayList<>();
     private EventController<EVENT> eventController;
     private EnumMap<EventPriority, ArrayList<RegisteredListener>> backup;
 
@@ -67,8 +68,10 @@ public class CancellationEventProxy<EVENT extends Event> {
 
         synchronized (list) {
             for (EventPriority p : slots.keySet().toArray(new EventPriority[0])) {
+
                 final EventPriority priority = p;
                 final ArrayList<RegisteredListener> proxyList = new ArrayList<RegisteredListener>() {
+
                     @Override
                     public boolean add(RegisteredListener e) {
                         super.add(injectRegisteredListener(e));
@@ -77,9 +80,9 @@ public class CancellationEventProxy<EVENT extends Event> {
 
                     @Override
                     public boolean remove(Object listener) {
-                        // Remove this listener
                         for (Iterator<RegisteredListener> it = iterator(); it.hasNext(); ) {
                             WrappedUniqueRegisteredListener delegated = (WrappedUniqueRegisteredListener) it.next();
+
                             if (delegated.delegate == listener) {
                                 it.remove();
                                 break;
@@ -115,9 +118,9 @@ public class CancellationEventProxy<EVENT extends Event> {
                 setId(id);
                 final List<RegisteredListener> listeners = handlerListContainer.getListeners(this.getId());
                 if (listeners.size() == 1) {
-                    controllerEvent = new WrappedEventController(listener, this.getId(), ControllerType.THREAD_START);
+                    controllerEvent = new WrappedEventController(listener, this.getId(), EventController.ControllerType.THREAD_START);
                 } else if (listeners.size() == handlerListContainer.getHandlerListSize()) {
-                    controllerEvent = new WrappedEventController(listener, this.getId(), ControllerType.CALLBACK);
+                    controllerEvent = new WrappedEventController(listener, this.getId(), EventController.ControllerType.CALLBACK);
                 }
 
                 if (!(event instanceof Cancellable)) {

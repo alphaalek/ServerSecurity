@@ -1,6 +1,6 @@
-package me.alek.security.event.wrappers;
+package me.alek.security.blocker.wrappers;
 
-import me.alek.security.event.ControllerType;
+import me.alek.security.blocker.EventController;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredListener;
@@ -9,16 +9,16 @@ public class WrappedEventController extends Event {
 
     private final RegisteredListener listener;
     private final long id;
-    private final ControllerType type;
+    private final EventController.ControllerType type;
     private static HandlerList handlers = new HandlerList();
 
-    public WrappedEventController(RegisteredListener listener, long id, ControllerType type) {
+    public WrappedEventController(RegisteredListener listener, long id, EventController.ControllerType type) {
         this.listener = listener;
         this.id = id;
         this.type = type;
     }
 
-    public ControllerType getType() {
+    public EventController.ControllerType getType() {
         return type;
     }
 

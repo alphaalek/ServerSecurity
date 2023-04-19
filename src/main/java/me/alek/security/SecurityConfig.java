@@ -1,4 +1,4 @@
-package me.alek.security.config;
+package me.alek.security;
 
 import com.google.common.base.Charsets;
 import me.alek.AntiMalwarePlugin;

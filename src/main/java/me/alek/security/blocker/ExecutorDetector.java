@@ -1,10 +1,10 @@
-package me.alek.security.event;
+package me.alek.security.blocker;
 
 import lombok.Getter;
 import me.alek.AntiMalwarePlugin;
 import me.alek.security.SecurityManager;
-import me.alek.security.event.wrappers.WrappedMethodRegisteredListener;
-import me.alek.security.event.wrappers.WrappedUniqueRegisteredListener;
+import me.alek.security.blocker.wrappers.WrappedMethodRegisteredListener;
+import me.alek.security.blocker.wrappers.WrappedUniqueRegisteredListener;
 import me.alek.utils.JARFinder;
 import me.alek.utils.ZipUtils;
 import org.bukkit.Bukkit;
@@ -15,11 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,9 +27,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ChatExecutorBlocker extends AbstractListener {
+public class ExecutorDetector extends AbstractListener {
 
-    public ChatExecutorBlocker(SecurityManager manager) {
+    private final SecurityManager manager;
+    private final HashMap<BaseListener, Long> dataLearningCounter = new HashMap<>();
+
+    private final static DataLearningHolder dataLearningHolder = DataLearningHolder.createSingleton();
+    @Getter private final static AlreadyNotifiedEvent alreadyNotifiedEvent = AlreadyNotifiedEvent.createSingleton();
+
+    public ExecutorDetector(SecurityManager manager) {
         super(manager);
         this.manager = manager;
 
@@ -87,11 +89,6 @@ public class ChatExecutorBlocker extends AbstractListener {
     private interface PluginListener extends BaseListener {
         RegisteredListener getRegisteredListener();
     }
-
-    private final SecurityManager manager;
-    private final HashMap<BaseListener, Long> dataLearningCounter = new HashMap<>();
-    private final static DataLearningHolder dataLearningHolder = DataLearningHolder.createSingleton();
-    @Getter private final static AlreadyNotifiedEvent alreadyNotifiedEvent = AlreadyNotifiedEvent.createSingleton();
 
     private BaseListener getListenerSlotLocation(BaseListener copy) {
         return dataLearningCounter.keySet().stream().filter(listener -> compare(listener, copy)).findFirst().orElse(copy);
@@ -168,7 +165,6 @@ public class ChatExecutorBlocker extends AbstractListener {
     }
 
     private void checkForMaliciousEvent(PluginListener listener, AsyncPlayerChatEvent event) {
-        Bukkit.broadcastMessage("check method");
         if (listener == null) return;
         if (usingExecutable(event)) {
             kickPlayer(event.getPlayer(),"§8[§6AntiMalware§8] §cMulig backdoor udnyttelse blev opfanget!\n\n§cCANCELLED EXECUTABLE: " + event.getMessage());
@@ -201,7 +197,6 @@ public class ChatExecutorBlocker extends AbstractListener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChat(PossibleMaliciousEventWrapper event) {
-        Bukkit.broadcastMessage("wrapper malicious event");
         if (event.isClassMalicious()) {
             dataLearningHolder.addBlacklistedListener(event.getPluginListener());
 
@@ -230,10 +225,6 @@ public class ChatExecutorBlocker extends AbstractListener {
         final Map.Entry<BaseListener, Long> highestData = getHighestData();
         dataLearningCounter.clear();
         dataLearningCounter.put(highestData.getKey(), highestData.getValue());
-    }
-
-    private static String getMethodSignature(Method method) {
-        return method.getName() + Type.getMethodDescriptor(method);
     }
 
     private static boolean isChatEventhandler(Method method) {
@@ -289,22 +280,6 @@ public class ChatExecutorBlocker extends AbstractListener {
         return null;
     }
 
-    private static boolean isMethodMalicious(MethodNode methodNode) {
-
-        final List<String> blacklistedStrings = Arrays.asList("dispatchCommand", "setOp");
-
-        for (AbstractInsnNode abstractInsnNode : methodNode.instructions) {
-            if (abstractInsnNode instanceof MethodInsnNode) {
-                MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
-
-                if (blacklistedStrings.contains(methodInsnNode.name)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private static class ClassDataModel {
 
         @Getter private final ClassNode classNode;
@@ -318,7 +293,7 @@ public class ChatExecutorBlocker extends AbstractListener {
         }
     }
 
-    private static class PossibleMaliciousEventWrapper extends Event {
+    public static class PossibleMaliciousEventWrapper extends Event {
         private final AsyncPlayerChatEvent delegate;
         private final PluginListener listener;
         private final static HandlerList handlers = new HandlerList();
@@ -334,28 +309,29 @@ public class ChatExecutorBlocker extends AbstractListener {
             } if (dataLearningHolder.isAccepted(listener)) {
                 return false;
             }
-            Bukkit.broadcastMessage("" + 1);
             final RegisteredListener registeredListener = getPluginListener().getRegisteredListener();
             if (!(registeredListener instanceof WrappedUniqueRegisteredListener)) return false;
-            Bukkit.broadcastMessage("" + 2);
 
             final WrappedUniqueRegisteredListener wrappedListener = (WrappedUniqueRegisteredListener) registeredListener;
             final RegisteredListenerAdapter adapter = wrappedListener.getAdapter();
-            if (!adapter.isWrappedMethodListener()) return false;
-            Bukkit.broadcastMessage("" + 3);
+            if (!adapter.isWrappedMethodListener()) {
+                return false;
+            }
 
             final WrappedMethodRegisteredListener methodRegisteredListener = adapter.getWrappedMethodListener();
             final String methodSignature = methodRegisteredListener.getMethodSignature();
 
             final Plugin plugin = listener.getRegisteredListener().getPlugin();
             final File file = JARFinder.findFile(new File("plugins"), plugin.getName());
-            if (file == null) return false;
-            Bukkit.broadcastMessage("" + 4);
+            if (file == null) {
+                return false;
+            }
 
             final Class<? extends Listener> listenerClass = listener.getRegisteredListener().getListener().getClass();
             final ClassDataModel classData = getListenerClass(file, getClassName(listenerClass.getName(), "\\."));
-            if (classData == null) return false;
-            Bukkit.broadcastMessage("" + 5);
+            if (classData == null) {
+                return false;
+            }
 
             final ClassNode classNode = classData.getClassNode();
             final ClassReader classReader = classData.getClassReader();
@@ -364,31 +340,15 @@ public class ChatExecutorBlocker extends AbstractListener {
             final AnnotationInjectedVisitor<AsyncPlayerChatEvent> classVisitor
                     = new AnnotationInjectedVisitor<>(AsyncPlayerChatEvent.class, classNode, "org/bukkit/event/EventHandler");
             classReader.accept(classVisitor, 0);
-            Bukkit.broadcastMessage(classVisitor.getClassNode().name);
 
-            for (Map.Entry<String, MethodNode> entry : classVisitor.getAnnotatedMethodNodeMap().entrySet()) {
-
-                Bukkit.broadcastMessage(entry.getKey());
-                if (entry.getKey().equals(methodSignature)) {
-
-                    Bukkit.broadcastMessage(entry.getValue().name);
-                    final MethodNode methodNode = entry.getValue();
-                    final boolean isMalicious = isMethodMalicious(methodNode);
-                    try {
-                        fileSystem.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return isMalicious;
-                }
-            }
+            final ExecutorBlocker<AsyncPlayerChatEvent> chatExecutorBlocker = new ExecutorBlocker<>(classVisitor, this);
+            final boolean feedback = chatExecutorBlocker.process(methodSignature);
             try {
                 fileSystem.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            return false;
+            return feedback;
         }
 
         public PluginListener getPluginListener() {

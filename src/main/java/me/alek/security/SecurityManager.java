@@ -2,14 +2,16 @@ package me.alek.security;
 
 import lombok.Getter;
 import me.alek.AntiMalwarePlugin;
-import me.alek.security.config.ResourceProviderWrapper;
-import me.alek.security.config.SecurityConfig;
-import me.alek.security.event.ListenerRegistery;
-import me.alek.security.event.wrappers.WrappedPluginManager;
+import me.alek.security.blocker.ListenerRegistery;
+import me.alek.security.blocker.wrappers.WrappedCommandMap;
+import me.alek.security.blocker.wrappers.WrappedPluginManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.SimplePluginManager;
 
 import java.lang.reflect.Field;
 
@@ -43,19 +45,5 @@ public class SecurityManager {
 
     public void generatePluginOptions() {
         this.options = new SecurityOptions(this.securityConfig);
-    }
-
-
-    private static void injectPluginManager() {
-        try {
-            Server server = Bukkit.getServer();
-            Field pluginManagerField = server.getClass().getDeclaredField("pluginManager");
-            pluginManagerField.setAccessible(true);
-            PluginManager originalPluginManager = (PluginManager) pluginManagerField.get(server);
-            WrappedPluginManager customPluginManager = new WrappedPluginManager(originalPluginManager);
-            pluginManagerField.set(server, customPluginManager);
-        } catch(NoSuchFieldException | IllegalAccessException ex) {
-            ex.printStackTrace();
-        }
     }
 }

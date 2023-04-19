@@ -1,6 +1,6 @@
-package me.alek.security.event.listeners;
+package me.alek.security.blocker.listeners;
 
-import me.alek.security.event.AbstractListener;
+import me.alek.security.blocker.AbstractListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import me.alek.security.SecurityManager;

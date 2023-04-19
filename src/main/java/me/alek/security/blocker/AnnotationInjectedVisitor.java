@@ -1,4 +1,4 @@
-package me.alek.security.event;
+package me.alek.security.blocker;
 
 import lombok.Getter;
 import org.bukkit.event.Event;
@@ -9,11 +9,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AnnotationInjectedVisitor<EVENT extends Event> extends ClassVisitor {
 
