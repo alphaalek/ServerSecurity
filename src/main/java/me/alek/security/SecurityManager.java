@@ -36,7 +36,7 @@ public class SecurityManager {
     private void init() {
         generatePluginOptions();
         if (this.options.isEnabled()) {
-            //if (options.isPreventCancelledMaliciousChatEvents()) injectPluginManager();
+            if (options.isPreventCancelledMaliciousChatEvents()) injectPluginManager();
         }
         new ListenerRegistery(this);
     }

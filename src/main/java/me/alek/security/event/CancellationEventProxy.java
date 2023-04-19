@@ -9,7 +9,10 @@ import org.bukkit.plugin.RegisteredListener;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class CancellationEventProxy<EVENT extends Event> {
     interface CancelListener<EVENT extends Event> {
@@ -53,7 +56,7 @@ public class CancellationEventProxy<EVENT extends Event> {
 
     private void injectProxy() {
         HandlerList list;
-        Map<EventPriority, ArrayList<RegisteredListener>> slots;
+        EnumMap<EventPriority, ArrayList<RegisteredListener>> slots;
         try {
             list = getHandlerList(clazz);
             slots = getSlots(list);
@@ -69,7 +72,7 @@ public class CancellationEventProxy<EVENT extends Event> {
                     @Override
                     public boolean add(RegisteredListener e) {
                         super.add(injectRegisteredListener(e));
-                        return backup.get(priority).add(e);
+                        return true;
                     }
 
                     @Override
@@ -85,10 +88,14 @@ public class CancellationEventProxy<EVENT extends Event> {
                         return backup.get(priority).remove(listener);
                     }
                 };
+                List<RegisteredListener> tempListeners = new ArrayList<>();
                 for (RegisteredListener listener : backup.get(priority)) {
                     proxyList.add(listener);
+                    tempListeners.add(listener);
                 }
                 slots.put(priority, proxyList);
+                backup.get(priority).clear();
+                backup.get(priority).addAll(tempListeners);
             }
         }
     }

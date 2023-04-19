@@ -27,7 +27,7 @@ public class WrappedUniqueRegisteredListener extends RegisteredListener {
         this.delegate.callEvent(event);
     }
 
-    public RegisteredListenerAdapter getAdpater() {
+    public RegisteredListenerAdapter getAdapter() {
         return adapter;
     }
 

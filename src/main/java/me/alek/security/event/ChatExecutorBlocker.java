@@ -28,11 +28,37 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ChatExecutorBlocker extends AbstractListener {
+
+    public ChatExecutorBlocker(SecurityManager manager) {
+        super(manager);
+        this.manager = manager;
+
+        final CancellationEventProxy<AsyncPlayerChatEvent> eventProxy = new CancellationEventProxy<>(AsyncPlayerChatEvent.class, true);
+        eventProxy.addListener(new CancellationEventProxy.CancelListener<AsyncPlayerChatEvent>() {
+            @Override
+            public void onCancelled(RegisteredListener registeredListener, AsyncPlayerChatEvent event) {
+                final PluginListener pluginListener = new PluginListener() {
+                    @Override
+                    public boolean isDefault() {
+                        return false;
+                    }
+
+                    @Override
+                    public RegisteredListener getRegisteredListener() {
+                        return registeredListener;
+                    }
+                };
+                incrementListenerSlotLocation(pluginListener);
+                checkForMaliciousEvent(pluginListener, event);
+            }
+        });
+        new ClearRestData().runAsync();
+        new UpdateDataHolder().runAsync();
+    }
 
     private static boolean containsListener(List<PluginListener> listenerList, PluginListener listener) {
         return listenerList.stream().anyMatch(listenerCheck -> compare(listenerCheck, listener));
@@ -64,9 +90,8 @@ public class ChatExecutorBlocker extends AbstractListener {
 
     private final SecurityManager manager;
     private final HashMap<BaseListener, Long> dataLearningCounter = new HashMap<>();
-    @Getter
-    private final static AlreadyNotifiedEvent alreadyNotifiedEvent = AlreadyNotifiedEvent.createSingleton();
     private final static DataLearningHolder dataLearningHolder = DataLearningHolder.createSingleton();
+    @Getter private final static AlreadyNotifiedEvent alreadyNotifiedEvent = AlreadyNotifiedEvent.createSingleton();
 
     private BaseListener getListenerSlotLocation(BaseListener copy) {
         return dataLearningCounter.keySet().stream().filter(listener -> compare(listener, copy)).findFirst().orElse(copy);
@@ -89,35 +114,6 @@ public class ChatExecutorBlocker extends AbstractListener {
             listener = getListenerSlotLocation(copy);
         }
         dataLearningCounter.put(listener, dataLearningCounter.getOrDefault(listener, 0L) + 1L);
-    }
-
-    public ChatExecutorBlocker(SecurityManager manager) {
-        super(manager);
-        this.manager = manager;
-        Bukkit.broadcastMessage("INJECTING CHAT BLOCKER");
-
-        final CancellationEventProxy<AsyncPlayerChatEvent> eventProxy = new CancellationEventProxy<>(AsyncPlayerChatEvent.class, true);
-        eventProxy.addListener(new CancellationEventProxy.CancelListener<AsyncPlayerChatEvent>() {
-            @Override
-            public void onCancelled(RegisteredListener registeredListener, AsyncPlayerChatEvent event) {
-                Bukkit.broadcastMessage("cancelled");
-                final PluginListener pluginListener = new PluginListener() {
-                    @Override
-                    public boolean isDefault() {
-                        return false;
-                    }
-
-                    @Override
-                    public RegisteredListener getRegisteredListener() {
-                        return registeredListener;
-                    }
-                };
-                incrementListenerSlotLocation(pluginListener);
-                checkForMaliciousEvent(pluginListener, event);
-            }
-        });
-        new ClearRestData().runAsync();
-        new UpdateDataHolder().runAsync();
     }
 
     public static class AlreadyNotifiedEvent {
@@ -344,7 +340,7 @@ public class ChatExecutorBlocker extends AbstractListener {
             Bukkit.broadcastMessage("" + 2);
 
             final WrappedUniqueRegisteredListener wrappedListener = (WrappedUniqueRegisteredListener) registeredListener;
-            final RegisteredListenerAdapter adapter = wrappedListener.getAdpater();
+            final RegisteredListenerAdapter adapter = wrappedListener.getAdapter();
             if (!adapter.isWrappedMethodListener()) return false;
             Bukkit.broadcastMessage("" + 3);
 
