@@ -1,97 +1,31 @@
 package me.alek.security.blocker.wrappers;
 
 import me.alek.AntiMalwarePlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.*;
-import org.objectweb.asm.*;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class WrappedPluginManager implements PluginManager {
 
     private final PluginManager delegate;
-    private final WrappedCommandMap wrappedCommandMap;
+    private final WrappedCommandMap commandMap;
     private final HashMap<Listener, List<WrappedMethodRegisteredListener>> methodListeners = new HashMap<>();
 
-    public WrappedPluginManager(PluginManager delegate) {
-        WrappedCommandMap wrappedCommandMap1 = null;
+    public WrappedPluginManager(PluginManager delegate, WrappedCommandMap commandMap) {
         this.delegate = delegate;
-        try {
-            Class<?> simplePluginManagerClass = Class.forName("org.bukkit.plugin.SimplePluginManager");
-            Field commandMapField = simplePluginManagerClass.getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-
-            // Create a new instance of WrappedCommandMap
-            final CommandMap originalCommandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-            wrappedCommandMap1 = new WrappedCommandMap((SimpleCommandMap) originalCommandMap);
-
-            // Use ASM to replace all references to SimpleCommandMap with WrappedCommandMap
-            ClassReader classReader = new ClassReader(simplePluginManagerClass.getName());
-            ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-            ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
-                @Override
-                public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-                    if (descriptor.equals("Lorg/bukkit/command/SimpleCommandMap;")) {
-                        descriptor = "Lorg/bukkit/command/CommandMap;";
-                    }
-                    return super.visitField(access, name, descriptor, signature, value);
-                }
-
-                @Override
-                public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-                    MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-                    return new MethodVisitor(Opcodes.ASM5, mv) {
-                        @Override
-                        public void visitFieldInsn(int opcode, String owner, String name, String descriptor) {
-                            if (descriptor.equals("Lorg/bukkit/command/SimpleCommandMap;")) {
-                                descriptor = "Lorg/bukkit/command/CommandMap;";
-                            }
-                            super.visitFieldInsn(opcode, owner, name, descriptor);
-                        }
-                    };
-                }
-            };
-            classReader.accept(classVisitor, ClassReader.SKIP_FRAMES);
-
-            byte[] newClassBytes = classWriter.toByteArray();
-
-            // Define the modified class in the same ClassLoader as the original class
-            ClassLoader classLoader = simplePluginManagerClass.getClassLoader();
-            Class<?> modifiedClass = (Class<?>) ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class)
-                    .invoke(classLoader, simplePluginManagerClass.getName(), newClassBytes, 0, newClassBytes.length);
-
-            // Create a new instance of the modified class and set its commandMap field to our wrappedCommandMap
-            Object originalPluginManager = Bukkit.getServer().getPluginManager();
-            Object modifiedPluginManager = modifiedClass.getConstructor(PluginLoader.class, SimplePluginManager.class)
-                    .newInstance(originalPluginManager.getClass().getMethod("getPluginLoaders").invoke(originalPluginManager),
-                            originalPluginManager);
-            commandMapField.set(modifiedPluginManager, wrappedCommandMap1);
-
-            // Replace the original plugin manager with the modified one
-            Field pluginManagerField = Bukkit.getServer().getClass().getDeclaredField("pluginManager");
-            pluginManagerField.setAccessible(true);
-            pluginManagerField.set(Bukkit.getServer(), modifiedPluginManager);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        wrappedCommandMap = wrappedCommandMap1;
+        this.commandMap = commandMap;
     }
 
     public CommandMap getCommandMap() {
-        return wrappedCommandMap;
+        return commandMap;
     }
 
     private static HandlerList getHandlerList(Class<? extends Event> clazz) throws Exception {
@@ -125,7 +59,6 @@ public class WrappedPluginManager implements PluginManager {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void registerEvent(Class<? extends Event> aClass, Listener listener, EventPriority eventPriority, EventExecutor eventExecutor, Plugin plugin, boolean b) {
@@ -189,10 +122,15 @@ public class WrappedPluginManager implements PluginManager {
             handlers.register(wrappedListener);
 
             methodListeners.get(listener).add(wrappedListener);
-            return;
+        } else {
+            // Only register the event with the current instance of PluginManager
+            AntiMalwarePlugin.getInstance().getLogger().info("REGISTER OTHER " + listener.getClass().getName() + " " + method.getName());
+            HandlerList.getHandlerLists().stream()
+                    .filter(handlerList -> Arrays.stream(handlerList.getRegisteredListeners())
+                            .noneMatch(registeredListener -> registeredListener.getListener().equals(listener)))
+                    .findFirst().orElse(handlers)
+                    .register(new WrappedMethodRegisteredListener(listener, executor, eventPriority, plugin, method, b));
         }
-        AntiMalwarePlugin.getInstance().getLogger().info("REGISTER OTHER " + listener.getClass().getName() + " " + method.getName());
-        delegate.registerEvent(eventClass, listener, eventPriority, executor, plugin, b);
 /*
         RegisteredListener notChatListener;
         if (useTimings()) {

@@ -3,6 +3,7 @@ package me.alek.security.blocker.wrappers;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 
+import java.lang.instrument.Instrumentation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +53,7 @@ public class WrappedCommandMap implements CommandMap {
 
     @Override
     public boolean dispatch(CommandSender sender, String commandLine) throws CommandException {
+        System.out.println("REEEEEEEEEEEEEEEEE");
         String id = UUID.randomUUID().toString();
         Bukkit.broadcastMessage("afventer svar " + id + "...");
 
@@ -114,20 +116,21 @@ public class WrappedCommandMap implements CommandMap {
         return bool.get();
     }
 
-
-
     @Override
     public void registerAll(String s, List<Command> list) {
+        Bukkit.broadcastMessage(" ......................................................REGISTER ALL");
         delegate.registerAll(s, list);
     }
 
     @Override
     public boolean register(String s, String s1, Command command) {
+        Bukkit.broadcastMessage("...................................................... REGISTER");
         return register(s, s1, command);
     }
 
     @Override
     public boolean register(String s, Command command) {
+        Bukkit.broadcastMessage("...................................................... REGISTER");
         return delegate.register(s, command);
     }
 

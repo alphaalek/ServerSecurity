@@ -38,6 +38,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/BooleanWrapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CancellationEventProxy.java">
           <value>
             <set />
@@ -53,7 +58,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CommandMapInvocationHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CommandMapProxy.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ControllerType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CustomClassLoader.java">
           <value>
             <set />
           </value>
@@ -78,7 +98,67 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/InvocationHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/InvocationHnadler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ListenerRegistery.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ModifiedCraftServerPluginLoader.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ServerClassVisitor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ServerProxy.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ServerVisitor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ServerWrapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/WrappedCraftServerPluginLoader.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/WrappedServer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/ChatListener2.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/PluginEnableEvent.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/PluginEnableListener.java">
           <value>
             <set />
           </value>
@@ -88,7 +168,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/test.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/BooleanWrapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/ServerProxy.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedCommandMap.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedCraftServer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedCraftServerPluginLoader.java">
           <value>
             <set />
           </value>
@@ -104,6 +209,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedPluginManager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedPluginManagerTransformer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedServer.java">
           <value>
             <set />
           </value>

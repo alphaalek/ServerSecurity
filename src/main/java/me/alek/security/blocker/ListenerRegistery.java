@@ -12,6 +12,7 @@ import me.alek.security.SecurityOptions;
 import me.alek.security.blocker.listeners.ChatListener2;
 import me.alek.security.blocker.listeners.CommandPreprocessListener;
 import me.alek.security.blocker.listeners.PlayerKickListener;
+import me.alek.security.blocker.listeners.PluginEnableListener;
 import org.bukkit.Bukkit;
 
 public class ListenerRegistery {
@@ -35,6 +36,7 @@ public class ListenerRegistery {
         List<Class<? extends AbstractListener>> listeners = new ArrayList<>(Arrays.asList(
                 CommandPreprocessListener.class,
                 PlayerKickListener.class,
+                PluginEnableListener.class,
                 ChatListener2.class));
         SecurityOptions securityOptions = securityManager.getOptions();
         if (securityOptions.isPreventCancelledMaliciousChatEvents()) {
