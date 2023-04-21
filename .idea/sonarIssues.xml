@@ -43,6 +43,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/BukkitClassVisitor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CancellationEventProxy.java">
           <value>
             <set />
@@ -169,6 +174,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/test.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/visitors/BukkitClassVisitor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/visitors/ServerClassVisitor.java">
           <value>
             <set />
           </value>
