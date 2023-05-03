@@ -13,6 +13,176 @@
             <set />
           </value>
         </entry>
+        <entry key="/fragment.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/GameListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/GameManager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/GamePlayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/GameState.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/HungerGames.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/HungerGamesPlugin.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/ItemBuilder.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/PlayerManager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/PlayerState.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/Singleton.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/hungergames/HungerGames.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/managers/GameManager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/managers/PlayerManager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/states/GameState.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/states/PlayerState.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/utils/ItemBuilder.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/HungerGames/src/main/java/me/alek/superawesome/utils/Utils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/java/me/alek/AddValueCommand.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/java/me/alek/DatabaseController.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/java/me/alek/Main.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/java/me/alek/PacketAnalyzer_data.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/java/me/alek/PacketEvent.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/java/me/alek/PacketListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/PacketAnalyzer_data/src/main/resources/plugin.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/SAEventAPI/src/main/java/me/alek/superawesome/saeventapi/SAEventAPI.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/SAEventAPI/src/main/java/me/alek/superawesome/saeventapi/SAEventFramework.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/ServerJarModifier/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/ServerJarModifier/src/main/java/me/alek/CraftServerByteBuddy.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/ServerJarModifier/src/main/java/me/alek/ServerJarModifier.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/ServerJarModifier/src/main/java/me/alek/WrappedCommandMap.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/IdeaProjects/ServerJarModifier/src/main/resources/plugin.yml">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/pom.xml">
           <value>
             <set />
@@ -38,12 +208,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/AbstractListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/BooleanWrapper.java">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/BukkitClassVisitor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CallbackBlocker.java">
           <value>
             <set />
           </value>
@@ -63,6 +243,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CommandChannel.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CommandInjector.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CommandInterceptor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CommandMapInvocationHandler.java">
           <value>
             <set />
@@ -74,6 +269,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ControllerType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/CraftServerTransformer.java">
           <value>
             <set />
           </value>
@@ -103,6 +303,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ICallbackBlocker.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/Injector.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/InvocationHandler.java">
           <value>
             <set />
@@ -114,6 +324,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/ListenerRegistery.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/MessageInterceptingCommandRunner.java">
           <value>
             <set />
           </value>
@@ -143,6 +358,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/WrappedCommandMap.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/WrappedCraftServerPluginLoader.java">
           <value>
             <set />
@@ -154,6 +374,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/ChatListener2.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/CommandPreprocessListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/listeners/PlayerKickListener.java">
           <value>
             <set />
           </value>
@@ -198,6 +428,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedCommand.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedCommandInterceptor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedCommandMap.java">
           <value>
             <set />
@@ -234,6 +474,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedServer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/blocker/wrappers/WrappedUniqueRegisteredListener.java">
           <value>
             <set />
           </value>
@@ -329,6 +574,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/event/wrappers/WrappedUniqueRegisteredListener.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/security/operator/OperatorManager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/me/alek/utils/bytecodeidentifier/CharSerializer.java">
           <value>
             <set />
           </value>

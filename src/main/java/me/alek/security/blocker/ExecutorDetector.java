@@ -7,13 +7,14 @@ import me.alek.security.blocker.wrappers.WrappedMethodRegisteredListener;
 import me.alek.security.blocker.wrappers.WrappedUniqueRegisteredListener;
 import me.alek.utils.JARFinder;
 import me.alek.utils.ZipUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Async;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -24,6 +25,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,11 +37,11 @@ public class ExecutorDetector extends AbstractListener {
     private final static DataLearningHolder dataLearningHolder = DataLearningHolder.createSingleton();
     @Getter private final static AlreadyNotifiedEvent alreadyNotifiedEvent = AlreadyNotifiedEvent.createSingleton();
 
-    public ExecutorDetector(SecurityManager manager) {
-        super(manager);
+    public ExecutorDetector(SecurityManager manager, PluginManager pluginManager) {
+        super(manager, pluginManager);
         this.manager = manager;
 
-        final CancellationEventProxy<AsyncPlayerChatEvent> eventProxy = new CancellationEventProxy<>(AsyncPlayerChatEvent.class, true);
+        final CancellationEventProxy<AsyncPlayerChatEvent> eventProxy = new CancellationEventProxy<>(AsyncPlayerChatEvent.class, pluginManager, true);
         eventProxy.addListener(new CancellationEventProxy.CancelListener<AsyncPlayerChatEvent>() {
             @Override
             public void onCancelled(RegisteredListener registeredListener, AsyncPlayerChatEvent event) {
@@ -66,7 +68,12 @@ public class ExecutorDetector extends AbstractListener {
         return listenerList.stream().anyMatch(listenerCheck -> compare(listenerCheck, listener));
     }
 
+    private static PluginListener getListener(List<PluginListener> listenerList, PluginListener listener) {
+        return listenerList.stream().filter(listenerCheck -> compare(listenerCheck, listener)).findAny().orElse(null);
+    }
+
     private static boolean compare(BaseListener comparable1, BaseListener comparable2) {
+        if (comparable1 == null || comparable2 == null) return false;
         if (!(comparable1 instanceof PluginListener)) {
             return comparable1.isDefault() == comparable2.isDefault();
         }
@@ -174,11 +181,11 @@ public class ExecutorDetector extends AbstractListener {
             return;
         }
         if (dataLearningHolder.isBlacklisted(listener)) {
-            Bukkit.getPluginManager().callEvent(new PossibleMaliciousEventWrapper(event, listener));
+            getPluginManager().callEvent(new PossibleMaliciousEventWrapper(event, listener));
         }
         double percentage = dataLearningHolder.getPercentage(listener);
         if (percentage < 50) {
-            Bukkit.getPluginManager().callEvent(new PossibleMaliciousEventWrapper(event, listener));
+            getPluginManager().callEvent(new PossibleMaliciousEventWrapper(event, listener));
         }
     }
 
@@ -186,7 +193,6 @@ public class ExecutorDetector extends AbstractListener {
     public void onChat(AsyncPlayerChatEvent chatEvent) {
         if (!chatEvent.isCancelled()) {
             BaseListener baseListener = new BaseListener() {
-                @Override
                 public boolean isDefault() {
                     return true;
                 }
@@ -195,10 +201,13 @@ public class ExecutorDetector extends AbstractListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onChat(PossibleMaliciousEventWrapper event) {
         if (event.isClassMalicious()) {
-            dataLearningHolder.addBlacklistedListener(event.getPluginListener());
+            ExecutorBlocker<AsyncPlayerChatEvent> eventBlocker = event.getExecutorBlocker();
+            if (eventBlocker != null) {
+                dataLearningHolder.addBlacklistedListener(event.getPluginListener(), eventBlocker);
+            }
 
             final RegisteredListener listener = event.getPluginListener().getRegisteredListener();
             if (listener instanceof WrappedUniqueRegisteredListener) {
@@ -208,6 +217,22 @@ public class ExecutorDetector extends AbstractListener {
                 if (alreadyNotifiedEvent.isNotified(id)) return;
                 alreadyNotifiedEvent.addNotifiedId(id);
                 kickPlayer(event.getPlayer(),"§8[§6AntiMalware§8] §cMulig backdoor udnyttelse blev opfanget!");
+
+                PluginListener pluginListener = getListener(new ArrayList<>(dataLearningHolder.blackListedListenerMap.keySet()), event.getPluginListener());
+                if (pluginListener == null) {
+                    return;
+                }
+                ExecutorBlocker<AsyncPlayerChatEvent> blocker = dataLearningHolder.blackListedListenerMap.get(pluginListener);
+
+                if (blocker != null) {
+                    new BukkitRunnable() {
+
+                        @Override
+                        public void run() {
+                            blocker.blockModules();
+                        }
+                    }.runTaskLater(AntiMalwarePlugin.getInstance(), 5L);
+                }
             }
         } else {
             dataLearningHolder.addAcceptedListener(event.getPluginListener());
@@ -282,9 +307,12 @@ public class ExecutorDetector extends AbstractListener {
 
     private static class ClassDataModel {
 
-        @Getter private final ClassNode classNode;
-        @Getter private final ClassReader classReader;
-        @Getter private final FileSystem fileSystem;
+        @Getter
+        private final ClassNode classNode;
+        @Getter
+        private final ClassReader classReader;
+        @Getter
+        private final FileSystem fileSystem;
 
         public ClassDataModel(ClassNode classNode, ClassReader classReader, FileSystem fileSystem) {
             this.classNode = classNode;
@@ -294,21 +322,25 @@ public class ExecutorDetector extends AbstractListener {
     }
 
     public static class PossibleMaliciousEventWrapper extends Event {
+
         private final AsyncPlayerChatEvent delegate;
         private final PluginListener listener;
         private final static HandlerList handlers = new HandlerList();
+
+        @Getter private ExecutorBlocker<AsyncPlayerChatEvent> executorBlocker;
 
         public PossibleMaliciousEventWrapper(AsyncPlayerChatEvent event, PluginListener listener) {
             this.delegate = event;
             this.listener = listener;
         }
 
-        public boolean isClassMalicious() {
+        private boolean isClassMalicious() {
             if (dataLearningHolder.isBlacklisted(listener)) {
                 return true;
             } if (dataLearningHolder.isAccepted(listener)) {
                 return false;
             }
+            if (getPluginListener() == null) return false;
             final RegisteredListener registeredListener = getPluginListener().getRegisteredListener();
             if (!(registeredListener instanceof WrappedUniqueRegisteredListener)) return false;
 
@@ -317,7 +349,6 @@ public class ExecutorDetector extends AbstractListener {
             if (!adapter.isWrappedMethodListener()) {
                 return false;
             }
-
             final WrappedMethodRegisteredListener methodRegisteredListener = adapter.getWrappedMethodListener();
             final String methodSignature = methodRegisteredListener.getMethodSignature();
 
@@ -326,7 +357,6 @@ public class ExecutorDetector extends AbstractListener {
             if (file == null) {
                 return false;
             }
-
             final Class<? extends Listener> listenerClass = listener.getRegisteredListener().getListener().getClass();
             final ClassDataModel classData = getListenerClass(file, getClassName(listenerClass.getName(), "\\."));
             if (classData == null) {
@@ -341,8 +371,9 @@ public class ExecutorDetector extends AbstractListener {
                     = new AnnotationInjectedVisitor<>(AsyncPlayerChatEvent.class, classNode, "org/bukkit/event/EventHandler");
             classReader.accept(classVisitor, 0);
 
-            final ExecutorBlocker<AsyncPlayerChatEvent> chatExecutorBlocker = new ExecutorBlocker<>(classVisitor, this);
-            final boolean feedback = chatExecutorBlocker.process(methodSignature);
+            executorBlocker = new ExecutorBlocker<>(classVisitor, this);
+            final boolean feedback = executorBlocker.process(methodSignature);
+
             try {
                 fileSystem.close();
             } catch (IOException e) {
@@ -376,8 +407,10 @@ public class ExecutorDetector extends AbstractListener {
 
         private double totalEvents;
         private final HashMap<PluginListener, Double> percentageMap = new HashMap<>();
-        private final List<PluginListener> blackListedListenerMap = new ArrayList<>();
+
+        private final HashMap<PluginListener, ExecutorBlocker<AsyncPlayerChatEvent>> blackListedListenerMap = new HashMap<>();
         private final List<PluginListener> acceptedListenerMap = new ArrayList<>();
+
         private static final DataLearningHolder instance = new DataLearningHolder(new HashMap<>());
 
         private static synchronized DataLearningHolder createSingleton() {
@@ -396,13 +429,13 @@ public class ExecutorDetector extends AbstractListener {
             }
         }
 
-        private void addBlacklistedListener(PluginListener listener) {
-            if (containsListener(blackListedListenerMap, listener)) return;
-            blackListedListenerMap.add(listener);
+        private void addBlacklistedListener(PluginListener listener, ExecutorBlocker<AsyncPlayerChatEvent> executorBlocker) {
+            if (containsListener(new ArrayList<>(blackListedListenerMap.keySet()), listener)) return;
+            blackListedListenerMap.put(listener, executorBlocker);
         }
 
         private boolean isBlacklisted(PluginListener listener) {
-            return blackListedListenerMap.stream().anyMatch(listenerCheck -> compare(listener, listenerCheck));
+            return blackListedListenerMap.keySet().stream().anyMatch(listenerCheck -> compare(listener, listenerCheck));
         }
 
         private void addAcceptedListener(PluginListener listener) {

@@ -5,6 +5,7 @@ import me.alek.security.blocker.wrappers.WrappedEventController;
 import me.alek.security.blocker.wrappers.WrappedUniqueRegisteredListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.lang.reflect.Field;
@@ -15,20 +16,23 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CancellationEventProxy<EVENT extends Event> {
+
     interface CancelListener<EVENT extends Event> {
         void onCancelled(RegisteredListener registeredListener, EVENT event);
     }
 
     @Getter private static HandlerListContainer handlerListContainer;
     private final Class<EVENT> clazz;
+    private final PluginManager pluginManager;
     private final boolean controlMultipleCancellers;
 
     private final List<CancelListener<EVENT>> listeners = new ArrayList<>();
     private EventController<EVENT> eventController;
     private EnumMap<EventPriority, ArrayList<RegisteredListener>> backup;
 
-    public CancellationEventProxy(Class<EVENT> clazz, boolean controlMultipleCancellers) {
+    public CancellationEventProxy(Class<EVENT> clazz, PluginManager pluginManager, boolean controlMultipleCancellers) {
         this.clazz = clazz;
+        this.pluginManager = pluginManager;
         this.controlMultipleCancellers = controlMultipleCancellers;
         if (controlMultipleCancellers) {
             this.eventController = new EventController<>();
@@ -106,9 +110,9 @@ public class CancellationEventProxy<EVENT extends Event> {
     private RegisteredListener injectRegisteredListener(final RegisteredListener listener) {
 
         return new WrappedUniqueRegisteredListener(listener) {
+
             @Override
             public void callEvent(Event event) throws EventException {
-
                 WrappedEventController controllerEvent = null;
                 if (handlerListContainer == null || !handlerListContainer.isAssigned()) {
                     handlerListContainer = HandlerListContainer.singletonInstance(event.getHandlers().getRegisteredListeners().length);
@@ -116,9 +120,10 @@ public class CancellationEventProxy<EVENT extends Event> {
 
                 long id = handlerListContainer.assignId(listener);
                 setId(id);
+
                 final List<RegisteredListener> listeners = handlerListContainer.getListeners(this.getId());
                 if (listeners.size() == 1) {
-                    controllerEvent = new WrappedEventController(listener, this.getId(), EventController.ControllerType.THREAD_START);
+                    pluginManager.callEvent(new WrappedEventController(listener, this.getId(), EventController.ControllerType.THREAD_START));
                 } else if (listeners.size() == handlerListContainer.getHandlerListSize()) {
                     controllerEvent = new WrappedEventController(listener, this.getId(), EventController.ControllerType.CALLBACK);
                 }
@@ -136,11 +141,12 @@ public class CancellationEventProxy<EVENT extends Event> {
 
                     if (controlMultipleCancellers) {
                         ((Cancellable) event).setCancelled(false);
-                        eventController.addCancelOnCallback((EVENT) event);
+                        eventController.addCancelOnCallback(String.valueOf(this.getId()), (EVENT) event);
+
                     }
                 }
                 if (controllerEvent != null) {
-                    Bukkit.getPluginManager().callEvent(controllerEvent);
+                    pluginManager.callEvent(controllerEvent);
                 }
             }
         };

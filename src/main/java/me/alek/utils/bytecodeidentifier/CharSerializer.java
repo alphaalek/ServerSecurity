@@ -57,7 +57,7 @@ public class CharSerializer {
                 .put(20, "T")
                 .put(25, "U")
                 .put(46, "V")
-                .put(47, "w")
+                .put(47, "W")
                 .put(48, "X")
                 .put(49, "Y")
                 .put(50, "Z")

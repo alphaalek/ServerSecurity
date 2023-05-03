@@ -1,6 +1,5 @@
 package me.alek.security.blocker.wrappers;
 
-import me.alek.AntiMalwarePlugin;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.*;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -16,16 +15,11 @@ import java.util.*;
 public class WrappedPluginManager implements PluginManager {
 
     private final PluginManager delegate;
-    private final WrappedCommandMap commandMap;
-    private final HashMap<Listener, List<WrappedMethodRegisteredListener>> methodListeners = new HashMap<>();
+    private final HashMap<Listener, ArrayList<WrappedMethodRegisteredListener>> registeredChatListeners = new HashMap<>();
+    private final HashMap<Listener, ArrayList<Method>> registeredListeners = new HashMap<>();
 
-    public WrappedPluginManager(PluginManager delegate, WrappedCommandMap commandMap) {
+    public WrappedPluginManager(PluginManager delegate) {
         this.delegate = delegate;
-        this.commandMap = commandMap;
-    }
-
-    public CommandMap getCommandMap() {
-        return commandMap;
     }
 
     private static HandlerList getHandlerList(Class<? extends Event> clazz) throws Exception {
@@ -80,6 +74,13 @@ public class WrappedPluginManager implements PluginManager {
         for (Method method : methods) {
             EventHandler eventHandler = method.getAnnotation(EventHandler.class);
             if (eventHandler == null) continue;
+            if (!registeredListeners.containsKey(listener)) {
+                registeredListeners.put(listener, new ArrayList<>());
+            }
+            if (registeredListeners.get(listener).contains(method)) {
+                continue;
+            }
+            registeredListeners.get(listener).add(method);
 
             Class<? extends Event> checkClass = method.getParameterTypes()[0].asSubclass(Event.class);
             registerEventToHandlers(checkClass, listener, eventHandler.priority(), plugin, method, eventHandler.ignoreCancelled());
@@ -105,12 +106,12 @@ public class WrappedPluginManager implements PluginManager {
             }
         };
         if (eventClass.isAssignableFrom(AsyncPlayerChatEvent.class)) {
-            if (methodListeners.containsKey(listener)) {
-                if (methodListeners.get(listener).stream().anyMatch(listenerCheck -> listenerCheck.getMethodSignature().equals(method.getName()))) {
+            if (registeredChatListeners.containsKey(listener)) {
+                if (registeredChatListeners.get(listener).stream().anyMatch(listenerCheck -> listenerCheck.getMethodSignature().equals(method.getName()))) {
                     return;
                 }
             } else {
-                methodListeners.put(listener, new ArrayList<>());
+                registeredChatListeners.put(listener, new ArrayList<>());
             }
             WrappedMethodRegisteredListener wrappedListener;
             try {
@@ -118,27 +119,23 @@ public class WrappedPluginManager implements PluginManager {
             } catch (NoSuchMethodException ex) {
                 return;
             }
-            AntiMalwarePlugin.getInstance().getLogger().info("REGISTER CHAT " + listener.getClass().getName() + " " + method.getName());
             handlers.register(wrappedListener);
 
-            methodListeners.get(listener).add(wrappedListener);
+            registeredChatListeners.get(listener).add(wrappedListener);
         } else {
-            // Only register the event with the current instance of PluginManager
-            AntiMalwarePlugin.getInstance().getLogger().info("REGISTER OTHER " + listener.getClass().getName() + " " + method.getName());
-            HandlerList.getHandlerLists().stream()
+            /*HandlerList.getHandlerLists().stream()
                     .filter(handlerList -> Arrays.stream(handlerList.getRegisteredListeners())
                             .noneMatch(registeredListener -> registeredListener.getListener().equals(listener)))
                     .findFirst().orElse(handlers)
-                    .register(new WrappedMethodRegisteredListener(listener, executor, eventPriority, plugin, method, b));
+                    .register(new WrappedMethodRegisteredListener(listener, executor, eventPriority, plugin, method, b));*/
+            RegisteredListener notChatListener;
+            if (useTimings()) {
+                notChatListener = new TimedRegisteredListener(listener, executor, eventPriority, plugin, b);
+            } else {
+                notChatListener = new RegisteredListener(listener, executor, eventPriority, plugin, b);
+            }
+            handlers.register(notChatListener);
         }
-/*
-        RegisteredListener notChatListener;
-        if (useTimings()) {
-            notChatListener = new TimedRegisteredListener(listener, eventExecutor, eventPriority, plugin, b);
-        } else {
-            notChatListener = new RegisteredListener(listener, eventExecutor, eventPriority, plugin, b);
-        }
-        handlers.register(notChatListener);*/
     }
 
     @Override
