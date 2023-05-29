@@ -1,6 +1,6 @@
 package me.alek.handlers.impl;
 
-import me.alek.cache.containers.SkyRageContainer;
+import me.alek.cache.malware.SkyrageLibraries;
 import me.alek.enums.MalwareType;
 import me.alek.handlers.types.EncryptedKeyHandler;
 import me.alek.handlers.types.nodes.MalwareNode;
@@ -13,12 +13,12 @@ import java.nio.file.Path;
 
 public class OldSkyRageCheck extends EncryptedKeyHandler implements ParseHandler, MalwareNode {
 
-    private SkyRageContainer container;
+    private SkyrageLibraries.LibrariesContainer container;
 
     @Override
     public void parse() {
         if (container != null) return;
-        container = new SkyRageContainer();
+        container = new SkyrageLibraries.LibrariesContainer();
     }
 
     @Override

@@ -3,8 +3,8 @@ package me.alek.scanning;
 import lombok.Getter;
 import lombok.Setter;
 import me.alek.AntiMalwarePlugin;
-import me.alek.cache.containers.CacheContainer;
-import me.alek.cache.containers.HandlerContainer;
+import me.alek.cache.CacheContainer;
+import me.alek.cache.malware.Handlers;
 import me.alek.logging.LogHolder;
 import me.alek.model.DuplicatedValueMap;
 import me.alek.model.ResultData;
@@ -54,7 +54,7 @@ public class Scanner {
         scanning = true;
         start = Instant.now();
 
-        final HandlerContainer handlerContainer = new HandlerContainer();
+        final Handlers.HandlerContainer handlerContainer = new Handlers.HandlerContainer();
         final CacheContainer cache = new CacheContainer();
         final DuplicatedValueMap<ResultData, Integer> resultMap = new DuplicatedValueMap<>();
 

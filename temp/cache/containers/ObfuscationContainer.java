@@ -1,7 +1,6 @@
 package me.alek.cache.containers;
 
 import me.alek.cache.Container;
-import me.alek.cache.registery.ObfuscationRegistery;
 import me.alek.cache.Registery;
 import me.alek.obfuscation.handlers.AbstractObfHandler;
 

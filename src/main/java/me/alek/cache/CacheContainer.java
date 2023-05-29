@@ -1,4 +1,4 @@
-package me.alek.cache.containers;
+package me.alek.cache;
 
 import org.bukkit.Bukkit;
 import org.objectweb.asm.ClassReader;

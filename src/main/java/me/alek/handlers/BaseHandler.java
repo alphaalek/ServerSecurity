@@ -1,6 +1,6 @@
 package me.alek.handlers;
 
-import me.alek.cache.containers.CacheContainer;
+import me.alek.cache.CacheContainer;
 import me.alek.model.result.CheckResult;
 import me.alek.model.PluginProperties;
 

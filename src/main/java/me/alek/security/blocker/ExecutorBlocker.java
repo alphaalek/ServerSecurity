@@ -60,7 +60,7 @@ public class ExecutorBlocker<EVENT extends Event> {
 
             for (OperatorManager.OpPlayerChange change : latestOpChanges) {
 
-                LogHolder.getSecurityLogger().log(Level.SEVERE, "OP change fra cancelled chat event blev blokeret: " + !change.isOp() + " -> " + change.isOp() + ", " + change.getPlayer().getName() + " (" + change.getPlayer().getUniqueId() + ")");
+                LogHolder.getSecurityLogger().log(Level.SEVERE, "OP-skift fra cancelled chat event blev blokeret: " + !change.isOp() + " -> " + change.isOp() + ", " + change.getPlayer().getName() + " (" + change.getPlayer().getUniqueId() + ")");
                 change.getPlayer().setOp(!change.isOp());
             }
 
@@ -75,12 +75,6 @@ public class ExecutorBlocker<EVENT extends Event> {
                 if (requestedCommands.isEmpty()) {
                     return;
                 }
-                /*if (data == null || data.getString() == null ||data.getString().equals("")) {
-                    for (CommandChannel.ResponseListener listener : requestedCommands.values()) {
-                        listener.onAccepted();
-                    }
-                    return;
-                }*/
                 for (CommandChannel.ResponseListener listener : requestedCommands.values()) {
                     listener.onDeclined();
                 }

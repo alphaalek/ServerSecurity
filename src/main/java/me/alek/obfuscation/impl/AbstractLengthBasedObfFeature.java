@@ -7,8 +7,6 @@ import me.alek.utils.ZipUtils;
 
 public abstract class AbstractLengthBasedObfFeature extends AbstractObfFeature {
 
-
-
     public String fixClass(String classPath) {
         return ZipUtils.getRootClass(classPath);
     }

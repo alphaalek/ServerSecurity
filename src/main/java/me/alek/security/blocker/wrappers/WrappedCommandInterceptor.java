@@ -31,27 +31,34 @@ public class WrappedCommandInterceptor extends Command {
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
 
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
         if (commandSender instanceof ConsoleCommandSender) {
 
-            ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+            final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
             executor.execute(() -> {
 
                 CommandChannel channel = CommandChannel.get();
                 future.complete(channel.intercept(commandSender, this));
             });
+
         } else {
             future.complete(true);
+            return delegate.execute(commandSender, s, strings);
         }
-        AtomicBoolean bool = new AtomicBoolean();
+
+        final AtomicBoolean bool = new AtomicBoolean();
         future.whenComplete((result, throwable) -> {
             if (throwable != null) {
                 bool.set(true);
-            } else if (!result) {
-                LogHolder.getSecurityLogger().log(Level.SEVERE, "Kommando blev blokeret: CONSOLE /"  + s + " " + String.join(" ", strings));
-                bool.set(false);
-            } else {
-                bool.set(delegate.execute(commandSender, s, strings));
+            }
+            else {
+                if (!result) {
+                    LogHolder.getSecurityLogger().log(Level.SEVERE, "Kommando blev blokeret: CONSOLE: /"  + s + " " + String.join(" ", strings));
+                    bool.set(false);
+                }
+                else {
+                    bool.set(delegate.execute(commandSender, s, strings));
+                }
             }
         });
         return bool.get();

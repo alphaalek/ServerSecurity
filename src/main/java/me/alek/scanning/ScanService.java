@@ -2,8 +2,8 @@ package me.alek.scanning;
 
 import lombok.Getter;
 import me.alek.AntiMalwarePlugin;
-import me.alek.cache.containers.CacheContainer;
-import me.alek.cache.containers.HandlerContainer;
+import me.alek.cache.CacheContainer;
+import me.alek.cache.malware.Handlers;
 import me.alek.handlers.BaseHandler;
 import me.alek.handlers.types.ParseHandler;
 import me.alek.model.DuplicatedValueMap;
@@ -12,7 +12,6 @@ import me.alek.model.ResultData;
 import me.alek.model.result.CheckResult;
 import me.alek.model.result.MalwareCheckResult;
 import me.alek.utils.ZipUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -31,13 +30,13 @@ public class ScanService {
     private volatile ArrayList<File> notDoneFiles;
 
     private final Scanner scanner;
-    private final HandlerContainer handlerContainer;
+    private final Handlers.HandlerContainer handlerContainer;
     private final CacheContainer cacheContainer;
 
     public ScanService(ArrayList<File> files,
                        DuplicatedValueMap<ResultData, Integer> resultMap,
                        Scanner scanner,
-                       HandlerContainer handlerContainer,
+                       Handlers.HandlerContainer handlerContainer,
                        CacheContainer cacheContainer) {
         this.files = files;
         notDoneFiles = new ArrayList<>();

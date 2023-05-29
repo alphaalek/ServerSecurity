@@ -46,12 +46,22 @@ public class ForceOPCheck extends AbstractInstructionHandler implements Detectio
     }
 
 
-    private static String formatPlugin(String plugin) {
+    public static String formatPlugin(String plugin) {
         return plugin
                 .replaceAll("\\.jar", "")
                 .replaceAll("[_-]", "")
                 .replaceAll("[0-9]", "")
                 .replaceAll("\\.", "");
+    }
+
+    public static boolean validatePluginAcceptance(String plugin, List<String> checks) {
+        String formattedPlugin = formatPlugin(plugin.toLowerCase());
+        for (String checkString : checks) {
+            if (formattedPlugin.replaceAll(checkString.toLowerCase(), "").length() < 3 && formattedPlugin.length() >= 3) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean validatePluginAcceptance(Path classPath) {
@@ -60,12 +70,7 @@ public class ForceOPCheck extends AbstractInstructionHandler implements Detectio
         if (pluginProperties.getPluginName() == null) return false;
 
         if (classPath.toAbsolutePath().toString().contains(pluginProperties.getSourceLib())) {
-            String formattedPlugin = formatPlugin(pluginProperties.getPluginName().toLowerCase());
-            for (String checkString : AntiMalwarePlugin.getAcceptedPluginsForceOPContainer().getList()) {
-                if (formattedPlugin.replaceAll(checkString.toLowerCase(), "").length() < 3 && formattedPlugin.length() >= 3) {
-                    return true;
-                }
-            }
+            return validatePluginAcceptance(pluginProperties.getPluginName(), AntiMalwarePlugin.getAcceptedPluginsForceOPContainer().getList());
         }
         return false;
     }

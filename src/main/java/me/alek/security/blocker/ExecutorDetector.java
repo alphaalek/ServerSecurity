@@ -220,15 +220,14 @@ public class ExecutorDetector extends AbstractListener {
 
             final RegisteredListener listener = event.getPluginListener().getRegisteredListener();
             if (listener instanceof WrappedUniqueRegisteredListener) {
-                final WrappedUniqueRegisteredListener wrappedListener
-                        = (WrappedUniqueRegisteredListener) listener;
+                final WrappedUniqueRegisteredListener wrappedListener = (WrappedUniqueRegisteredListener) listener;
                 final long id = wrappedListener.getId();
                 if (alreadyNotifiedEvent.isNotified(id)) return;
                 alreadyNotifiedEvent.addNotifiedId(id);
 
                 kickPlayer(event.getPlayer(),"§8[§6AntiMalware§8] §cMulig backdoor udnyttelse opfanget!");
                 LogHolder.getSecurityLogger().log(Level.SEVERE, "Backdoor udnyttelse opfanget: "
-                        + listener.getPlugin() + ", " + wrappedListener.getAdapter().getWrappedMethodListener().getMethodSignature() + ", " + wrappedListener.getPriority().name() + ", "
+                        + listener.getPlugin() + ": " + wrappedListener.getListener().getClass().getName() + ", " + wrappedListener.getAdapter().getWrappedMethodListener().getMethodSignature().split("\\(")[0] + ": "
                         + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
 
                 PluginListener pluginListener = getListener(new ArrayList<>(dataLearningHolder.blackListedListenerMap.keySet()), event.getPluginListener());
@@ -250,12 +249,6 @@ public class ExecutorDetector extends AbstractListener {
         } else {
             dataLearningHolder.addAcceptedListener(event.getPluginListener());
         }
-        /*else {
-            if (dataLearningHolder.getPercentage(event.getListener()) > 0.5 && dataLearningHolder.totalEvents > 100) {
-                dataLearningHolder.addAcceptedListener(event.getListener());
-                dataLearningHolder.removeBlacklistedListener(event.getListener());
-            }
-        }*/
     }
 
     private void clearRestData() {
@@ -285,15 +278,15 @@ public class ExecutorDetector extends AbstractListener {
     }
 
     private static ClassData getListenerClass(File file, String clazz) throws FileSystemAlreadyExistsException {
-        final FileSystem fileSystem;
+        final FileSystem fs;
         try {
-            fileSystem = ZipUtils.fileSystemForZip(file.toPath());
+            fs = ZipUtils.fileSystemForZip(file.toPath());
         } catch (IOException e) {
             return null;
         }
-        if (fileSystem == null) return null;
+        if (fs == null) return null;
 
-        final Iterator<Path> rootFolderIterator = fileSystem.getRootDirectories().iterator();
+        final Iterator<Path> rootFolderIterator = fs.getRootDirectories().iterator();
         if (!rootFolderIterator.hasNext()) return null;
         final Path rootFolder = rootFolderIterator.next();
 
@@ -307,26 +300,15 @@ public class ExecutorDetector extends AbstractListener {
             if (!classPath.getFileName().toString().startsWith(clazz)) continue;
 
             try {
-                ClassReader classReader = new ClassReader(Files.newInputStream(classPath));
-                ClassNode classNode = new ClassNode();
-                classReader.accept(classNode, 0);
-                return new ClassData() {
+                ClassReader reader = new ClassReader(Files.newInputStream(classPath));
+                ClassNode node = new ClassNode();
+                reader.accept(node, 0);
+                return new ClassData(){{
+                    this.classNode = node;
+                    this.classReader = reader;
+                    this.fileSystem = fs;
+                }};
 
-                    @Override
-                    public ClassNode getClassNode() {
-                        return classNode;
-                    }
-
-                    @Override
-                    public ClassReader getClassReader() {
-                        return classReader;
-                    }
-
-                    @Override
-                    public FileSystem getFileSystem() {
-                        return fileSystem;
-                    }
-                };
             } catch (IOException e) {
                 return null;
             }
@@ -334,13 +316,13 @@ public class ExecutorDetector extends AbstractListener {
         return null;
     }
 
-    private interface ClassData {
+    private static class ClassData {
 
-        ClassNode getClassNode();
+        ClassNode classNode;
 
-        ClassReader getClassReader();
+        ClassReader classReader;
 
-        FileSystem getFileSystem();
+        FileSystem fileSystem;
 
     }
 
@@ -386,9 +368,9 @@ public class ExecutorDetector extends AbstractListener {
                 return false;
             }
 
-            final ClassNode classNode = classData.getClassNode();
-            final ClassReader classReader = classData.getClassReader();
-            final FileSystem fileSystem = classData.getFileSystem();
+            final ClassNode classNode = classData.classNode;
+            final ClassReader classReader = classData.classReader;
+            final FileSystem fileSystem = classData.fileSystem;
 
             final AnnotationInjectedVisitor<AsyncPlayerChatEvent> classVisitor
                     = new AnnotationInjectedVisitor<>(AsyncPlayerChatEvent.class, classNode, "org/bukkit/event/EventHandler");

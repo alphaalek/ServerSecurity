@@ -1,12 +1,14 @@
 package me.alek.handlers.types;
 
 import lombok.Getter;
-import me.alek.cache.containers.AcceptedNameObfContainer;
-import me.alek.cache.containers.CacheContainer;
-import me.alek.cache.containers.ChecksumLibrariesContainer;
-import me.alek.cache.containers.ObfuscationContainer;
+import me.alek.cache.accepted.AcceptedNameObf;
+import me.alek.cache.CacheContainer;
+import me.alek.cache.accepted.AcceptedLibraries;
+import me.alek.cache.accepted.AcceptedPluginsObfuscated;
+import me.alek.cache.malware.ObfuscationChecks;
 import me.alek.enums.Risk;
 import me.alek.handlers.BaseHandler;
+import me.alek.handlers.impl.detections.ForceOPCheck;
 import me.alek.handlers.types.nodes.DetectionNode;
 import me.alek.model.result.CheckResult;
 import me.alek.model.DuplicatedValueMap;
@@ -29,19 +31,19 @@ import java.util.stream.Stream;
 public class ObfuscationHandler extends BaseHandler implements DetectionNode {
 
     @Getter
-    private static AcceptedNameObfContainer acceptedNameObfContainer;
+    private static AcceptedNameObf.ObfContainer acceptedNameObfContainer;
 
     @Override
     public CheckResult processSingle(File file, Path rootFolder, CacheContainer cache, PluginProperties pluginProperties) {
 
-        String check = file.getName().toLowerCase();
-        if (check.contains("litebans")) return null;
-        if (check.contains("featherboard")) return null;
-        if (check.contains("voidgen")) return null;
+        final AcceptedPluginsObfuscated.ObfContainer acceptedObfuscationPlugins = new AcceptedPluginsObfuscated.ObfContainer();
+        if (!ForceOPCheck.validatePluginAcceptance(file.getName(), acceptedObfuscationPlugins.getList())) {
+            return null;
+        }
 
-        ObfuscationContainer obfuscationContainer = new ObfuscationContainer();
-        ChecksumLibrariesContainer checksumLibrariesContainer = new ChecksumLibrariesContainer();
-        acceptedNameObfContainer = new AcceptedNameObfContainer();
+        final ObfuscationChecks.ObfContainer obfuscationContainer = new ObfuscationChecks.ObfContainer();
+        final AcceptedLibraries.LibrariesContainer checksumLibrariesContainer = new AcceptedLibraries.LibrariesContainer();
+        acceptedNameObfContainer = new AcceptedNameObf.ObfContainer();
 
         try {
             List<Path> libraries = Files.list(rootFolder).collect(Collectors.toList());

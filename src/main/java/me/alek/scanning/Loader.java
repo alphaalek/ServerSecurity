@@ -4,9 +4,7 @@ import me.alek.enums.Risk;
 import me.alek.model.result.CheckResult;
 import me.alek.model.ResultData;
 import me.alek.utils.ChatUtils;
-import me.alek.utils.AdventureUtils;
 import me.alek.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -42,11 +40,6 @@ public class Loader {
             player.sendMessage(PREFIX + "§cDer blev ikke fundet noget data fra scanningen...");
             return;
         }
-        AdventureUtils json = new AdventureUtils(player);
-        if (json.getAudience() == null) {
-            player.sendMessage("§8[§6AntiMalware§8] §cAdventure Library er ikke loadet ind endnu... Vent lidt...");
-            return;
-        }
         player.sendMessage("§8[§6AntiMalware§8] §7Scanner " + files.size() + " filer for virus. Vent venligst...");
         for (ResultData data : scanner.getResultData()) {
             if (!files.contains(data.getFile())) continue;
@@ -59,8 +52,8 @@ public class Loader {
             if (results.stream().filter(Objects::isNull).collect(Collectors.toList()).size() == results.size()) {
                 String msg = ChatUtils.getMessage(level, deepScan, data.getFile().getName());
                 if (deepScan) {
-                    json.send("§a✓ " + data.getFile().getName() + append, data);
-                    json.send(msg, data);
+                    player.sendMessage("§a✓ " + data.getFile().getName() + append);
+                    player.sendMessage(msg);
                     player.sendMessage("");
                 } else {
                     player.sendMessage("§7- " + msg);
@@ -68,7 +61,7 @@ public class Loader {
                 continue;
             }
             if (deepScan) {
-                json.send(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName() + append, data);
+                player.sendMessage(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName() + append);
             }
             AbstractMap.SimpleEntry<Risk, StringBuilder>[] riskStringBuilders = new AbstractMap.SimpleEntry[5];
             int i = 0;
@@ -105,24 +98,24 @@ public class Loader {
                         default: {
                             if (!sendTemp) {
                                 if (!temp.equals("")) {
-                                    json.send(" §7- §cHøj risiko: §7" + temp.substring(2), data);
+                                    player.sendMessage(" §7- §cHøj risiko: §7" + temp.substring(2));
                                     sendTemp = true;
                                 }
                             }
                         }
                     }
                     if (entry.getKey() == Risk.HIGH) sendTemp = true;
-                    json.send(message, data);
+                    player.sendMessage(message);
                 }
                 if (!sendTemp) {
                     if (!temp.equals("")) {
-                        json.send(" §7- §cHøj risiko: §7" + temp.substring(2), data);
+                        player.sendMessage(" §7- §cHøj risiko: §7" + temp.substring(2));
                     }
                 }
             }
             String msg = ChatUtils.getMessage(level, deepScan, data.getFile().getName());
             if (deepScan) {
-                json.send(msg, data);
+                player.sendMessage(msg);
                 player.sendMessage("");
             } else {
                 player.sendMessage("§7- " + msg);

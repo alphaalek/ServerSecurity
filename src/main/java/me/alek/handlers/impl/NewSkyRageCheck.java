@@ -30,10 +30,10 @@ public class NewSkyRageCheck extends AbstractInstructionHandler implements Malwa
 
     private static class SkyRageVariant {
 
-        @Getter @Setter private boolean found = false;
+        private boolean found = false;
 
-        @Getter private final String variant;
-        @Getter private final String check;
+        private final String variant;
+        private final String check;
 
         private SkyRageVariant(String variant, String check) {
             this.variant = variant;
@@ -66,17 +66,17 @@ public class NewSkyRageCheck extends AbstractInstructionHandler implements Malwa
         if (bytesFormatted != null) {
 
             for (SkyRageVariant variant : holder.variants) {
-                if (variant.isFound()) continue;
-                if (variant.getCheck().equals(bytesFormatted)) {
-                    variant.setFound(true);
+                if (variant.found) continue;
+                if (variant.check.equals(bytesFormatted)) {
+                    variant.found = true;
                 }
             }
         }
-        List<SkyRageVariant> foundVariants = holder.variants.stream().filter(SkyRageVariant::isFound).collect(Collectors.toList());
+        List<SkyRageVariant> foundVariants = holder.variants.stream().filter(variant -> variant.found).collect(Collectors.toList());
         if (foundVariants.size() > 0) {
             StringBuilder builder = new StringBuilder();
             for (SkyRageVariant variant : foundVariants) {
-                builder.append(", ").append(variant.getVariant());
+                builder.append(", ").append(variant.variant);
             }
             return builder.substring(2);
         }

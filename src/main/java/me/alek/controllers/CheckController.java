@@ -1,6 +1,6 @@
 package me.alek.controllers;
 
-import me.alek.cache.containers.CacheContainer;
+import me.alek.cache.CacheContainer;
 import me.alek.handlers.CheckAdapter;
 import me.alek.handlers.types.OnlySourceLibraryHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
@@ -10,7 +10,6 @@ import me.alek.model.result.CheckResult;
 import me.alek.model.PluginProperties;
 import me.alek.model.result.MalwareCheckResult;
 import me.alek.utils.ZipUtils;
-import org.bukkit.Bukkit;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;

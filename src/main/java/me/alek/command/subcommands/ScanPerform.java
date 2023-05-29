@@ -22,7 +22,7 @@ public class ScanPerform {
         if (scanner.isScanning()) {
             int size = scanner.getFiles().size() - scanner.getService().getNotDoneFiles().size() - 1;
             player.sendMessage("§8[§6AntiMalware§8] §7Serveren er igang med at opdatere cache i auto-update. Vent lidt... ("
-                    + (size == -1 ? 0 : size) + "/" + size + ")");
+                    + (size == -1 ? 0 : size) + "/" + scanner.getFiles().size() + ")");
             return;
         }
         final List<File> files = new ArrayList<>();

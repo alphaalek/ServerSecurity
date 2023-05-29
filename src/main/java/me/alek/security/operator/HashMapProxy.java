@@ -1,5 +1,7 @@
 package me.alek.security.operator;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import lombok.SneakyThrows;
 import me.alek.logging.LogHolder;
@@ -11,6 +13,13 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,16 +37,25 @@ public class HashMapProxy<K, V> extends HashMap<K, V> {
 
     @Override
     public V put(K key, V value) {
-        OfflinePlayer player = getPlayer(value);
+        final OfflinePlayer player = getPlayer(value);
         if (player != null) {
+
+            String name = player.getName();
+            if (name == null) {
+                name = getMojangName(player.getUniqueId().toString());
+                if (name.equals("")) {
+                    name = "Ukendt";
+                }
+            }
             if (!operatorManager.isPlayerAllowed(player)) {
-                LogHolder.getOPLogger().log(Level.SEVERE, "OP spiller blev blokeret: " + player.getName() + " (" + player.getUniqueId() + ")");
+
+                LogHolder.getOPLogger().log(Level.SEVERE, "OP spiller blev blokeret: " + name + " (" + player.getUniqueId() + ")");
                 for (OpListEntry entry : ((CraftServer)Bukkit.getServer()).getHandle().getOPs().getValues()) {
                     OfflinePlayer oppedOfflinePlayer = getPlayer((V)entry);
                     if (!oppedOfflinePlayer.isOnline()) continue;
 
-                    Player oppedPlayer = (Player) oppedOfflinePlayer;
-                    oppedPlayer.sendMessage("§8[§6AntiMalware§8] §cOpped spiller blev blokeret: " + player.getName() + ". " +
+                    final Player oppedPlayer = (Player) oppedOfflinePlayer;
+                    oppedPlayer.sendMessage("§8[§6AntiMalware§8] §cOp spiller blev blokeret: " + name + ". " +
                             "Hvis spilleren skal oppes, kan du give spilleren tilladelse i config.yml.");
                 }
                 return null;
@@ -46,7 +64,7 @@ public class HashMapProxy<K, V> extends HashMap<K, V> {
             operatorManager.put(player, true);
 
             if (super.get(key) == null) {
-                LogHolder.getOPLogger().log(Level.INFO, "Spiller blev op: " + player.getName() + " (" + player.getUniqueId() + ")");
+                LogHolder.getOPLogger().log(Level.INFO, "Spiller blev op: " + name + " (" + player.getUniqueId() + ")");
             }
         }
 
@@ -70,5 +88,29 @@ public class HashMapProxy<K, V> extends HashMap<K, V> {
 
     private OfflinePlayer getPlayer(V value) {
         return Bukkit.getOfflinePlayer(((GameProfile) ((JsonListEntry) value).getKey()).getId());
+    }
+
+    private String getMojangName(String uuid) {
+        final String SESSION_SERVER_URL = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid;
+        try {
+            final URL url = new URL(SESSION_SERVER_URL);
+            final URLConnection connection = url.openConnection();
+
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            final StringBuilder lines = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.append(line);
+            }
+
+            final JsonParser parser = new JsonParser();
+            final JsonObject json = parser.parse(lines.toString()).getAsJsonObject();
+
+            reader.close();
+            return json.get("name").getAsString();
+        } catch (IOException ex) {
+            return "";
+        }
     }
 }

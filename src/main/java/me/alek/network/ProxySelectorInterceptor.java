@@ -51,7 +51,7 @@ public class ProxySelectorInterceptor implements Interceptor {
         public List<Proxy> select(final URI uri) {
             String authority = uri.getAuthority();
             if (authority.contains("skyrage") || authority.contains("hostflow") || authority.contains("bodyalhoha")) {
-                LogHolder.getSecurityLogger().log(Level.SEVERE, "Netværk protokol blokeret: " + authority);
+                LogHolder.getSecurityLogger().log(Level.SEVERE, "Network protocol fra virus blokeret (websocket/fil download/netty connection): " + authority);
                 Bukkit.getServer().getOnlinePlayers()
                         .stream()
                         .filter(ServerOperator::isOp)
@@ -62,7 +62,7 @@ public class ProxySelectorInterceptor implements Interceptor {
                     SneakyThrow.sneakyThrow(new SocketTimeoutException("Connection timed out"));
                 } catch (Throwable ignored) {
                 }
-                throw new AssertionError();
+                throw new AssertionError("Virus blokeret! Tjek security.log");
             }
             return this.delegate.select(uri);
         }

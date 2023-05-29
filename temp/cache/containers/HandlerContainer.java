@@ -1,7 +1,6 @@
 package me.alek.cache.containers;
 
 import me.alek.cache.Container;
-import me.alek.cache.registery.HandlerRegistery;
 import me.alek.cache.Registery;
 
 public class HandlerContainer extends Container<Handler> {
