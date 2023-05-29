@@ -2,9 +2,11 @@ package me.alek.security.blocker;
 
 import lombok.Getter;
 import me.alek.AntiMalwarePlugin;
+import me.alek.logging.LogHolder;
 import me.alek.security.SecurityManager;
 import me.alek.security.blocker.wrappers.WrappedMethodRegisteredListener;
 import me.alek.security.blocker.wrappers.WrappedUniqueRegisteredListener;
+import me.alek.utils.AsynchronousTask;
 import me.alek.utils.JARFinder;
 import me.alek.utils.ZipUtils;
 import org.bukkit.entity.Player;
@@ -14,7 +16,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Async;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -22,10 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,8 +43,8 @@ public class ExecutorDetector extends AbstractListener {
         super(manager, pluginManager);
         this.manager = manager;
 
-        final CancellationEventProxy<AsyncPlayerChatEvent> eventProxy = new CancellationEventProxy<>(AsyncPlayerChatEvent.class, pluginManager, true);
-        eventProxy.addListener(new CancellationEventProxy.CancelListener<AsyncPlayerChatEvent>() {
+        final CancellationProxy<AsyncPlayerChatEvent> eventProxy = new CancellationProxy<>(AsyncPlayerChatEvent.class, pluginManager, true);
+        eventProxy.addListener(new CancellationProxy.CancelListener<AsyncPlayerChatEvent>() {
             @Override
             public void onCancelled(RegisteredListener registeredListener, AsyncPlayerChatEvent event) {
                 final PluginListener pluginListener = new PluginListener() {
@@ -182,6 +184,7 @@ public class ExecutorDetector extends AbstractListener {
         }
         if (dataLearningHolder.isBlacklisted(listener)) {
             getPluginManager().callEvent(new PossibleMaliciousEventWrapper(event, listener));
+            return;
         }
         double percentage = dataLearningHolder.getPercentage(listener);
         if (percentage < 50) {
@@ -203,7 +206,13 @@ public class ExecutorDetector extends AbstractListener {
 
     @EventHandler
     public void onChat(PossibleMaliciousEventWrapper event) {
-        if (event.isClassMalicious()) {
+        boolean isMalicious;
+        try {
+            isMalicious = event.isClassMalicious();
+        } catch (FileSystemAlreadyExistsException ex) {
+            return;
+        }
+        if (isMalicious) {
             ExecutorBlocker<AsyncPlayerChatEvent> eventBlocker = event.getExecutorBlocker();
             if (eventBlocker != null) {
                 dataLearningHolder.addBlacklistedListener(event.getPluginListener(), eventBlocker);
@@ -216,7 +225,11 @@ public class ExecutorDetector extends AbstractListener {
                 final long id = wrappedListener.getId();
                 if (alreadyNotifiedEvent.isNotified(id)) return;
                 alreadyNotifiedEvent.addNotifiedId(id);
-                kickPlayer(event.getPlayer(),"§8[§6AntiMalware§8] §cMulig backdoor udnyttelse blev opfanget!");
+
+                kickPlayer(event.getPlayer(),"§8[§6AntiMalware§8] §cMulig backdoor udnyttelse opfanget!");
+                LogHolder.getSecurityLogger().log(Level.SEVERE, "Backdoor udnyttelse opfanget: "
+                        + listener.getPlugin() + ", " + wrappedListener.getAdapter().getWrappedMethodListener().getMethodSignature() + ", " + wrappedListener.getPriority().name() + ", "
+                        + event.getPlayer().getName() + " (" + event.getPlayer().getUniqueId() + ")");
 
                 PluginListener pluginListener = getListener(new ArrayList<>(dataLearningHolder.blackListedListenerMap.keySet()), event.getPluginListener());
                 if (pluginListener == null) {
@@ -271,7 +284,7 @@ public class ExecutorDetector extends AbstractListener {
         return clazzName;
     }
 
-    private static ClassDataModel getListenerClass(File file, String clazz) {
+    private static ClassData getListenerClass(File file, String clazz) throws FileSystemAlreadyExistsException {
         final FileSystem fileSystem;
         try {
             fileSystem = ZipUtils.fileSystemForZip(file.toPath());
@@ -297,7 +310,23 @@ public class ExecutorDetector extends AbstractListener {
                 ClassReader classReader = new ClassReader(Files.newInputStream(classPath));
                 ClassNode classNode = new ClassNode();
                 classReader.accept(classNode, 0);
-                return new ClassDataModel(classNode, classReader, fileSystem);
+                return new ClassData() {
+
+                    @Override
+                    public ClassNode getClassNode() {
+                        return classNode;
+                    }
+
+                    @Override
+                    public ClassReader getClassReader() {
+                        return classReader;
+                    }
+
+                    @Override
+                    public FileSystem getFileSystem() {
+                        return fileSystem;
+                    }
+                };
             } catch (IOException e) {
                 return null;
             }
@@ -305,20 +334,14 @@ public class ExecutorDetector extends AbstractListener {
         return null;
     }
 
-    private static class ClassDataModel {
+    private interface ClassData {
 
-        @Getter
-        private final ClassNode classNode;
-        @Getter
-        private final ClassReader classReader;
-        @Getter
-        private final FileSystem fileSystem;
+        ClassNode getClassNode();
 
-        public ClassDataModel(ClassNode classNode, ClassReader classReader, FileSystem fileSystem) {
-            this.classNode = classNode;
-            this.classReader = classReader;
-            this.fileSystem = fileSystem;
-        }
+        ClassReader getClassReader();
+
+        FileSystem getFileSystem();
+
     }
 
     public static class PossibleMaliciousEventWrapper extends Event {
@@ -334,7 +357,7 @@ public class ExecutorDetector extends AbstractListener {
             this.listener = listener;
         }
 
-        private boolean isClassMalicious() {
+        private boolean isClassMalicious() throws FileSystemAlreadyExistsException {
             if (dataLearningHolder.isBlacklisted(listener)) {
                 return true;
             } if (dataLearningHolder.isAccepted(listener)) {
@@ -358,7 +381,7 @@ public class ExecutorDetector extends AbstractListener {
                 return false;
             }
             final Class<? extends Listener> listenerClass = listener.getRegisteredListener().getListener().getClass();
-            final ClassDataModel classData = getListenerClass(file, getClassName(listenerClass.getName(), "\\."));
+            final ClassData classData = getListenerClass(file, getClassName(listenerClass.getName(), "\\."));
             if (classData == null) {
                 return false;
             }
@@ -467,18 +490,6 @@ public class ExecutorDetector extends AbstractListener {
         }
     }
 
-    private abstract class AsynchronousTask {
-
-        public void runAsync() {
-            getRunnable().runTaskTimerAsynchronously(manager.getPlugin(), 0L, getPeriod());
-        }
-
-        public abstract BukkitRunnable getRunnable();
-
-        public abstract Long getPeriod();
-
-    }
-
     private class ClearRestData extends AsynchronousTask {
 
         @Override
@@ -492,7 +503,7 @@ public class ExecutorDetector extends AbstractListener {
         }
 
         @Override
-        public Long getPeriod() {
+        public long getPeriod() {
             return 36000L;
         }
     }
@@ -510,7 +521,7 @@ public class ExecutorDetector extends AbstractListener {
         }
 
         @Override
-        public Long getPeriod() {
+        public long getPeriod() {
             return 600L;
         }
     }

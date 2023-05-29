@@ -44,7 +44,7 @@ public class DispatchCommandCheck extends AbstractInstructionHandler implements 
                     return "";
                 }
             }
-            if (i > 5) {
+            if (i > 10) {
                 return null;
             }
             i++;

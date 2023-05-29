@@ -17,6 +17,7 @@ public class CancelledChatEventCheck extends AbstractInstructionHandler implemen
     public CancelledChatEventCheck() {
         super(MethodInsnNode.class);
     }
+
     @Override
     public Pair<String, String> preProcessJAR(File file, Path rootFolder, PluginProperties pluginProperties) {
         return null;

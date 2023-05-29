@@ -15,7 +15,7 @@ import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class CancellationEventProxy<EVENT extends Event> {
+public class CancellationProxy<EVENT extends Event> {
 
     interface CancelListener<EVENT extends Event> {
         void onCancelled(RegisteredListener registeredListener, EVENT event);
@@ -30,7 +30,7 @@ public class CancellationEventProxy<EVENT extends Event> {
     private EventController<EVENT> eventController;
     private EnumMap<EventPriority, ArrayList<RegisteredListener>> backup;
 
-    public CancellationEventProxy(Class<EVENT> clazz, PluginManager pluginManager, boolean controlMultipleCancellers) {
+    public CancellationProxy(Class<EVENT> clazz, PluginManager pluginManager, boolean controlMultipleCancellers) {
         this.clazz = clazz;
         this.pluginManager = pluginManager;
         this.controlMultipleCancellers = controlMultipleCancellers;

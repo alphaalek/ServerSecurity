@@ -1,5 +1,6 @@
 package me.alek.security.blocker.wrappers;
 
+import me.alek.logging.LogHolder;
 import me.alek.security.blocker.CommandChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -7,9 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.defaults.VanillaCommand;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 public class WrappedCommandInterceptor extends Command {
 
@@ -45,7 +48,7 @@ public class WrappedCommandInterceptor extends Command {
             if (throwable != null) {
                 bool.set(true);
             } else if (!result) {
-                Bukkit.broadcastMessage("Farlig kommando blev blokeret");
+                LogHolder.getSecurityLogger().log(Level.SEVERE, "Kommando blev blokeret: CONSOLE /"  + s + " " + String.join(" ", strings));
                 bool.set(false);
             } else {
                 bool.set(delegate.execute(commandSender, s, strings));

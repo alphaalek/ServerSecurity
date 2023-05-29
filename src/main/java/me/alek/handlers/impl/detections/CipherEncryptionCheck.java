@@ -27,7 +27,7 @@ public class CipherEncryptionCheck extends AbstractInstructionHandler implements
     public String processAbstractInsn(MethodNode methodNode, AbstractInsnNode abstractInsnNode, Path classPath) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) abstractInsnNode;
         if (!methodInsnNode.owner.equals("javax/crypto/Cipher")) return null;
-        if (!methodInsnNode.name.equals("getInstance")) return null;
+        //if (!methodInsnNode.name.equals("getInstance")) return null;
         return "";
     }
 

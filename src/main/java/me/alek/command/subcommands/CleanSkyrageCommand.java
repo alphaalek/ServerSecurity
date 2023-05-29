@@ -3,6 +3,7 @@ package me.alek.command.subcommands;
 import me.alek.cleaning.OperatingSystem;
 import me.alek.cleaning.SkyrageJarCleaner;
 import me.alek.cleaning.SystemCleaner;
+import me.alek.cleaning.SystemInfectionType;
 import me.alek.command.SubCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,8 +33,9 @@ public class CleanSkyrageCommand implements SubCommand {
             OperatingSystem system = OperatingSystem.getSystem();
             SystemCleaner cleaner = system.getCleaner();
             try {
-                if (cleaner.isInfected()) {
-                    cleaner.clean(player);
+                SystemInfectionType type = cleaner.getInfection();
+                if (type != null) {
+                    cleaner.clean(type, player);
                 } else {
                     player.sendMessage("§8[§6AntiMalware§8] §aDet ser ud til, at dit system ikke er smittet med Skyrage Malware.");
                 }

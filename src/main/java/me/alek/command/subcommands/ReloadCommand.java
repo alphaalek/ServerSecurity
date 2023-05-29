@@ -2,7 +2,7 @@ package me.alek.command.subcommands;
 
 import me.alek.AntiMalwarePlugin;
 import me.alek.command.SubCommand;
-import me.alek.scanning.ScanManager;
+import me.alek.scanning.ScanHandler;
 import me.alek.scanning.Scanner;
 import me.alek.utils.JARFinder;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ public class ReloadCommand implements SubCommand {
         AntiMalwarePlugin.getSecurityManager().reload();
 
         Player player = (Player) sender;
-        Scanner scanner = ScanManager.getLatestScanner();
+        Scanner scanner = ScanHandler.getLatestScanner();
         if (scanner.isScanning()) {
             int size = scanner.getFiles().size();
             player.sendMessage("§8[§6AntiMalware§8] §7Serveren er allerede igang med at opdatere cache i auto-update. Vent lidt... ("

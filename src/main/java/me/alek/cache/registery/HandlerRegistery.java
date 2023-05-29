@@ -41,10 +41,12 @@ public class HandlerRegistery extends Registery<BaseHandler> {
                 new VulcanCheck(),
                 new DiscordWebhookCheck(),
                 new CancelledChatEventCheck(),
+                new DirectLeaksCheck(),
 
                 //MALWARES
                 new HostflowCheck(),
-                new SkyRageCheck(),
+                new OldSkyRageCheck(),
+                new NewSkyRageCheck(),
                 new EctasyCheck(),
                 new OpenEctasyCheck(),
                 new QlutchCheck(),

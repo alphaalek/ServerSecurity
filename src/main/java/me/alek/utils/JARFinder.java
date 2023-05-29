@@ -12,14 +12,13 @@ public class JARFinder {
 
     public static ArrayList<File> findAllJars(File dir) {
         if (dir.listFiles() == null) return null;
-        ArrayList<String> absolutePaths = new ArrayList<>();
-        ArrayList<File> jars = findAllJarsDir(dir, absolutePaths);
-        return jars;
+        final ArrayList<String> absolutePaths = new ArrayList<>();
+        return findAllJarsDir(dir, absolutePaths);
     }
 
     public static ArrayList<File> findAllJarsDir(File dir, List<String> absolutePaths) {
         try {
-            ArrayList<File> jars = new ArrayList<>();
+            final ArrayList<File> jars = new ArrayList<>();
             Files.walk(dir.toPath())
                     .map(Path::toFile)
                     .filter(file -> !absolutePaths.contains(file.getAbsolutePath()))

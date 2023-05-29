@@ -2,7 +2,7 @@ package me.alek.command.subcommands;
 
 import me.alek.*;
 import me.alek.scanning.Loader;
-import me.alek.scanning.ScanManager;
+import me.alek.scanning.ScanHandler;
 import me.alek.scanning.Scanner;
 import me.alek.utils.JARFinder;
 import org.bukkit.command.CommandSender;
@@ -17,23 +17,23 @@ import java.util.stream.Collectors;
 public class ScanPerform {
 
     public static void perform(CommandSender sender, String[] args, boolean deepScan) {
-        Player player = (Player) sender;
-        Scanner scanner = ScanManager.getLatestScanner();
+        final Player player = (Player) sender;
+        final Scanner scanner = ScanHandler.getLatestScanner();
         if (scanner.isScanning()) {
-            int size = scanner.getFiles().size();
+            int size = scanner.getFiles().size() - scanner.getService().getNotDoneFiles().size() - 1;
             player.sendMessage("§8[§6AntiMalware§8] §7Serveren er igang med at opdatere cache i auto-update. Vent lidt... ("
-                    + (size - scanner.getService().getNotDoneFiles().size() - 1) + "/" + size + ")");
+                    + (size == -1 ? 0 : size) + "/" + size + ")");
             return;
         }
-        List<File> files = new ArrayList<>();
-        File dataFolder = AntiMalwarePlugin.getInstance().getDataFolder().getParentFile();
+        final List<File> files = new ArrayList<>();
+        final File dataFolder = AntiMalwarePlugin.getInstance().getDataFolder().getParentFile();
         if (args.length == 1 || args[1].equalsIgnoreCase("all")) {
-            List<File> jars = JARFinder.findAllJars(dataFolder);
+            final List<File> jars = JARFinder.findAllJars(dataFolder);
             if (jars != null) {
                 files.addAll(jars);
             }
         } else {
-            File target = JARFinder.findFile(dataFolder, args[1]);
+            final File target = JARFinder.findFile(dataFolder, args[1]);
             files.add(target);
         }
 
@@ -41,7 +41,7 @@ public class ScanPerform {
             player.sendMessage("§8[§6AntiMalware§8] §cKunne ikke finde noget plugin...");
             return;
         }
-        Loader loader = new Loader(player, deepScan, files);
-        loader.load(ScanManager.getLatestScanner()).sendFeedback();
+        final Loader loader = new Loader(player, deepScan, files);
+        loader.load(ScanHandler.getLatestScanner()).sendFeedback();
     }
 }

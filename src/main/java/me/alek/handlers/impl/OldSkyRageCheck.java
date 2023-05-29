@@ -11,7 +11,7 @@ import me.alek.model.PluginProperties;
 import java.io.File;
 import java.nio.file.Path;
 
-public class SkyRageCheck extends EncryptedKeyHandler implements ParseHandler, MalwareNode {
+public class OldSkyRageCheck extends EncryptedKeyHandler implements ParseHandler, MalwareNode {
 
     private SkyRageContainer container;
 
@@ -28,7 +28,7 @@ public class SkyRageCheck extends EncryptedKeyHandler implements ParseHandler, M
 
     @Override
     public String[] getURLKeys() {
-        return new String[]{"http://files.skyrage.de/update", "http://files.skyrage.de/mvd"};
+        return new String[]{"http://files.skyrage.de/update", "http://files.skyrage.de/mvd", "http://files.ckyroor.com"};
     }
 
     @Override

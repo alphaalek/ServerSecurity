@@ -12,9 +12,9 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.File;
 import java.nio.file.Path;
 
-public class DiscordWebhookCheck extends AbstractInstructionHandler implements DetectionNode {
+public class DirectLeaksCheck extends AbstractInstructionHandler implements DetectionNode {
 
-    public DiscordWebhookCheck() {
+    public DirectLeaksCheck() {
         super(LdcInsnNode.class);
     }
 
@@ -29,13 +29,13 @@ public class DiscordWebhookCheck extends AbstractInstructionHandler implements D
         Object value = ldcInsnNode.cst;
         if (!(value instanceof String)) return null;
         String string = (String) value;
-        if (!string.contains("discord.com/api/webhooks")) return null;
+        if (!string.contains("DirectLeaks")) return null;
         return "";
     }
 
     @Override
     public String getType() {
-        return "Discord Webhook";
+        return "DirectLeaks";
     }
 
     @Override

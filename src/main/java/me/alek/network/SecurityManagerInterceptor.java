@@ -1,11 +1,13 @@
 package me.alek.network;
 
 import me.alek.AntiMalwarePlugin;
+import me.alek.logging.LogHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.ServerOperator;
 
 import java.net.SocketTimeoutException;
 import java.security.Permission;
+import java.util.logging.Level;
 
 public class SecurityManagerInterceptor extends SecurityManager implements Interceptor {
 
@@ -32,18 +34,18 @@ public class SecurityManagerInterceptor extends SecurityManager implements Inter
     public void checkConnect(final String host, final int port) {
         if (host.contains("skyrage") || host.contains("hostflow") || host.contains("bodyalhoha")) {
             String portF = (port == -1) ? "" : ":" + port;
-            plugin.getLogger().severe("Blokeret mistaenksom netvaerksprotokol: " + host + portF);
+            LogHolder.getSecurityLogger().log(Level.SEVERE, "Network protocol fra virus blev blokeret: " + host + portF + " (Tag dette som en advarsel!)");
             Bukkit.getServer().getOnlinePlayers()
                     .stream()
                     .filter(ServerOperator::isOp)
                     .forEach(player -> {
-                        player.sendMessage("§8[§6AntiMalware§8] §cBlokeret mistænksom netværksprotokol: " + host + portF);
+                        player.sendMessage("§8[§6AntiMalware§8] §cBlokeret network protocol: " + host + portF);
                     });
             try {
                 SneakyThrow.sneakyThrow(new SocketTimeoutException("Connection timed out"));
             } catch (Throwable ignored) {
             }
-            throw new AssertionError();
+            throw new AssertionError("Virus blokeret! Tjek security.log");
         }
     }
 
@@ -59,7 +61,7 @@ public class SecurityManagerInterceptor extends SecurityManager implements Inter
             return;
         }
         if (this.enabled && name.equals("setSecurityManager")) {
-            throw new SecurityException("Cannot replace the security manager.");
+            throw new SecurityException("Fejl ved replace af SecurityManager.");
         }
     }
 

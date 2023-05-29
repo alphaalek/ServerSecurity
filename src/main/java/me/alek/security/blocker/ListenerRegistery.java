@@ -10,8 +10,6 @@ import me.alek.AntiMalwarePlugin;
 import me.alek.security.SecurityManager;
 import me.alek.security.SecurityOptions;
 import me.alek.security.blocker.listeners.ChatListener2;
-import me.alek.security.blocker.listeners.CommandPreprocessListener;
-import me.alek.security.blocker.listeners.PlayerKickListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -34,13 +32,12 @@ public class ListenerRegistery {
 
     private List<Class<? extends AbstractListener>> getListeners() {
         List<Class<? extends AbstractListener>> listeners = new ArrayList<>(Arrays.asList(
-                CommandPreprocessListener.class,
-                PlayerKickListener.class,
-                ChatListener2.class,
-                CommandInjector.class));
+                ChatListener2.class));
         SecurityOptions securityOptions = securityManager.getOptions();
         if (securityOptions.isPreventCancelledMaliciousChatEvents()) {
-            listeners.add(ExecutorDetector.class);
+            listeners.addAll(Arrays.asList(
+                    ExecutorDetector.class,
+                    CommandInjector.class));
         }
         return listeners;
     }

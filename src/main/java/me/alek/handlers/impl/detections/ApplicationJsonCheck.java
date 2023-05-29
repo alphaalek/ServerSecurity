@@ -17,7 +17,6 @@ public class ApplicationJsonCheck extends RequestPropertyHandler {
     @Override
     public Risk getRisk() {
         return Risk.LOW;
-
     }
 
     @Override

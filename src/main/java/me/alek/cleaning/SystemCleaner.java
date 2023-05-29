@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 
 public interface SystemCleaner {
-    boolean isInfected() throws IOException;
-    void clean(Player player) throws IOException;
+
+    SystemInfectionType getInfection() throws IOException;
+
+    void clean(SystemInfectionType type, Player player) throws IOException;
 }

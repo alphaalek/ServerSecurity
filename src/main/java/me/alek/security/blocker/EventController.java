@@ -7,8 +7,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.plugin.PluginManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +38,7 @@ public class EventController<EVENT extends Event> implements Listener {
                     ((Cancellable)cancellableEvent).setCancelled(true);
                 }
             }
-            CancellationEventProxy.getHandlerListContainer().clearId(event.getId());
+            CancellationProxy.getHandlerListContainer().clearId(event.getId());
             ExecutorDetector.getAlreadyNotifiedEvent().removeNotifiedId(event.getId());
             cancelOnCallbackEvents.remove(String.valueOf(event.getId()));
         }

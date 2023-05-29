@@ -10,7 +10,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -34,7 +33,7 @@ public class AdventureUtils {
         return component.appendNewline();
     }
 
-    private String fixString(String string) {
+    private String compressLine(String string) {
         String strip = string.substring(0, string.length());
         ChatColor.stripColor(strip);
         if (strip.length() > 34) {
@@ -44,23 +43,27 @@ public class AdventureUtils {
     }
 
     private Component append(Component component, String string) {
-        return component.append(Component.text(fixString(string)));
+        return component.appendNewline();
     }
 
     private Component hoverComponent(ResultData data) {
-        double level = data.getLevel();
-        Component component = Component.text(fixString(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName()));
+        final double level = data.getLevel();
+
+        Component component = Component.text(compressLine(ChatUtils.getChatSymbol(level) + "§r" + ChatUtils.getChatColor(level) + data.getFile().getName()));
         component = nl(component);
         component = append(component, "§7" + data.getFile().getPath());
+
         HashMap<CheckResult, Double> resultMap = new HashMap<>();
         for (CheckResult result : data.getResults()) {
             resultMap.put(result, result.getRisk().getDetectionLevel());
         }
-        List<Map.Entry<CheckResult, Double>> pulledResults = new ArrayList<>();
+        final List<Map.Entry<CheckResult, Double>> pulledResults = new ArrayList<>();
         pulledResults.addAll(resultMap.entrySet());
+
         if (!pulledResults.isEmpty()) component = nl(component);
         pulledResults.sort(Map.Entry.comparingByValue());
         Collections.reverse(pulledResults);
+
         int i = 0;
         for (Map.Entry<CheckResult, Double> entry : pulledResults) {
             i++;
@@ -69,11 +72,13 @@ public class AdventureUtils {
                 component = append(component, "  §7... og " + (pulledResults.size() - i + 1) + " mere...");
                 break;
             }
-            CheckResult result = entry.getKey();
+
+            final CheckResult result = entry.getKey();
             String variant = result.getVariant();
             if (!variant.equals("")) {
                 variant = " (" + variant + ")";
             }
+
             String className = "";
             String classNameRaw = result.getClassName();
             if (classNameRaw != null) {
@@ -93,7 +98,7 @@ public class AdventureUtils {
     private final LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().character('§').build();
 
     public void send(String str, ResultData data) {
-        TextComponent component = serializer.deserialize(str).hoverEvent(HoverEvent.showText(hoverComponent(data)));
+        final TextComponent component = serializer.deserialize(str).hoverEvent(HoverEvent.showText(hoverComponent(data)));
         audience.sendMessage(component);
     }
 }

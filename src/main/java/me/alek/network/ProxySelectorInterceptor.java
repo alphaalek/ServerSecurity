@@ -2,12 +2,14 @@ package me.alek.network;
 
 
 import me.alek.AntiMalwarePlugin;
+import me.alek.logging.LogHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.ServerOperator;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ProxySelectorInterceptor implements Interceptor {
 
@@ -49,12 +51,12 @@ public class ProxySelectorInterceptor implements Interceptor {
         public List<Proxy> select(final URI uri) {
             String authority = uri.getAuthority();
             if (authority.contains("skyrage") || authority.contains("hostflow") || authority.contains("bodyalhoha")) {
-                plugin.getLogger().severe("Blokeret mistaenksom netvaerksprotokol: " + authority);
+                LogHolder.getSecurityLogger().log(Level.SEVERE, "Netværk protokol blokeret: " + authority);
                 Bukkit.getServer().getOnlinePlayers()
                         .stream()
                         .filter(ServerOperator::isOp)
                         .forEach(player -> {
-                            player.sendMessage("§8[§6AntiMalware§8] §cBlokeret mistænksom netværksprotokol: " + authority);
+                            player.sendMessage("§8[§6AntiMalware§8] §cBlokeret network protocol: " + authority);
                         });
                 try {
                     SneakyThrow.sneakyThrow(new SocketTimeoutException("Connection timed out"));

@@ -50,15 +50,19 @@ public class CommandInjector extends AbstractListener {
                 for (Command command : preKnownCommands.values()) {
 
                     final AtomicReference<Command> newCommand = new AtomicReference<>();
-                    if (labelsWrapping.contains(command.getLabel())) {
 
+                    String label = command.getLabel();
+                    if (label.contains(":")) {
+                        label = label.split(":")[1];
+                    }
+
+                    if (labelsWrapping.contains(label)) {
                         WrappedCommandInterceptor wrappedCommandInterceptor = new WrappedCommandInterceptor(command, command.getLabel());
                         newCommand.set(wrappedCommandInterceptor);
                     }
                     if (newCommand.get() == null) {
                         newCommand.set(command);
                     }
-
                     modifiedKnownCommands.put(command.getLabel(), new ModifiedCommand() {
                         @Override
                         public Command getCommand() {

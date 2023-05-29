@@ -8,7 +8,6 @@ import me.alek.handlers.types.ParseHandler;
 import me.alek.handlers.types.nodes.DetectionNode;
 import me.alek.model.Pair;
 import me.alek.model.PluginProperties;
-import org.bukkit.Bukkit;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;

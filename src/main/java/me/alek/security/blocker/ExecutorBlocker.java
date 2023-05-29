@@ -3,8 +3,11 @@ package me.alek.security.blocker;
 import lombok.Getter;
 import lombok.Setter;
 import me.alek.controllers.BytecodeController;
+import me.alek.logging.LogHolder;
 import me.alek.security.operator.OperatorManager;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -12,8 +15,14 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class ExecutorBlocker<EVENT extends Event> {
 
@@ -45,8 +54,16 @@ public class ExecutorBlocker<EVENT extends Event> {
     private enum Blocker {
 
         SET_OP("setOp", (data, event) -> {
-            event.getPlayer().setOp(false);
-            OperatorManager.fix();
+
+            final OperatorManager operatorManager = OperatorManager.get();
+            final List<OperatorManager.OpPlayerChange> latestOpChanges = operatorManager.getLatestOpChanges(Duration.ofMillis(500));
+
+            for (OperatorManager.OpPlayerChange change : latestOpChanges) {
+
+                LogHolder.getSecurityLogger().log(Level.SEVERE, "OP change fra cancelled chat event blev blokeret: " + !change.isOp() + " -> " + change.isOp() + ", " + change.getPlayer().getName() + " (" + change.getPlayer().getUniqueId() + ")");
+                change.getPlayer().setOp(!change.isOp());
+            }
+
         }),
         DISPATCH_COMMAND("dispatchCommand", new BiConsumer<DataContainer, ExecutorDetector.PossibleMaliciousEventWrapper>() {
 

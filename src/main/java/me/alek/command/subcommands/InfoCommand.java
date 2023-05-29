@@ -13,7 +13,8 @@ public class InfoCommand implements SubCommand {
         player.sendMessage("§4⚠ Malware: §7Hostflow, SkyRage, Qlutch, Ectasy, OpenEctasy, ThiccIndustries, Bukloit, OpenBukloit");
         player.sendMessage("§c⚠ Høj risiko: §7Obfuscated, Force OP, Bytecode Manipulation");
         player.sendMessage("§e✓ Moderat risiko: §7Dispatch Command, Discord Webhook, L10 Class, System Access, User-Agent Request, Embedded JAR, Websocket");
-        player.sendMessage("§a✓ Lav risiko: §7Cipher Encryption, Base64, ClassLoader, Hidden File, IP Grabber, Load Plugins, OpenConnection, System Property, Cancelled Chat Event, Vulcan JAR, Application/Json");
+        player.sendMessage("§a✓ Lav risiko: §7Cipher Encryption, Base64, ClassLoader, Hidden File, IP Grabber, Load Plugins, OpenConnection, System Property, Cancelled Chat Event, Vulcan JAR, Application/Json, DirectLeaks");
+        player.sendMessage("§8[§6AntiMalware§8] §7Pluginnet er udviklet af Alek05.");
     }
 
     @Override

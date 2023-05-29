@@ -2,11 +2,15 @@ package me.alek.security;
 
 import lombok.Getter;
 import me.alek.AntiMalwarePlugin;
+import me.alek.logging.LogHolder;
 import me.alek.security.blocker.ListenerRegistery;
 import me.alek.security.blocker.wrappers.WrappedPluginManager;
+import me.alek.security.operator.OperatorInjector;
+import me.alek.security.operator.OperatorManager;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
 
@@ -14,45 +18,48 @@ public class SecurityManager {
 
     @Getter
     private final AntiMalwarePlugin plugin;
-    @Getter
-    private final ResourceProviderWrapper resourceProvider;
-    @Getter
+
     private final SecurityConfig securityConfig;
     @Getter
     private SecurityOptions options;
 
     public SecurityManager(AntiMalwarePlugin plugin) {
         this.plugin = plugin;
-        this.resourceProvider = new ResourceProviderWrapper(plugin);
         this.securityConfig = new SecurityConfig(this);
 
         init();
     }
 
     public void generatePluginOptions() {
-        this.options = new SecurityOptions(this.securityConfig);
+        final SecurityOptions options = new SecurityOptions(this.securityConfig);
+        this.options = options;
+        LogHolder.setup(options);
     }
 
     public void reload() {
         this.securityConfig.reload();
-        generatePluginOptions();
+        AntiMalwarePlugin.getInstance().disableLoggingHandlers();
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                generatePluginOptions();
+            }
+        }.runTaskLater(AntiMalwarePlugin.getInstance(), 10L);
     }
 
     private void init() {
         generatePluginOptions();
         PluginManager pluginManager = Bukkit.getPluginManager();
-        if (this.options.isEnabled()) {
+        if (this.options.isPreventCancelledMaliciousChatEvents()) {
             try {
-                // plugin manager
                 PluginManager wrappedPluginManager = new WrappedPluginManager(Bukkit.getPluginManager());
                 Field pluginManagerField = ((CraftServer)Bukkit.getServer()).getClass().getDeclaredField("pluginManager");
                 pluginManagerField.setAccessible(true);
                 pluginManagerField.set(Bukkit.getServer(), wrappedPluginManager);
 
-                // INJECT KNOWN COMMANDS I COMMAND MAP MED WRAPPED COMMAND SOM INTERCEPTOR VED CONSOLE EXECUTION, OG SÅ GØR DET SAMME SOM FØR MED RESPONSELISTENER OSV
-                Class<?> commandMapClass = ((CraftServer) Bukkit.getServer()).getCommandMap().getClass();
-                Field knownCommandsField = commandMapClass.getField("knownCommands");
-                knownCommandsField.setAccessible(true);
+                OperatorInjector operatorInjector = new OperatorInjector(OperatorManager.get());
+                operatorInjector.inject();
 
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 ex.printStackTrace();

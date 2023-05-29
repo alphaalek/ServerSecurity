@@ -4,7 +4,7 @@ import me.alek.scanning.Scanner;
 
 import java.util.ArrayList;
 
-public class ScanManager {
+public class ScanHandler {
 
     private static Scanner latestScanner = null;
     private static final ArrayList<Scanner> scannersRunning = new ArrayList<>();

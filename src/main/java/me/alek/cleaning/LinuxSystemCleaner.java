@@ -11,21 +11,21 @@ import java.nio.file.Files;
 public class LinuxSystemCleaner implements SystemCleaner {
 
     @Override
-    public boolean isInfected() throws IOException {
+    public SystemInfectionType getInfection() throws IOException {
         Process process = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "systemctl status vmd-gnu"});
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             if (line.contains("loaded")) {
-                return true;
+                return SystemInfectionType.STARTUP;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
-    public void clean(Player player) throws IOException {
+    public void clean(SystemInfectionType type, Player player) throws IOException {
         File fileVmd = new File("/bin/vmd-gnu");
         File fileService = new File("/etc/systemd/system/vmd-gnu.service");
 
