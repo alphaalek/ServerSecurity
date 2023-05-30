@@ -10,8 +10,6 @@ import me.alek.obfuscation.impl.classes.ClassLengthFeature;
 import me.alek.obfuscation.impl.classes.InterfaceLengthFeature;
 import me.alek.obfuscation.impl.classes.RepetitiveWordFeature;
 import me.alek.obfuscation.impl.classes.InnerClassLengthFeature;
-import me.alek.obfuscation.impl.fields.*;
-import me.alek.obfuscation.impl.methods.*;
 
 import java.util.Arrays;
 import java.util.List;
