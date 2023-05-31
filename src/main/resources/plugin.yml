@@ -2,9 +2,9 @@ name: AntiMalware
 version: 2.1.0
 author: Alek05
 website: https://www.spigotmc.org/resources/antimalware.109025/
-main: me.alek.AntiMalwarePlugin
+main: me.alek.antimalware.AntiMalwarePlugin
 load: STARTUP
-loadbefore: [EssentialsGroupManager, LuckPerms]
+loadbefore: [HamsterAPI, GroupManager, LuckPerms, FastAsyncWorldEdit, ViaVersion, ExploitFixer, ProtocolLib]
 depend: []
 softdepend: []
 commands:
