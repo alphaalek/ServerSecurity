@@ -3,7 +3,7 @@
 
 # skal security være slået til på serveren.
 # syntax: true / false
-security-enabled: true
+security-enabled: false
 
 # skal cancelled chat events der indeholder sårbare serverting, såsom
 # op/deop af spillere eller kommandoer skrevet af console, blive blokeret.
@@ -11,16 +11,18 @@ security-enabled: true
 # til at udføre deres ting. herunder indgår Bukloit, Ectasy, ThiccIndustries osv.
 # obs: hvis du ændrer i denne, kræver det genstart af serveren.
 # syntax: true / false
-prevent-cancelled-malicious-chat-event: true
+prevent-cancelled-malicious-chat-event: false
 
 # skal OP proxy blocker være slået til på serveren. Det betyder, at du kan
 # vælge i mellem specifikke personer som kan være OP på serveren, og alle
 # andre vil blive blokeret. skriv de tilladte spillere/uuids under "target".
+# bemærk, at det ikke giver en spiller OP at være på listen. det vil derimod
+# bare være ligesom normalt, hvor man ikke bliver blokeret.
 # syntax: true / false
-op-proxy-blocker: true
+op-proxy-blocker: false
 
-target: []
-# eksempel (husk at fjern "[]"):
-# - Alek05
-# - c3e9356e-841c-4a9f-8805-f4c5f0ea1255
+target:
+  - Alek05
+# - navn
+# - uuid
 
