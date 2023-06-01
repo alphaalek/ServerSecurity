@@ -1,5 +1,5 @@
 
-# husk, at hvis du ændrer i noget i dinne konfigurationsfil imens serveren er oppe, kræver det et reload via. /am reload
+# husk, at hvis du ændrer i noget i denne konfigurationsfil imens serveren er oppe, kræver det et reload via. /am reload
 
 # skal security være slået til på serveren.
 # syntax: true / false
@@ -7,6 +7,8 @@ security-enabled: true
 
 # skal cancelled chat events der indeholder sårbare serverting, såsom
 # op/deop af spillere eller kommandoer skrevet af console, blive blokeret.
+# dette er typisk en metode forskellige backdoors bruger frem for kommandoer,
+# til at udføre deres ting. herunder indgår Bukloit, Ectasy, ThiccIndustries osv.
 # obs: hvis du ændrer i denne, kræver det genstart af serveren.
 # syntax: true / false
 prevent-cancelled-malicious-chat-event: true
