@@ -8,6 +8,6 @@ loadbefore: [HamsterAPI, GroupManager, LuckPerms, FastAsyncWorldEdit, WorldEdit,
 depend: []
 softdepend: []
 commands:
-  antimalware:
-    aliases: [am]
+  am:
+    aliases: [antimalware]
 
