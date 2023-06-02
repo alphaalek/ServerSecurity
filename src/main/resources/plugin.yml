@@ -4,7 +4,7 @@ author: Alek05
 website: https://www.spigotmc.org/resources/antimalware.109025/
 main: me.alek.antimalware.AntiMalwarePlugin
 load: STARTUP
-loadbefore: [HamsterAPI, GroupManager, LuckPerms, FastAsyncWorldEdit, ViaVersion, ExploitFixer, ProtocolLib]
+loadbefore: [HamsterAPI, GroupManager, LuckPerms, FastAsyncWorldEdit, WorldEdit, ViaVersion, ExploitFixer, ProtocolLib]
 depend: []
 softdepend: []
 commands:
