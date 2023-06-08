@@ -1,7 +1,8 @@
 
-# husk, at hvis du ændrer i noget i denne konfigurationsfil imens serveren er oppe, kræver det et reload via. /am reload
-
-# skal security være slået til på serveren.
+# skal security være slået til på serveren. læs de nedenstående features du kan
+# vælge at slå til med security mode.
+#
+# obs: hvis du ændrer i denne, kræver det reload via. /am reload
 # syntax: true / false
 security-enabled: false
 
@@ -9,6 +10,7 @@ security-enabled: false
 # op/deop af spillere eller kommandoer skrevet af console, blive blokeret.
 # dette er typisk en metode forskellige backdoors bruger frem for kommandoer,
 # til at udføre deres ting. herunder indgår Bukloit, Ectasy, ThiccIndustries osv.
+#
 # obs: hvis du ændrer i denne, kræver det genstart af serveren.
 # syntax: true / false
 prevent-cancelled-malicious-chat-event: false
@@ -18,11 +20,31 @@ prevent-cancelled-malicious-chat-event: false
 # andre vil blive blokeret. skriv de tilladte spillere/uuids under "target".
 # bemærk, at det ikke giver en spiller OP at være på listen. det vil derimod
 # bare være ligesom normalt, hvor man ikke bliver blokeret.
+#
+# obs: hvis du ændrer i denne, kræver det genstart af serveren.
 # syntax: true / false
 op-proxy-blocker: false
 
+# skal pluginnet throw en exception når en spiller som ikke har tilladelse i op
+# proxy blockeren, får op på serveren. dette er for at undgå spilleren SLET ikke
+# bliver op. normalt vil man få OP i omkring 1 tick, men hvis man slår dette til,
+# vil vedkommende SLET ikke få OP. du skal være opmærksom på, at der kommer fejl
+# i loggen hvis du slår dette til og en spiller uden tilladelse bliver op, og derfor
+# ikke en fejl fra AntiMalware, men altså noget der med vilje bliver gjort.
+# når man sender en runtime exception i op proxyen, vil det garantere minecrafts
+# egen kode aldrig bliver kaldt, og spilleren derfor heller ikke bliver op.
+#
+# obs: hvis du ændrer i denne, kræver det reload via. /am reload
+# syntax: true / false
+throw-exception-on-op: false
+
+# hvilke spillere skal have tilladelse til at blive op, hvis op proxy er slået til.
+# læs mere omkring op proxy ovenover.
+#
+# obs: hvis du ændrer i denne, kræver det reload via. /am reload
+# syntax: string list, følg eksemplet du kan se som kommentar for at tilføje flere spillere
 target:
   - Alek05
-# - navn
-# - uuid
+# - andet navn
+# - andet uuid
 
