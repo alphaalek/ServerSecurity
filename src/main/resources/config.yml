@@ -1,10 +1,21 @@
+#
+#
+# konfigurationsfil til plguinnet AntiMalware.
+# Hjemmeside: https://www.spigotmc.org/resources/antimalware.109025/
+# Discord: https://discord.gg/FJuKAUDX4C
+# Sourcecode: https://github.com/alphaalek/AntiMalware
+#
+# det anbefales at slå alle nedenstående indstillinger til, men du vælger selvfølgelig
+# selv. det skal siges, at ingen af dem vil virke, hvis ikke du slår security mode til
+#
+#
 
-# skal security være slået til på serveren. læs de nedenstående features du kan
+# skal security mode være slået til på serveren. læs de nedenstående features du kan
 # vælge at slå til med security mode.
 #
 # obs: hvis du ændrer i denne, kræver det reload via. /am reload
 # syntax: true / false
-security-enabled: false
+security-mode-enabled: false
 
 # skal cancelled chat events der indeholder sårbare serverting, såsom
 # op/deop af spillere eller kommandoer skrevet af console, blive blokeret.
@@ -27,10 +38,10 @@ op-proxy-blocker: false
 
 # skal pluginnet throw en exception når en spiller som ikke har tilladelse i op
 # proxy blockeren, får op på serveren. dette er for at undgå spilleren SLET ikke
-# bliver op. normalt vil man få OP i omkring 1 tick, men hvis man slår dette til,
-# vil vedkommende SLET ikke få OP. du skal være opmærksom på, at der kommer fejl
-# i loggen hvis du slår dette til og en spiller uden tilladelse bliver op, og derfor
-# ikke en fejl fra AntiMalware, men altså noget der med vilje bliver gjort.
+# bliver op. nogengange kan man have op i få ticks hvis det lagger meget på serveren, men
+# hvis man slår dette til, vil vedkommende SLET ikke få OP. du skal være opmærksom på, at der
+# kommer fejl i loggen hvis du slår dette til og en spiller uden tilladelse bliver op, og
+# derfor ikke en fejl fra AntiMalware, men altså noget der med vilje bliver gjort.
 # når man sender en runtime exception i op proxyen, vil det garantere minecrafts
 # egen kode aldrig bliver kaldt, og spilleren derfor heller ikke bliver op.
 #
