@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AntiMalware.iml" filepath="$PROJECT_DIR$/AntiMalware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ServerSecurity.iml" filepath="$PROJECT_DIR$/ServerSecurity.iml" />
     </modules>
   </component>
 </project>
