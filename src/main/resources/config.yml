@@ -10,6 +10,9 @@
 #
 #
 
+# sprog
+locale: "en"
+
 # skal security mode være slået til på serveren. læs de nedenstående features du kan
 # vælge at slå til med security mode.
 #

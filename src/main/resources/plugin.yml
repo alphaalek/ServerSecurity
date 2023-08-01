@@ -1,8 +1,8 @@
-name: AntiMalware
-version: 2.1.0
+name: ServerSecurity
+version: 2.1.1
 author: Alek05
-website: https://www.spigotmc.org/resources/antimalware.109025/
-main: me.alek.antimalware.AntiMalwarePlugin
+website: https://www.spigotmc.org/resources/serversecurity.109025/
+main: me.alek.serversecurity.ServerSecurityPlugin
 load: STARTUP
 loadbefore: [HamsterAPI, GroupManager, LuckPerms, FastAsyncWorldEdit, WorldEdit, ViaVersion, ExploitFixer, ProtocolLib]
 depend: []

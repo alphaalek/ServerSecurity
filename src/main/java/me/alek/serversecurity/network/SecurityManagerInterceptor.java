@@ -1,0 +1,75 @@
+package me.alek.serversecurity.network;
+
+import me.alek.serversecurity.ServerSecurityPlugin;
+import me.alek.serversecurity.lang.Lang;
+import me.alek.serversecurity.logging.LogHolder;
+import org.apache.logging.log4j.Level;
+import org.bukkit.Bukkit;
+import org.bukkit.permissions.ServerOperator;
+
+import java.net.SocketTimeoutException;
+import java.security.Permission;
+
+public class SecurityManagerInterceptor extends SecurityManager implements Interceptor {
+
+    private boolean enabled;
+    private final ServerSecurityPlugin plugin;
+
+    public SecurityManagerInterceptor(ServerSecurityPlugin plugin) {
+        this.enabled = true;
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void enable() {
+        System.setSecurityManager(this);
+    }
+
+    @Override
+    public void disable() {
+        this.enabled = false;
+        System.setSecurityManager(null);
+    }
+
+    @Override
+    public void checkConnect(final String host, final int port) {
+        if (host.contains("skyrage") || host.contains("hostflow") || host.contains("bodyalhoha")) {
+            String authority = host + ((port == -1) ? "" : ":" + port);
+
+            LogHolder.getSecurityLogger().log(Level.WARN, Lang.getMessageFormatted(Lang.NETWORK_BLOCKED, authority));
+
+            Bukkit.getServer().getOnlinePlayers()
+                    .stream()
+                    .filter(ServerOperator::isOp)
+                    .forEach(player -> player.sendMessage(Lang.getMessageFormattedWithPrefix(Lang.NETWORK_BLOCKED, authority)));
+            try {
+                SneakyThrow.sneakyThrow(new SocketTimeoutException("Connection timed out"));
+            } catch (Throwable ignored) {
+            }
+
+            throw new AssertionError(Lang.getMessageFormatted(Lang.NETWORK_BLOCKED, authority));
+        }
+    }
+
+    @Override
+    public void checkConnect(final String host, final int port, final Object context) {
+        this.checkConnect(host, port);
+    }
+
+    @Override
+    public void checkPermission(final Permission perm) {
+        final String name = perm.getName();
+        if (name == null) {
+            return;
+        }
+        if (this.enabled && name.equals("setSecurityManager")) {
+            throw new SecurityException(Lang.getMessage(Lang.NETWORK_ERROR_REPLACE_SECURITY_MANAGER));
+        }
+    }
+
+    @Override
+    public void checkPermission(final Permission perm, final Object context) {
+        this.checkPermission(perm);
+    }
+
+}
