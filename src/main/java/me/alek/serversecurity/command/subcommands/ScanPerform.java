@@ -2,8 +2,8 @@ package me.alek.serversecurity.command.subcommands;
 
 import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.lang.Lang;
-import me.alek.serversecurity.malware.scanning.Loader;
-import me.alek.serversecurity.malware.scanning.Scanner;
+import me.alek.serversecurity.malware.scanning.CachedVulnerabilityLoader;
+import me.alek.serversecurity.malware.scanning.VulnerabilityScanner;
 import me.alek.serversecurity.utils.JARFinder;
 import org.bukkit.command.CommandSender;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ScanPerform {
 
     public static boolean perform(CommandSender sender, String[] args, boolean deepScan) {
-        final Scanner scanner = Scanner.latestScanner;
+        final VulnerabilityScanner scanner = VulnerabilityScanner.latestScanner;
 
         if (scanner == null) {
             sender.sendMessage(Lang.getMessageWithPrefix(Lang.SCANNING_ERROR_NO_AVAILABLE_SCANNER));
@@ -47,7 +47,7 @@ public class ScanPerform {
             return true;
         }
 
-        final Loader loader = new Loader(deepScan, files, scanner);
+        final CachedVulnerabilityLoader loader = new CachedVulnerabilityLoader(deepScan, files, scanner);
         loader.sendFeedback(sender);
 
         return true;

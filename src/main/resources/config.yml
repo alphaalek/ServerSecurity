@@ -10,13 +10,29 @@
 #
 #
 
-# sprog
+# |---------------------------------------------|
+# | ########################################### |
+# |              GENERAL SETTINGS               |
+# | ########################################### |
+# |---------------------------------------------|
+
+#
+#
+#
+# obs: if you change this, it requires reload by /am reload
+# syntax: language
 locale: "en"
+
+# |---------------------------------------------|
+# | ########################################### |
+# |             BACKDOOR SECURITY               |
+# | ########################################### |
+# |---------------------------------------------|
 
 # skal security mode være slået til på serveren. læs de nedenstående features du kan
 # vælge at slå til med security mode.
 #
-# obs: hvis du ændrer i denne, kræver det reload via. /am reload
+# obs: if you change this, it requires reload by /am reload
 # syntax: true / false
 security-mode-enabled: false
 
@@ -25,9 +41,15 @@ security-mode-enabled: false
 # dette er typisk en metode forskellige backdoors bruger frem for kommandoer,
 # til at udføre deres ting. herunder indgår Bukloit, Ectasy, ThiccIndustries osv.
 #
-# obs: hvis du ændrer i denne, kræver det genstart af serveren.
+# obs: if you change this, it requires restart of the server
 # syntax: true / false
 prevent-cancelled-malicious-chat-event: false
+
+# |---------------------------------------------|
+# | ########################################### |
+# |                OP PROXY                     |
+# | ########################################### |
+# |---------------------------------------------|
 
 # skal OP proxy blocker være slået til på serveren. Det betyder, at du kan
 # vælge i mellem specifikke personer som kan være OP på serveren, og alle
@@ -35,7 +57,7 @@ prevent-cancelled-malicious-chat-event: false
 # bemærk, at det ikke giver en spiller OP at være på listen. det vil derimod
 # bare være ligesom normalt, hvor man ikke bliver blokeret.
 #
-# obs: hvis du ændrer i denne, kræver det genstart af serveren.
+# obs: if you change this, it requires restart of the server
 # syntax: true / false
 op-proxy-blocker: false
 
@@ -48,17 +70,39 @@ op-proxy-blocker: false
 # når man sender en runtime exception i op proxyen, vil det garantere minecrafts
 # egen kode aldrig bliver kaldt, og spilleren derfor heller ikke bliver op.
 #
-# obs: hvis du ændrer i denne, kræver det reload via. /am reload
+# obs: if you change this, it requires reload by /am reload
 # syntax: true / false
 throw-exception-on-op: false
 
 # hvilke spillere skal have tilladelse til at blive op, hvis op proxy er slået til.
 # læs mere omkring op proxy ovenover.
 #
-# obs: hvis du ændrer i denne, kræver det reload via. /am reload
-# syntax: string list, følg eksemplet du kan se som kommentar for at tilføje flere spillere
+# obs: if you change this, it requires reload by /am reload
+# syntax: string list
 target:
-  - Alek05
+  - "Alek05"
 # - andet navn
 # - andet uuid
+
+# |---------------------------------------------|
+# | ########################################### |
+# |                 NETWORK                    |
+# | ########################################### |
+# |---------------------------------------------|
+
+# which network addresses should connections within the server, be interrupted and blocked.
+# multiple malwares are using some kind of rest api or websocket to do their thing, so
+# blocking these will prevent the malware to execute
+#
+# obs: if you change this, it requires reload by /am reload
+# syntax: string list
+blocked-target:
+  - "85.217.144.130"
+  - "bodyalhoha.com"
+  - "client.hostflow.eu"
+  - "skyrage.de"
+  - "files.skyrage.de"
+  - "t23e7v6uz8idz87ehugwq.skyrage.de"
+  - "qw3e1ee12e9hzheu9h1912hew1sh12uw9.skyrage.de"
+
 

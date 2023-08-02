@@ -10,8 +10,6 @@ public class DeepScanCommand implements SubCommandImpl {
 
     @Override
     public boolean perform(CommandSender sender, String label, String[] args) {
-        Bukkit.broadcastMessage("performing");
-        Bukkit.broadcastMessage(ServerSecurityPlugin.get().getLatestVersion() + " version hehe");
         return ScanPerform.perform(sender, args, true);
     }
 

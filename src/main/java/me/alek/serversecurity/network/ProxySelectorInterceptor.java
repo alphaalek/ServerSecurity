@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.List;
 
-public class ProxySelectorInterceptor implements Interceptor {
+public class ProxySelectorInterceptor implements NetworkInterceptor {
 
     private final ServerSecurityPlugin plugin;
     private boolean enabled;
@@ -25,20 +25,32 @@ public class ProxySelectorInterceptor implements Interceptor {
     @Override
     public void enable() {
         final ProxySelector selector = ProxySelector.getDefault();
-        if (selector instanceof LoggingSelectorWrapper) {
-            return;
-        }
+
+        if (selector instanceof LoggingSelectorWrapper) return;
+
         ProxySelector.setDefault(new LoggingSelectorWrapper(selector));
     }
 
     @Override
     public void disable() {
         enabled = false;
+
         final ProxySelector selector = ProxySelector.getDefault();
+
         if (selector instanceof LoggingSelectorWrapper) {
+
             final LoggingSelectorWrapper logSelector = (LoggingSelectorWrapper) selector;
             ProxySelector.setDefault(logSelector.delegate);
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void checkConnect(String host, int port) {
     }
 
     private static final class LoggingSelectorWrapper extends ProxySelector {
@@ -50,22 +62,8 @@ public class ProxySelectorInterceptor implements Interceptor {
 
         @Override
         public List<Proxy> select(final URI uri) {
-            String authority = uri.getAuthority();
-            if (authority.contains("skyrage") || authority.contains("hostflow") || authority.contains("bodyalhoha")) {
+            CommonNetworkInterceptor.check(uri.getHost(), uri.getPort());
 
-                LogHolder.getSecurityLogger().log(Level.WARN, Lang.getMessageFormatted(Lang.NETWORK_BLOCKED, authority));
-
-                Bukkit.getServer().getOnlinePlayers()
-                        .stream()
-                        .filter(ServerOperator::isOp)
-                        .forEach(player -> player.sendMessage(Lang.getMessageFormattedWithPrefix(Lang.NETWORK_BLOCKED, authority)));
-                try {
-                    SneakyThrow.sneakyThrow(new SocketTimeoutException("Connection timed out"));
-                } catch (Throwable ignored) {
-                }
-
-                throw new AssertionError(Lang.getMessageFormatted(Lang.NETWORK_BLOCKED, authority));
-            }
             return this.delegate.select(uri);
         }
 

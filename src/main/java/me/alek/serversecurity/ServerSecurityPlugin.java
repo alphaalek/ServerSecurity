@@ -6,8 +6,8 @@ import me.alek.serversecurity.lang.Lang;
 import me.alek.serversecurity.logging.AbstractLogger;
 import me.alek.serversecurity.logging.LogHolder;
 import me.alek.serversecurity.metrics.Metrics;
-import me.alek.serversecurity.network.NetworkInterceptor;
-import me.alek.serversecurity.malware.scanning.Scanner;
+import me.alek.serversecurity.network.NetworkHandler;
+import me.alek.serversecurity.malware.scanning.VulnerabilityScanner;
 import me.alek.serversecurity.security.SecurityManager;
 import me.alek.serversecurity.utils.Appender;
 import me.alek.serversecurity.utils.JARFinder;
@@ -29,7 +29,7 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
     private static ServerSecurityPlugin instance;
     private static SecurityManager securityManager;
     private static Configuration configuration;
-    private static NetworkInterceptor interceptor;
+    private static NetworkHandler interceptor;
     private static String latestVersion = null;
 
     @Override
@@ -43,7 +43,7 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
         securityManager = new SecurityManager(this);
 
         // setup network interceptor
-        interceptor = new NetworkInterceptor(this);
+        interceptor = new NetworkHandler(this);
         interceptor.enable();
 
         // check latest updates
@@ -73,7 +73,7 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
             public void run() {
 
                 final File dataFolder = ServerSecurityPlugin.get().getDataFolder().getParentFile();
-                final Scanner scanner = new Scanner(JARFinder.findAllJars(dataFolder));
+                final VulnerabilityScanner scanner = new VulnerabilityScanner(JARFinder.findAllJars(dataFolder));
 
                 final Appender whenDone = new Appender();
                 whenDone.setRunnable(() -> {
@@ -125,7 +125,7 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
             }.runTaskLater(this, 60L);
         }
 
-        Scanner latestScanner = Scanner.latestScanner;
+        VulnerabilityScanner latestScanner = VulnerabilityScanner.latestScanner;
         if (latestScanner != null && latestScanner.hasMalware()) {
             player.sendMessage(Lang.getMessageWithPrefix(Lang.SCANNING_WARN_INFECTED_JOIN));
         }

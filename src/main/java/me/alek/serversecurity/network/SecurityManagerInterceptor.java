@@ -10,18 +10,16 @@ import org.bukkit.permissions.ServerOperator;
 import java.net.SocketTimeoutException;
 import java.security.Permission;
 
-public class SecurityManagerInterceptor extends SecurityManager implements Interceptor {
+public class SecurityManagerInterceptor extends SecurityManager implements NetworkInterceptor {
 
     private boolean enabled;
-    private final ServerSecurityPlugin plugin;
 
-    public SecurityManagerInterceptor(ServerSecurityPlugin plugin) {
-        this.enabled = true;
-        this.plugin = plugin;
+    public SecurityManagerInterceptor() {
     }
 
     @Override
     public void enable() {
+        this.enabled = true;
         System.setSecurityManager(this);
     }
 
@@ -32,23 +30,13 @@ public class SecurityManagerInterceptor extends SecurityManager implements Inter
     }
 
     @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
     public void checkConnect(final String host, final int port) {
-        if (host.contains("skyrage") || host.contains("hostflow") || host.contains("bodyalhoha")) {
-            String authority = host + ((port == -1) ? "" : ":" + port);
-
-            LogHolder.getSecurityLogger().log(Level.WARN, Lang.getMessageFormatted(Lang.NETWORK_BLOCKED, authority));
-
-            Bukkit.getServer().getOnlinePlayers()
-                    .stream()
-                    .filter(ServerOperator::isOp)
-                    .forEach(player -> player.sendMessage(Lang.getMessageFormattedWithPrefix(Lang.NETWORK_BLOCKED, authority)));
-            try {
-                SneakyThrow.sneakyThrow(new SocketTimeoutException("Connection timed out"));
-            } catch (Throwable ignored) {
-            }
-
-            throw new AssertionError(Lang.getMessageFormatted(Lang.NETWORK_BLOCKED, authority));
-        }
+        CommonNetworkInterceptor.check(host, port);
     }
 
     @Override

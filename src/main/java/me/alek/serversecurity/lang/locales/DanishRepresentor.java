@@ -30,7 +30,7 @@ public enum DanishRepresentor implements LocaleMessageRepresentor {
     SCANNING_ERROR_ALREADY_SCANNING(Lang.SCANNING_ERROR_ALREADY_SCANNING, "§cServeren er i gang med at cache scanninger. Vent lidt... (%s/%s)"),
     SCANNING_ERROR_NO_RESULT(Lang.SCANNING_ERROR_NO_RESULT, "§cDer blev ikke fundet noget data fra scanningen."),
     SCANNING_ERROR_UNKNOWN(Lang.SCANNING_ERROR_UNKNOWN, "§cDer skete en fejl, prøv igen senere."),
-    SCANNING_WARN_MANY_INFECTED(Lang.SCANNING_WARN_MANY_INFECTED, "§cDet ser ud til, at serveren har rigtig mange filer smittet." +
+    SCANNING_WARN_MANY_INFECTED(Lang.SCANNING_WARN_MANY_INFECTED, "§cDet ser ud til, at serveren har rigtig mange filer smittet. " +
             "Dette kan være fordi, at ét plugin har smittet til alle de andre. Du bør installere alle dine plugins igen, også ServerSecurity."),
     SCANNING_STARTING(Lang.SCANNING_STARTING, "§7Scanner %s filer for malware og backdoors..."),
     SCANNING_DONE_CHAT(Lang.SCANNING_DONE_CHAT, "§7Scannede %s filer i gennem og fandt %s med malware eller backdoor."),
