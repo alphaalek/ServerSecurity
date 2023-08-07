@@ -286,12 +286,7 @@ public class ExecutorDetector extends AbstractListener {
     }
 
     private static ClassData getListenerClass(File file, String clazz) throws FileSystemAlreadyExistsException {
-        final FileSystem fs;
-        try {
-            fs = ZipUtils.fileSystemForZip(file.toPath());
-        } catch (IOException e) {
-            return null;
-        }
+        final FileSystem fs = ZipUtils.fileSystemForZip(file.toPath());
         if (fs == null) return null;
 
         final Iterator<Path> rootFolderIterator = fs.getRootDirectories().iterator();

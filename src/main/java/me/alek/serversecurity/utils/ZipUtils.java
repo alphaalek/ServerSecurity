@@ -32,7 +32,7 @@ public class ZipUtils {
         }
     }
 
-    public static FileSystem fileSystemForZip(final Path pathToZip) throws IOException {
+    public static FileSystem fileSystemForZip(final Path pathToZip) {
         /*try {
             return FileSystems.newFileSystem(pathToZip, new HashMap<>());
         } catch (IOException e) {
@@ -46,7 +46,6 @@ public class ZipUtils {
         try {
             return FileSystems.newFileSystem(URI.create("jar:" + pathToZip.toUri() + "!/"), new HashMap<>());
         } catch (IOException e3) {
-            e3.printStackTrace();
             return null;
         }
     }

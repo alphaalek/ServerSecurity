@@ -19,6 +19,12 @@ public enum DanishRepresentor implements LocaleMessageRepresentor {
     SUBCOMMAND_CLEAN_PLUGINS_CLEANING(Lang.SUBCOMMAND_CLEAN_PLUGINS_CLEANING, "§aFjerner Skyrage Malware fra fil %s..."),
     SUBCOMMAND_CLEAN_PLUGINS_TOTAL_CLEANED(Lang.SUBCOMMAND_CLEAN_PLUGINS_TOTAL_CLEANED, "§aFjernet Skyrage Malware fra %s filer."),
 
+    SUBCOMMAND_LANGUAGE_INFO_DESCRIPTION(Lang.SUBCOMMAND_LANGUAGE_INFO_DESCRIPTION, "Ændre sproget på pluginnet."),
+    SUBCOMMAND_LANGUAGE_ERROR_NO_SUCH_PLUGIN(Lang.SUBCOMMAND_LANGUAGE_ERROR_NO_SUCH_LANGUAGE, "§cDer blev ikke fundet noget plugin ud fra den tekst."),
+    SUBCOMMAND_LANGUAGE_ERROR_BAD_CONFIG(Lang.SUBCOMMAND_LANGUAGE_ERROR_BAD_CONFIG, "§cDu har enten en gammel config eller skrevet noget vrøvl i den. Slet den, genstart serveren og prøv igen."),
+    SUBCOMMAND_LANGUAGE_ERROR_SPECIFICATION(Lang.SUBCOMMAND_LANGUAGE_ERROR_SPECIFICATION, "§cDu skal vælge et sprog."),
+    SUBCOMMAND_LANGUAGE_CHANGED(Lang.SUBCOMMAND_LANGUAGE_CHANGED, "§aSproget er nu ændret til dansk."),
+
     SUBCOMMAND_DEEPSCAN_INFO_DESCRIPTION(Lang.SUBCOMMAND_DEEPSCAN_INFO_DESCRIPTION,"Detaljeret scan af filer for virus og backdoors."),
     SUBCOMMAND_SIMPLESCAN_INFO_DESCRIPTION(Lang.SUBCOMMAND_SIMPLESCAN_INFO_DESCRIPTION, "Simpel scan af filer for virus og backdoors."),
     SUBCOMMAND_HELP_INFO_DESCRIPTION(Lang.SUBCOMMAND_HELP_INFO_DESCRIPTION, "Sender kommandoer du kan bruge."),

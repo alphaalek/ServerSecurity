@@ -19,6 +19,12 @@ public enum EnglishRepresentor implements LocaleMessageRepresentor {
     SUBCOMMAND_CLEAN_PLUGINS_CLEANING(Lang.SUBCOMMAND_CLEAN_PLUGINS_CLEANING, "§aRemoving Skyrage Malware from file %s..."),
     SUBCOMMAND_CLEAN_PLUGINS_TOTAL_CLEANED(Lang.SUBCOMMAND_CLEAN_PLUGINS_TOTAL_CLEANED, "§aRemoved Skyrage Malware from %s files."),
 
+    SUBCOMMAND_LANGUAGE_INFO_DESCRIPTION(Lang.SUBCOMMAND_LANGUAGE_INFO_DESCRIPTION, "Change the language of the plugin."),
+    SUBCOMMAND_LANGUAGE_ERROR_NO_SUCH_LANGUAGE(Lang.SUBCOMMAND_LANGUAGE_ERROR_NO_SUCH_LANGUAGE, "§cNo language was found by that string."),
+    SUBCOMMAND_LANGUAGE_ERROR_BAD_CONFIG(Lang.SUBCOMMAND_LANGUAGE_ERROR_BAD_CONFIG, "§cYou may have a old config or typed something badly in it. Remove it, restart the server and try again."),
+    SUBCOMMAND_LANGUAGE_ERROR_SPECIFICATION(Lang.SUBCOMMAND_LANGUAGE_ERROR_SPECIFICATION, "§cYou have to chose a language."),
+    SUBCOMMAND_LANGUAGE_CHANGED(Lang.SUBCOMMAND_LANGUAGE_CHANGED, "§aThe language is now changed to english."),
+
     SUBCOMMAND_DEEPSCAN_INFO_DESCRIPTION(Lang.SUBCOMMAND_DEEPSCAN_INFO_DESCRIPTION, "Detailed scan of files with virus and backdoors."),
     SUBCOMMAND_SIMPLESCAN_INFO_DESCRIPTION(Lang.SUBCOMMAND_SIMPLESCAN_INFO_DESCRIPTION, "Simple scan of files with virus and backdoors."),
     SUBCOMMAND_HELP_INFO_DESCRIPTION(Lang.SUBCOMMAND_HELP_INFO_DESCRIPTION, "Sends all the commands you can use."),

@@ -23,7 +23,7 @@ public class ReloadCommand implements SubCommandImpl {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    new VulnerabilityScanner(JARFinder.findAllJars(dataFolder)).startScan(null);
+                    new VulnerabilityScanner(JARFinder.findAllJars(dataFolder)).startScan();
                 }
             }.runTaskAsynchronously(ServerSecurityPlugin.get());
         }

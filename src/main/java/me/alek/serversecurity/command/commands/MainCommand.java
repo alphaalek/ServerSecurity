@@ -26,6 +26,7 @@ public class MainCommand extends BaseCommandImpl implements PermissibleCommandIm
     public List<SubCommandImpl> registerSubCommands() {
         return Arrays.asList(
                 new HelpCommand(),
+                new LanguageCommand(),
                 new ReloadCommand(),
                 new CleanSkyrageCommand(),
                 new DeepScanCommand(),

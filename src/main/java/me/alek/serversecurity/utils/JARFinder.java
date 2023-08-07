@@ -1,5 +1,7 @@
 package me.alek.serversecurity.utils;
 
+import me.alek.serversecurity.model.PluginProperties;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +26,7 @@ public class JARFinder {
                     .filter(file -> !absolutePaths.contains(file.getAbsolutePath()))
                     .filter(file -> file.getName().endsWith(".jar")
                             && (isPlugin(file) || file.getName().equals("bungee.jar"))
-                            && !file.getName().contains("ServerSecurity"))
+                            && !new PluginProperties(file).getPluginName().equals("ServerSecurity"))
                     .forEach(file -> {
                         absolutePaths.add(file.getAbsolutePath());
                         jars.add(file);

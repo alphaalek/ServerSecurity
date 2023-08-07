@@ -23,7 +23,7 @@ public class ScanPerform {
         }
 
         if (scanner.isScanning()) {
-            int size = scanner.getDone();
+            int size = scanner.getDoneFiles();
             sender.sendMessage(Lang.getMessageFormattedWithPrefix(Lang.SCANNING_ERROR_ALREADY_SCANNING, (size == -1 ? 0 : size), scanner.getSize()));
             return true;
         }
