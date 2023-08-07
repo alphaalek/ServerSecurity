@@ -22,12 +22,19 @@ public class LogHolder {
         return holder.securityLogger;
     }
 
+    private static boolean inUse;
+
     public static void setup() {
         holder = new Holder();
+        inUse = true;
 
         holder.scanLogger = new Loggers.ScanLogger();
         holder.opLogger = new Loggers.OPLogger();
         holder.securityLogger = new Loggers.SecurityLogger();
+    }
+
+    public static boolean isInUse() {
+        return inUse;
     }
 
 }
