@@ -1,10 +1,10 @@
 package me.alek.serversecurity.command.subcommands;
 
-import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.command.SubCommandImpl;
-import me.alek.serversecurity.lang.Lang;
+import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.malware.scanning.VulnerabilityScanner;
 import me.alek.serversecurity.utils.JARFinder;
+import me.alek.serversecurity.lang.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,7 +23,7 @@ public class ReloadCommand implements SubCommandImpl {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    new VulnerabilityScanner(JARFinder.findAllJars(dataFolder)).startScan();
+                    new VulnerabilityScanner(JARFinder.findAllJars(dataFolder), false).startScan();
                 }
             }.runTaskAsynchronously(ServerSecurityPlugin.get());
         }

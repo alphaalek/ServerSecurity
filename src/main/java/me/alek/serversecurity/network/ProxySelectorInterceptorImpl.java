@@ -2,22 +2,17 @@ package me.alek.serversecurity.network;
 
 
 import me.alek.serversecurity.ServerSecurityPlugin;
-import me.alek.serversecurity.lang.Lang;
-import me.alek.serversecurity.logging.LogHolder;
-import org.apache.logging.log4j.Level;
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.ServerOperator;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.List;
 
-public class ProxySelectorInterceptor implements NetworkInterceptor {
+public class ProxySelectorInterceptorImpl implements NetworkInterceptor {
 
     private final ServerSecurityPlugin plugin;
     private boolean enabled;
 
-    public ProxySelectorInterceptor(ServerSecurityPlugin plugin) {
+    public ProxySelectorInterceptorImpl(ServerSecurityPlugin plugin) {
         this.plugin = plugin;
         this.enabled = true;
     }

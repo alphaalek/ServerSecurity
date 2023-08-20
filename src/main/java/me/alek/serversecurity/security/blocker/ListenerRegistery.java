@@ -1,9 +1,9 @@
 package me.alek.serversecurity.security.blocker;
 
 import me.alek.serversecurity.ServerSecurityPlugin;
+import me.alek.serversecurity.security.injector.CommandInjector;
 import me.alek.serversecurity.security.SecurityManager;
 import me.alek.serversecurity.configuration.ConfigurationOptions;
-import me.alek.serversecurity.security.injector.CommandInjector;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 

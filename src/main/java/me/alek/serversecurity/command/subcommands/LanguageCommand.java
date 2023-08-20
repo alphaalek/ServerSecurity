@@ -1,8 +1,8 @@
 package me.alek.serversecurity.command.subcommands;
 
-import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.command.SubCommandImpl;
 import me.alek.serversecurity.configuration.Configuration;
+import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.lang.Lang;
 import me.alek.serversecurity.lang.Locale;
 import org.bukkit.command.CommandSender;

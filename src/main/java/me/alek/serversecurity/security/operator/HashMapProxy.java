@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.lang.Lang;
 import me.alek.serversecurity.logging.LogHolder;
+import me.alek.serversecurity.security.SecurityManager;
 import net.minecraft.server.v1_8_R3.JsonListEntry;
 import net.minecraft.server.v1_8_R3.OpListEntry;
 import org.apache.logging.log4j.Level;
@@ -13,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.entity.Player;
-import me.alek.serversecurity.security.SecurityManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;

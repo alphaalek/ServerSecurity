@@ -31,6 +31,7 @@ public class JARFinder {
                         absolutePaths.add(file.getAbsolutePath());
                         jars.add(file);
                     });
+            System.out.println(jars);
             return jars;
         } catch (IOException ignored) {
         }

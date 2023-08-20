@@ -1,8 +1,8 @@
 package me.alek.serversecurity.lang.locales;
 
 import me.alek.serversecurity.ServerSecurityPlugin;
-import me.alek.serversecurity.lang.Lang;
 import me.alek.serversecurity.lang.LocaleMessageRepresentor;
+import me.alek.serversecurity.lang.Lang;
 
 public enum DanishRepresentor implements LocaleMessageRepresentor {
 

@@ -2,8 +2,6 @@ package me.alek.serversecurity.network;
 
 import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.lang.Lang;
-import org.bukkit.Server;
-import sun.nio.ch.Net;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -101,8 +99,8 @@ public class NetworkHandler {
     }
 
     private enum InterceptMethod {
-        SECURITY_MANAGER(SecurityManagerInterceptor.class),
-        PROXY_SELECTOR(ProxySelectorInterceptor.class);
+        SECURITY_MANAGER(SecurityManagerInterceptorImpl.class),
+        PROXY_SELECTOR(ProxySelectorInterceptorImpl.class);
 
         private final Class<? extends NetworkInterceptor> clazz;
 

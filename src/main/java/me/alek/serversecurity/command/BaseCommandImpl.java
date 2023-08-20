@@ -24,7 +24,6 @@ public abstract class BaseCommandImpl implements CommandExecutor, CommandImpl {
     }
 
     public void sendHelpMessage(CommandSender sender) {
-        sender.sendMessage("");
         sender.sendMessage(Lang.getMessage(Lang.COMMAND_HELP_HEADER) + ((ServerSecurityPlugin.get().getLatestVersion() == null) ? "" : " §c(Outdated)"));
         subCommands.forEach(subCommand -> sender.sendMessage(" §a" + subCommand.getUsage() + " > §7" + subCommand.getDescription()));
     }

@@ -44,8 +44,15 @@ public class PluginProperties {
     }
 
     public String getPluginName() {
-        if (getProperties() == null) return null;
-        return getProperties().getProperty("name");
+        return properties.getProperty("name");
+    }
+
+    public String getVersion() {
+        return properties.getProperty("version");
+    }
+
+    public String getAuthor() {
+        return properties.getProperty("author");
     }
 
     public Properties getProperties() {

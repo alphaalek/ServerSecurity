@@ -1,20 +1,14 @@
 package me.alek.serversecurity.network;
 
-import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.lang.Lang;
-import me.alek.serversecurity.logging.LogHolder;
-import org.apache.logging.log4j.Level;
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.ServerOperator;
 
-import java.net.SocketTimeoutException;
 import java.security.Permission;
 
-public class SecurityManagerInterceptor extends SecurityManager implements NetworkInterceptor {
+public class SecurityManagerInterceptorImpl extends SecurityManager implements NetworkInterceptor {
 
     private boolean enabled;
 
-    public SecurityManagerInterceptor() {
+    public SecurityManagerInterceptorImpl() {
     }
 
     @Override

@@ -1,17 +1,17 @@
 package me.alek.serversecurity;
 
-import me.alek.serversecurity.command.commands.MainCommand;
 import me.alek.serversecurity.configuration.Configuration;
-import me.alek.serversecurity.lang.Lang;
+import me.alek.serversecurity.command.commands.MainCommand;
 import me.alek.serversecurity.logging.AbstractLogger;
 import me.alek.serversecurity.logging.LogHolder;
+import me.alek.serversecurity.malware.scanning.VulnerabilityScanner;
 import me.alek.serversecurity.metrics.Metrics;
 import me.alek.serversecurity.network.NetworkHandler;
-import me.alek.serversecurity.malware.scanning.VulnerabilityScanner;
 import me.alek.serversecurity.security.SecurityManager;
 import me.alek.serversecurity.utils.Appender;
 import me.alek.serversecurity.utils.JARFinder;
 import me.alek.serversecurity.utils.UpdateChecker;
+import me.alek.serversecurity.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -73,7 +73,7 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
             public void run() {
 
                 final File dataFolder = ServerSecurityPlugin.get().getDataFolder().getParentFile();
-                final VulnerabilityScanner scanner = new VulnerabilityScanner(JARFinder.findAllJars(dataFolder));
+                final VulnerabilityScanner scanner = new VulnerabilityScanner(JARFinder.findAllJars(dataFolder), false);
 
                 final Appender whenDone = new Appender();
                 whenDone.setRunnable(() -> {

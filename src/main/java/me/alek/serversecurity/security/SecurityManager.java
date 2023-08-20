@@ -2,9 +2,9 @@ package me.alek.serversecurity.security;
 
 import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.configuration.ConfigurationOptions;
-import me.alek.serversecurity.logging.LogHolder;
-import me.alek.serversecurity.security.injector.ListenerInjector;
 import me.alek.serversecurity.security.blocker.ListenerRegistery;
+import me.alek.serversecurity.security.injector.ListenerInjector;
+import me.alek.serversecurity.logging.LogHolder;
 import me.alek.serversecurity.security.operator.OperatorInjector;
 import me.alek.serversecurity.security.operator.OperatorManager;
 import org.bukkit.Bukkit;

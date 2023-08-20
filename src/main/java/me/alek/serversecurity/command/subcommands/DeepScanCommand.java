@@ -1,9 +1,7 @@
 package me.alek.serversecurity.command.subcommands;
 
-import me.alek.serversecurity.ServerSecurityPlugin;
 import me.alek.serversecurity.command.SubCommandImpl;
 import me.alek.serversecurity.lang.Lang;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class DeepScanCommand implements SubCommandImpl {

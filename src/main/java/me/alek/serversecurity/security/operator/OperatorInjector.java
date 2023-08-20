@@ -1,12 +1,12 @@
 package me.alek.serversecurity.security.operator;
 
+import me.alek.serversecurity.security.SecurityManager;
 import net.minecraft.server.v1_8_R3.JsonList;
 import net.minecraft.server.v1_8_R3.OpList;
 import net.minecraft.server.v1_8_R3.OpListEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import sun.misc.Unsafe;
-import me.alek.serversecurity.security.SecurityManager;
 
 import java.lang.reflect.Field;
 import java.util.Map;

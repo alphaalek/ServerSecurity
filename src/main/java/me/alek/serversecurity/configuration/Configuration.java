@@ -1,17 +1,16 @@
 package me.alek.serversecurity.configuration;
 
 import me.alek.serversecurity.ServerSecurityPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 
 public class Configuration {
 
     private FileConfiguration yamlConfiguration;
+    private File file;
     private ConfigurationOptions options;
 
     public Configuration() {
@@ -34,14 +33,14 @@ public class Configuration {
 
     public FileConfiguration loadConfiguration() {
         File dataFolder = ServerSecurityPlugin.get().getDataFolder();
-        File config = new File(dataFolder, "config.yml");
-        if (!config.exists()) {
+        file = new File(dataFolder, "config.yml");
+        if (!file.exists()) {
             ServerSecurityPlugin.get().saveDefaultConfig();
         }
-        return YamlConfiguration.loadConfiguration(config);
+        return YamlConfiguration.loadConfiguration(file);
     }
 
-    public void reload() {
+    public synchronized void reload() {
         ServerSecurityPlugin.get().reloadConfig();
 
         generatePluginOptions();

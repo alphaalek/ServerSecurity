@@ -1,7 +1,5 @@
 package me.alek.serversecurity.utils;
 
-import me.alek.serversecurity.ServerSecurityPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.text.DecimalFormat;
@@ -85,16 +83,6 @@ public class Utils {
             }
         }
         return freq;
-    }
-
-    public static void runTaskLater(long delay, Runnable runnable) {
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                runnable.run();
-            }
-        }.runTaskLater(ServerSecurityPlugin.get(), delay);
     }
 
 }

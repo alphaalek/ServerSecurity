@@ -1,11 +1,11 @@
 package me.alek.serversecurity.command.subcommands;
 
+import me.alek.serversecurity.command.SubCommandImpl;
 import me.alek.serversecurity.lang.Lang;
 import me.alek.serversecurity.malware.cleaning.OperatingSystem;
 import me.alek.serversecurity.malware.cleaning.SkyrageJarCleaner;
 import me.alek.serversecurity.malware.cleaning.SystemCleaner;
 import me.alek.serversecurity.malware.cleaning.SystemInfectionType;
-import me.alek.serversecurity.command.SubCommandImpl;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
