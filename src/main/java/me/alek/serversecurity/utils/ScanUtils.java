@@ -11,7 +11,7 @@ public class ScanUtils {
         if (level >= 130) {
             return "§c";
         }
-        if (level > 80) {
+        if (level > 75) {
             return "§e";
         }
         return "§a";
@@ -24,7 +24,7 @@ public class ScanUtils {
         if (level >= 130) {
             return "§c⚠ ";
         }
-        if (level > 80) {
+        if (level > 75) {
             return "§e✓ ";
         }
         return "§a✓ ";
@@ -39,7 +39,7 @@ public class ScanUtils {
         else if (level >= 130) {
             message = Lang.getMessage(Lang.SCANNING_RESULT_RED);
         }
-        else if (level > 80) {
+        else if (level > 75) {
             message = Lang.getMessage(Lang.SCANNING_RESULT_YELLOW);
         }
         else {

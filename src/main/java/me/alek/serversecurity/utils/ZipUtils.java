@@ -33,18 +33,13 @@ public class ZipUtils {
     }
 
     public static FileSystem fileSystemForZip(final Path pathToZip) {
-        /*try {
-            return FileSystems.newFileSystem(pathToZip, new HashMap<>());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        URI uri = URI.create("jar:" + pathToZip.toUri() + "!/");
         try {
-            return FileSystems.getFileSystem(URI.create("jar:" + pathToZip.toUri() + "!/"));
-        } catch (Exception e2) {
-            e2.printStackTrace();
-        }*/
-        try {
-            return FileSystems.newFileSystem(URI.create("jar:" + pathToZip.toUri() + "!/"), new HashMap<>());
+            try {
+                return FileSystems.getFileSystem(uri);
+            } catch (Exception ex) {
+            }
+            return FileSystems.newFileSystem(uri, new HashMap<>());
         } catch (IOException e3) {
             return null;
         }

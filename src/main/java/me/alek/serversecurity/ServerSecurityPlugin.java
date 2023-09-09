@@ -4,7 +4,8 @@ import me.alek.serversecurity.configuration.Configuration;
 import me.alek.serversecurity.command.commands.MainCommand;
 import me.alek.serversecurity.logging.AbstractLogger;
 import me.alek.serversecurity.logging.LogHolder;
-import me.alek.serversecurity.malware.scanning.VulnerabilityScanner;
+import me.alek.serversecurity.malware.scanning.JarBytecodeScanner;
+import me.alek.serversecurity.malware.scanning.MalwareScanner;
 import me.alek.serversecurity.metrics.Metrics;
 import me.alek.serversecurity.network.NetworkHandler;
 import me.alek.serversecurity.security.SecurityManager;
@@ -13,6 +14,7 @@ import me.alek.serversecurity.utils.JARFinder;
 import me.alek.serversecurity.utils.UpdateChecker;
 import me.alek.serversecurity.lang.Lang;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -60,7 +62,9 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
         Metrics metrics = new Metrics(this, 18393);
 
         // setup commands
-        this.getCommand("am").setExecutor(new MainCommand());
+        final CommandExecutor executor = new MainCommand();
+        this.getCommand("am").setExecutor(executor);
+        this.getCommand("serversecurity").setExecutor(executor);
 
         // setup listeners
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -73,13 +77,12 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
             public void run() {
 
                 final File dataFolder = ServerSecurityPlugin.get().getDataFolder().getParentFile();
-                final VulnerabilityScanner scanner = new VulnerabilityScanner(JARFinder.findAllJars(dataFolder), false);
+                final MalwareScanner scanner = new MalwareScanner(JARFinder.findAllJars(dataFolder), false);
 
                 final Appender whenDone = new Appender();
                 whenDone.setRunnable(() -> {
 
                     if (scanner.hasMalware()) {
-
                         Bukkit.getOnlinePlayers()
                                 .stream()
                                 .filter(Player::isOp)
@@ -125,7 +128,7 @@ public class ServerSecurityPlugin extends JavaPlugin implements Listener {
             }.runTaskLater(this, 60L);
         }
 
-        VulnerabilityScanner latestScanner = VulnerabilityScanner.latestScanner;
+        MalwareScanner latestScanner = MalwareScanner.latestScanner;
         if (latestScanner != null && latestScanner.hasMalware()) {
             player.sendMessage(Lang.getMessageWithPrefix(Lang.SCANNING_WARN_INFECTED_JOIN));
         }
