@@ -10,6 +10,8 @@ public enum EnglishRepresentor implements LocaleMessageRepresentor {
     COMMAND_NO_CONSOLE(Lang.COMMAND_NO_CONSOLE, "§cThis command can only be used by players."),
     COMMAND_HELP_HEADER(Lang.COMMAND_HELP_HEADER,
             "§6" + ServerSecurityPlugin.get().getDescription().getFullName() + ". Made by Alek05."),
+    COMMAND_HELP_FOOTER(Lang.COMMAND_HELP_FOOTER,
+            "§7Type §e/am help §7for help on command usage."),
 
     SUBCOMMAND_CLEAN_INFO_DESCRIPTION(Lang.SUBCOMMAND_CLEAN_INFO_DESCRIPTION, "Cleans OS or plugins from Skyrage."),
     SUBCOMMAND_CLEAN_SPECIFICATION(Lang.SUBCOMMAND_CLEAN_SPECIFICATION, "§cYou need to specify, what you would like to clean. Use /am cleanskyrage <system/plugins>."),

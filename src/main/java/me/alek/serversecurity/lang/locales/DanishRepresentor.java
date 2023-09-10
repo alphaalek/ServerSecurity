@@ -10,6 +10,8 @@ public enum DanishRepresentor implements LocaleMessageRepresentor {
     COMMAND_NO_CONSOLE(Lang.COMMAND_NO_CONSOLE, "§cDenne kommando kan kun blive skrevet af spillere."),
     COMMAND_HELP_HEADER(Lang.COMMAND_HELP_HEADER,
                 "§6" + ServerSecurityPlugin.get().getDescription().getFullName() + ". Lavet af Alek05."),
+    COMMAND_HELP_FOOTER(Lang.COMMAND_HELP_FOOTER,
+                "§7Skriv §e/am help §7for hjælp til brug af kommandoer."),
 
     SUBCOMMAND_CLEAN_INFO_DESCRIPTION(Lang.SUBCOMMAND_CLEAN_INFO_DESCRIPTION, "Renser OS eller plugins fra Skyrage."),
     SUBCOMMAND_CLEAN_SPECIFICATION(Lang.SUBCOMMAND_CLEAN_SPECIFICATION, "§cDu mangler at specificere, hvad du vil rense. Brug /am cleanskyrage <system/plugins>."),

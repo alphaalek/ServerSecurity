@@ -7,13 +7,8 @@ import org.bukkit.command.CommandSender;
 public class DeepScanCommand implements SubCommandImpl {
 
     @Override
-    public boolean perform(CommandSender sender, String label, String[] args) {
-        return ScanPerform.perform(sender, args, true);
-    }
-
-    @Override
-    public boolean executableByConsole() {
-        return true;
+    public void perform(CommandSender sender, String label, String[] args) {
+        ScanPerform.perform(sender, args, true);
     }
 
     @Override

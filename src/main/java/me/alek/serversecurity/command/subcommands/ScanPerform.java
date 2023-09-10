@@ -15,18 +15,18 @@ import java.util.Objects;
 
 public class ScanPerform {
 
-    public static boolean perform(CommandSender sender, String[] args, boolean deepScan) {
+    public static void perform(CommandSender sender, String[] args, boolean deepScan) {
         final MalwareScanner scanner = MalwareScanner.latestScanner;
 
         if (scanner == null) {
             sender.sendMessage(Lang.getMessageWithPrefix(Lang.SCANNING_ERROR_NO_AVAILABLE_SCANNER));
-            return true;
+            return;
         }
 
         if (scanner.isScanning()) {
             int size = scanner.getDoneFiles();
             sender.sendMessage(Lang.getMessageFormattedWithPrefix(Lang.SCANNING_ERROR_ALREADY_SCANNING, (size == -1 ? 0 : size), scanner.getSize()));
-            return true;
+            return;
         }
 
         final List<File> files = new ArrayList<>();
@@ -45,12 +45,10 @@ public class ScanPerform {
 
         if (files.isEmpty() || files.stream().filter(Objects::isNull).count() == files.size()) {
             sender.sendMessage(Lang.getMessageWithPrefix(Lang.SCANNING_ERROR_NO_SUCH_PLUGIN));
-            return true;
+            return;
         }
 
         final CachedVulnerabilityLoader loader = new CachedVulnerabilityLoader(deepScan, files, scanner);
         loader.sendFeedback(sender);
-
-        return true;
     }
 }

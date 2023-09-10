@@ -13,7 +13,7 @@ import java.io.File;
 
 public class ReloadCommand implements SubCommandImpl {
     @Override
-    public boolean perform(CommandSender sender, String label, String[] args) {
+    public void perform(CommandSender sender, String label, String[] args) {
         ServerSecurityPlugin.get().getConfiguration().reload();
 
         File dataFolder = ServerSecurityPlugin.get().getDataFolder().getParentFile();
@@ -28,12 +28,6 @@ public class ReloadCommand implements SubCommandImpl {
                 }
             }.runTaskAsynchronously(ServerSecurityPlugin.get());
         }
-        return true;
-    }
-
-    @Override
-    public boolean executableByConsole() {
-        return true;
     }
 
     @Override

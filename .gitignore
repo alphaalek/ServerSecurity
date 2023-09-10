@@ -1,2 +1,8 @@
 # Project exclude paths
 /target/
+
+AntiMalware_pl.iml
+dependency-reduced-pom.xml
+ServerSecurity.iml
+.idea
+malware plugins

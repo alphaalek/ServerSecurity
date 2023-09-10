@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CleanSkyrageCommand implements SubCommandImpl {
     @Override
-    public boolean perform(CommandSender sender, String label, String[] args) {
+    public void perform(CommandSender sender, String label, String[] args) {
 
         boolean sendHelpMessage = false;
         if (args.length == 1) {
@@ -24,7 +24,7 @@ public class CleanSkyrageCommand implements SubCommandImpl {
         }
         if (sendHelpMessage) {
             sender.sendMessage(Lang.getMessageWithPrefix(Lang.SUBCOMMAND_CLEAN_SPECIFICATION));
-            return true;
+            return;
         }
 
         if (args[1].equals("system")) {
@@ -46,7 +46,7 @@ public class CleanSkyrageCommand implements SubCommandImpl {
                 List<File> infectedJars = SkyrageJarCleaner.findInfectedJars(new File("plugins").getAbsoluteFile().getParentFile());
                 if (infectedJars.size() == 0) {
                     sender.sendMessage(Lang.getMessageWithPrefix(Lang.SUBCOMMAND_CLEAN_PLUGINS_NOT_INFECTED));
-                    return true;
+                    return;
                 }
                 boolean success = false;
                 for (File jar : infectedJars) {
@@ -60,12 +60,7 @@ public class CleanSkyrageCommand implements SubCommandImpl {
                 e.printStackTrace();
             }
         }
-        return true;
-    }
-
-    @Override
-    public boolean executableByConsole() {
-        return true;
+        return;
     }
 
     @Override
