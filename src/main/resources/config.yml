@@ -1,13 +1,7 @@
 #
-#
-# konfigurationsfil til plguinnet AntiMalware.
-# Hjemmeside: https://www.spigotmc.org/resources/antimalware.109025/
+# Website: https://www.spigotmc.org/resources/antimalware.109025/
 # Discord: https://discord.gg/FJuKAUDX4C
 # Sourcecode: https://github.com/alphaalek/AntiMalware
-#
-# det anbefales at slå alle nedenstående indstillinger til, men du vælger selvfølgelig
-# selv. det skal siges, at ingen af dem vil virke, hvis ikke du slår security mode til
-#
 #
 
 # |---------------------------------------------|
@@ -16,10 +10,7 @@
 # | ########################################### |
 # |---------------------------------------------|
 
-#
-#
-#
-# obs: if you change this, it requires reload by /am reload
+# OBS: if you change this, it requires reload by /am reload
 # syntax: language
 locale: "en"
 
@@ -29,19 +20,17 @@ locale: "en"
 # | ########################################### |
 # |---------------------------------------------|
 
-# skal security mode være slået til på serveren. læs de nedenstående features du kan
-# vælge at slå til med security mode.
+# Should security mode be enabled. You can see the features below that security mode offers.
 #
-# obs: if you change this, it requires reload by /am reload
+# OBS: if you change this, it requires reload by /am reload
 # syntax: true / false
 security-mode-enabled: false
 
-# skal cancelled chat events der indeholder sårbare serverting, såsom
-# op/deop af spillere eller kommandoer skrevet af console, blive blokeret.
-# dette er typisk en metode forskellige backdoors bruger frem for kommandoer,
-# til at udføre deres ting. herunder indgår Bukloit, Ectasy, ThiccIndustries osv.
+# Should cancelled chat events that contains vulnerable things as
+# op and deop of players or commands executed by console, be blocked from being called.
+# This is because backdoors typically uses chat events to do it's things.
 #
-# obs: if you change this, it requires restart of the server
+# OBS: if you change this, it requires restart of the server
 # syntax: true / false
 prevent-cancelled-malicious-chat-event: false
 
@@ -51,38 +40,29 @@ prevent-cancelled-malicious-chat-event: false
 # | ########################################### |
 # |---------------------------------------------|
 
-# skal OP proxy blocker være slået til på serveren. Det betyder, at du kan
-# vælge i mellem specifikke personer som kan være OP på serveren, og alle
-# andre vil blive blokeret. skriv de tilladte spillere/uuids under "target".
-# bemærk, at det ikke giver en spiller OP at være på listen. det vil derimod
-# bare være ligesom normalt, hvor man ikke bliver blokeret.
+# Should OP proxy blocker be enabled on the server. This means, that you can
+# choose specific players who can only be OP on the server, and everyone else
+# will be blocked. Write the allowed players/uuids below.
+# OBS: If you are on the list below, it doesn't giv you OP. It just means that you CAN get it.
 #
-# obs: if you change this, it requires restart of the server
+# OBS: if you change this, it requires restart of the server
 # syntax: true / false
 op-proxy-blocker: false
 
-# skal pluginnet throw en exception når en spiller som ikke har tilladelse i op
-# proxy blockeren, får op på serveren. dette er for at undgå spilleren SLET ikke
-# bliver op. nogengange kan man have op i få ticks hvis det lagger meget på serveren, men
-# hvis man slår dette til, vil vedkommende SLET ikke få OP. du skal være opmærksom på, at der
-# kommer fejl i loggen hvis du slår dette til og en spiller uden tilladelse bliver op, og
-# derfor ikke en fejl fra AntiMalware, men altså noget der med vilje bliver gjort.
-# når man sender en runtime exception i op proxyen, vil det garantere minecrafts
-# egen kode aldrig bliver kaldt, og spilleren derfor heller ikke bliver op.
+# Should the pluyin throw an exception when a player who doesn't have permission
+# in the OP proxy blocker, tries to get OP on the server. This is to ensure that players NEVER get op at all.
+# OBS: If you enable this, it means that a exception will be thrown in console. This is not an error.
 #
-# obs: if you change this, it requires reload by /am reload
+# OBS: if you change this, it requires reload by /am reload
 # syntax: true / false
 throw-exception-on-op: false
 
-# hvilke spillere skal have tilladelse til at blive op, hvis op proxy er slået til.
-# læs mere omkring op proxy ovenover.
+# Which players should be allowed the get OP, if the OP proxy blocker is enabled.
 #
-# obs: if you change this, it requires reload by /am reload
+# OBS: if you change this, it requires reload by /am reload
 # syntax: string list
 target:
   - "Alek05"
-# - andet navn
-# - andet uuid
 
 # |---------------------------------------------|
 # | ########################################### |
@@ -90,11 +70,11 @@ target:
 # | ########################################### |
 # |---------------------------------------------|
 
-# which network addresses should connections within the server, be interrupted and blocked.
-# multiple malwares are using some kind of rest api or websocket to do their thing, so
-# blocking these will prevent the malware to execute
+# What network addresses should connections within the server, be interrupted and blocked.
+# Multiple backdoors uses some kind of Restful API or WebSocket to establish a connection to
+# the internet and do things. Blocking these connections will prevent some backdoors to execute.
 #
-# obs: if you change this, it requires reload by /am reload
+# OBS: if you change this, it requires reload by /am reload
 # syntax: string list
 blocked-target:
   - "85.217.144.130"
