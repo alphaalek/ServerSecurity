@@ -19,23 +19,23 @@ public class JARFinder {
     }
 
     public static ArrayList<File> findAllJarsDir(File dir, List<String> absolutePaths) {
-        try {
-            final ArrayList<File> jars = new ArrayList<>();
-            Files.walk(dir.toPath())
-                    .map(Path::toFile)
-                    .filter(file -> !absolutePaths.contains(file.getAbsolutePath()))
-                    .filter(file -> file.getName().endsWith(".jar")
+        if (!dir.isDirectory() || dir.listFiles() == null) return new ArrayList<>();
+
+        final ArrayList<File> jars = new ArrayList<>();
+
+        Arrays.stream(dir.listFiles())
+                .filter(file -> !absolutePaths.contains(file.getAbsolutePath()))
+                .filter(file -> {
+                    String pluginName = new PluginProperties(file).getPluginName();
+                    return file.getName().endsWith(".jar")
                             && (isPlugin(file) || file.getName().equals("bungee.jar"))
-                            && !new PluginProperties(file).getPluginName().equals("ServerSecurity"))
-                    .forEach(file -> {
-                        absolutePaths.add(file.getAbsolutePath());
-                        jars.add(file);
-                    });
-            System.out.println(jars);
-            return jars;
-        } catch (IOException ignored) {
-        }
-        return null;
+                            && pluginName != null && !(pluginName.equals("ServerSecurity") || pluginName.equals("AntiMalware"));
+                })
+                .forEach(file -> {
+                    absolutePaths.add(file.getAbsolutePath());
+                    jars.add(file);
+                });
+        return jars;
     }
 
     public static File findJar(File dir, String check) {
